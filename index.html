@@ -217,11 +217,15 @@ camera.position.set(0, 8, 30);
 camera.lookAt(0, 0, 0);
 
 // ─── LIGHTING ───────────────────────────────────────────────────────────────
-const sun = new THREE.PointLight(0xfff5e0, 3.5, 500);
+const sun = new THREE.PointLight(0xfff5e0, 1.2, 500);
 sun.position.set(0, 0, 0);
 scene.add(sun);
-const ambient = new THREE.AmbientLight(0x111133, 0.4);
+const ambient = new THREE.AmbientLight(0xffffff, 0.75);
 scene.add(ambient);
+// Fill light from opposite side so dark sides aren't pitch black
+const fill = new THREE.DirectionalLight(0x8899bb, 0.3);
+fill.position.set(-10, -5, -10);
+scene.add(fill);
 
 // Sun glow
 const sunGeo = new THREE.SphereGeometry(1.5, 32, 32);
