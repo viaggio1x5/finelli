@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Caterina Finelli</title>
+<meta name="description" content="Caterina Finelli — Product Designer. Portfolio, podcast, blog e radio."/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-mono: 'Space Mono', monospace;
+    --bg: #000005;
+    --star: rgba(255,255,255,0.8);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+    cursor: none;
+  }
+
+  #canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  /* Custom cursor */
+  #cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    mix-blend-mode: difference;
+  }
+  #cursor.hover {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+
+  /* Header */
+  #header {
+    position: fixed;
+    top: 40px; left: 50px;
+    z-index: 100;
+    pointer-events: none;
+  }
+  #header h1 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(18px, 2vw, 24px);
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  #header p {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* Planet labels */
+  .planet-label {
+    position: fixed;
+    pointer-events: none;
+    z-index: 50;
+    text-align: center;
+    transform: translate(-50%, 0);
+    transition: opacity 0.3s ease;
+  }
+  .planet-label .name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(13px, 1.5vw, 17px);
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.1em;
+    display: block;
+  }
+  .planet-label .sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 4px;
+  }
+  .planet-label.hovered .name { color: white; }
+  .planet-label.hovered .sub { color: rgba(255,255,255,0.6); }
+
+  /* Tooltip on hover */
+  #tooltip {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  #tooltip.visible { opacity: 1; }
+  #tooltip .tip-name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(28px, 4vw, 48px);
+    color: white;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+  #tooltip .tip-action {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* Orbit hint */
+  #hint {
+    position: fixed;
+    bottom: 30px; right: 40px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  /* Click ripple */
+  .ripple {
+    position: fixed;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.4);
+    pointer-events: none;
+    z-index: 300;
+    animation: ripple-out 0.8s ease-out forwards;
+    transform: translate(-50%, -50%);
+  }
+  @keyframes ripple-out {
+    from { width: 0; height: 0; opacity: 1; }
+    to { width: 120px; height: 120px; opacity: 0; }
+  }
+
+  /* Fade in */
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  body { animation: fadeIn 2s ease forwards; }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<canvas id="canvas"></canvas>
+
+<div id="header">
+  <h1>Caterina Finelli</h1>
+  <p>Navigate the system</p>
+</div>
+
+<div id="tooltip">
+  <div class="tip-name" id="tip-name"></div>
+  <div class="tip-action">— click to enter —</div>
+</div>
+
+<div id="hint">drag to orbit &nbsp;·&nbsp; scroll to zoom</div>
+
+<!-- Planet labels (positioned via JS) -->
+<div class="planet-label" id="label-earth">
+  <span class="name">Terra</span>
+  <span class="sub">cheviaggio.xyz</span>
+</div>
+<div class="planet-label" id="label-mars">
+  <span class="name">Marte</span>
+  <span class="sub">Portfolio</span>
+</div>
+<div class="planet-label" id="label-venus">
+  <span class="name">Venere</span>
+  <span class="sub">Blog — coming soon</span>
+</div>
+<div class="planet-label" id="label-jupiter">
+  <span class="name">Giove</span>
+  <span class="sub">Radio — coming soon</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── SCENE SETUP ────────────────────────────────────────────────────────────
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 8, 30);
+camera.lookAt(0, 0, 0);
+
+// ─── LIGHTING ───────────────────────────────────────────────────────────────
+const sun = new THREE.PointLight(0xfff5e0, 3.5, 500);
+sun.position.set(0, 0, 0);
+scene.add(sun);
+const ambient = new THREE.AmbientLight(0x111133, 0.4);
+scene.add(ambient);
+
+// Sun glow
+const sunGeo = new THREE.SphereGeometry(1.5, 32, 32);
+const sunMat = new THREE.MeshBasicMaterial({ color: 0xfff0a0 });
+const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+scene.add(sunMesh);
+
+// Sun halo
+const haloGeo = new THREE.SphereGeometry(2.8, 32, 32);
+const haloMat = new THREE.MeshBasicMaterial({
+  color: 0xffcc44,
+  transparent: true,
+  opacity: 0.06,
+  side: THREE.BackSide
+});
+scene.add(new THREE.Mesh(haloGeo, haloMat));
+
+// ─── STARS ──────────────────────────────────────────────────────────────────
+function createStars() {
+  const geo = new THREE.BufferGeometry();
+  const count = 3000;
+  const positions = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    positions[i * 3]     = (Math.random() - 0.5) * 1200;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 1200;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 1200;
+    sizes[i] = Math.random() * 1.5 + 0.3;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+  const mat = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.25,
+    transparent: true,
+    opacity: 0.7,
+    sizeAttenuation: true
+  });
+  scene.add(new THREE.Points(geo, mat));
+}
+createStars();
+
+// ─── TEXTURE LOADER ─────────────────────────────────────────────────────────
+const loader = new THREE.TextureLoader();
+
+// ─── PLANETS ────────────────────────────────────────────────────────────────
+const planets = [];
+
+const planetData = [
+  {
+    id: 'earth',
+    texture: 'earth.jpg',
+    radius: 1.4,
+    orbitRadius: 9,
+    orbitSpeed: 0.0018,
+    rotSpeed: 0.003,
+    startAngle: Math.PI * 0.1,
+    tilt: 0.41,
+    url: 'https://cheviaggio.xyz',
+    tipName: 'Terra',
+    labelId: 'label-earth',
+    atmosphereColor: 0x4488ff,
+    atmosphereOpacity: 0.12
+  },
+  {
+    id: 'mars',
+    texture: 'mars.jpg',
+    radius: 1.1,
+    orbitRadius: 13,
+    orbitSpeed: 0.0012,
+    rotSpeed: 0.0028,
+    startAngle: Math.PI * 0.7,
+    tilt: 0.44,
+    url: 'https://finelli.xyz/portfolio',
+    tipName: 'Marte',
+    labelId: 'label-mars',
+    atmosphereColor: 0xff6633,
+    atmosphereOpacity: 0.08
+  },
+  {
+    id: 'venus',
+    texture: 'venus.jpg',
+    radius: 1.3,
+    orbitRadius: 6,
+    orbitSpeed: 0.0024,
+    rotSpeed: 0.001,
+    startAngle: Math.PI * 1.3,
+    tilt: 0.05,
+    url: null,
+    tipName: 'Venere',
+    labelId: 'label-venus',
+    atmosphereColor: 0xff8833,
+    atmosphereOpacity: 0.18
+  },
+  {
+    id: 'jupiter',
+    texture: 'jupiter.jpg',
+    radius: 2.2,
+    orbitRadius: 18,
+    orbitSpeed: 0.0007,
+    rotSpeed: 0.005,
+    startAngle: Math.PI * 1.8,
+    tilt: 0.05,
+    url: null,
+    tipName: 'Giove',
+    labelId: 'label-jupiter',
+    atmosphereColor: 0xccaa77,
+    atmosphereOpacity: 0.06
+  }
+];
+
+// Draw orbit rings
+planetData.forEach(p => {
+  const curve = new THREE.EllipseCurve(0, 0, p.orbitRadius, p.orbitRadius, 0, Math.PI * 2);
+  const points = curve.getPoints(128).map(pt => new THREE.Vector3(pt.x, 0, pt.y));
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const mat = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.06
+  });
+  scene.add(new THREE.Line(geo, mat));
+});
+
+// Create planet meshes
+planetData.forEach(p => {
+  const tex = loader.load(p.texture);
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+  const geo = new THREE.SphereGeometry(p.radius, 64, 64);
+  const mat = new THREE.MeshStandardMaterial({
+    map: tex,
+    roughness: 0.85,
+    metalness: 0.0,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.rotation.z = p.tilt;
+
+  // Atmosphere
+  const atmGeo = new THREE.SphereGeometry(p.radius * 1.04, 32, 32);
+  const atmMat = new THREE.MeshBasicMaterial({
+    color: p.atmosphereColor,
+    transparent: true,
+    opacity: p.atmosphereOpacity,
+    side: THREE.FrontSide
+  });
+  const atm = new THREE.Mesh(atmGeo, atmMat);
+  mesh.add(atm);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  scene.add(group);
+
+  // Position on orbit
+  const angle = p.startAngle;
+  group.position.x = Math.cos(angle) * p.orbitRadius;
+  group.position.z = Math.sin(angle) * p.orbitRadius;
+
+  planets.push({
+    ...p,
+    mesh,
+    group,
+    angle,
+    atmMat,
+    originalAtmOpacity: p.atmosphereOpacity
+  });
+});
+
+// ─── CAMERA CONTROLS ────────────────────────────────────────────────────────
+let isDragging = false;
+let prevMouse = { x: 0, y: 0 };
+let spherical = { theta: 0, phi: Math.PI / 3.5, radius: 30 };
+let targetSpherical = { ...spherical };
+
+canvas.addEventListener('mousedown', e => { isDragging = true; prevMouse = { x: e.clientX, y: e.clientY }; });
+canvas.addEventListener('mouseup', () => { isDragging = false; });
+canvas.addEventListener('mouseleave', () => { isDragging = false; });
+
+canvas.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const dx = e.clientX - prevMouse.x;
+  const dy = e.clientY - prevMouse.y;
+  targetSpherical.theta -= dx * 0.005;
+  targetSpherical.phi = Math.max(0.3, Math.min(Math.PI / 2.2, targetSpherical.phi + dy * 0.005));
+  prevMouse = { x: e.clientX, y: e.clientY };
+});
+
+canvas.addEventListener('wheel', e => {
+  targetSpherical.radius = Math.max(12, Math.min(60, targetSpherical.radius + e.deltaY * 0.04));
+});
+
+// ─── CURSOR & HOVER ─────────────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const tooltip = document.getElementById('tooltip');
+const tipName = document.getElementById('tip-name');
+let mouse2D = new THREE.Vector2();
+let raycaster = new THREE.Raycaster();
+let hoveredPlanet = null;
+
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  mouse2D.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse2D.y = -(e.clientY / window.innerHeight) * 2 + 1;
+});
+
+// ─── CLICK ──────────────────────────────────────────────────────────────────
+document.addEventListener('click', e => {
+  if (isDragging) return;
+  // Ripple
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  r.style.left = e.clientX + 'px';
+  r.style.top = e.clientY + 'px';
+  document.body.appendChild(r);
+  setTimeout(() => r.remove(), 800);
+
+  if (hoveredPlanet && hoveredPlanet.url) {
+    window.open(hoveredPlanet.url, '_blank');
+  }
+});
+
+// ─── LABEL POSITIONING ──────────────────────────────────────────────────────
+function updateLabels() {
+  planets.forEach(p => {
+    const label = document.getElementById(p.labelId);
+    if (!label) return;
+
+    // Project planet position to screen
+    const pos = p.group.position.clone();
+    pos.y += p.radius + 0.5;
+    pos.project(camera);
+
+    const x = (pos.x * 0.5 + 0.5) * window.innerWidth;
+    const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+
+    // Behind camera?
+    if (pos.z > 1) {
+      label.style.opacity = '0';
+      return;
+    }
+
+    label.style.left = x + 'px';
+    label.style.top = (y + 16) + 'px';
+
+    // Fade based on distance
+    const dist = camera.position.distanceTo(p.group.position);
+    const fade = Math.max(0, Math.min(1, (dist - p.radius * 2) / 15));
+    label.style.opacity = (fade * (hoveredPlanet?.id === p.id ? 1 : 0.6)).toString();
+
+    label.classList.toggle('hovered', hoveredPlanet?.id === p.id);
+  });
+}
+
+// ─── ANIMATE ────────────────────────────────────────────────────────────────
+const clock = new THREE.Clock();
+let frame = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+  frame++;
+
+  // Orbit & rotate
+  planets.forEach(p => {
+    p.angle += p.orbitSpeed;
+    p.group.position.x = Math.cos(p.angle) * p.orbitRadius;
+    p.group.position.z = Math.sin(p.angle) * p.orbitRadius;
+    p.mesh.rotation.y += p.rotSpeed;
+  });
+
+  // Smooth camera
+  spherical.theta += (targetSpherical.theta - spherical.theta) * 0.06;
+  spherical.phi += (targetSpherical.phi - spherical.phi) * 0.06;
+  spherical.radius += (targetSpherical.radius - spherical.radius) * 0.06;
+
+  camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+  camera.position.y = spherical.radius * Math.cos(spherical.phi);
+  camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+  camera.lookAt(0, 0, 0);
+
+  // Sun pulse
+  const pulse = Math.sin(frame * 0.02) * 0.05 + 1;
+  sunMesh.scale.setScalar(pulse);
+
+  // Hover detection
+  raycaster.setFromCamera(mouse2D, camera);
+  const meshes = planets.map(p => p.mesh);
+  const hits = raycaster.intersectObjects(meshes);
+
+  if (hits.length > 0) {
+    const hit = hits[0].object;
+    hoveredPlanet = planets.find(p => p.mesh === hit);
+    cursor.classList.add('hover');
+    tooltip.classList.add('visible');
+    tipName.textContent = hoveredPlanet.tipName;
+    document.body.style.cursor = hoveredPlanet.url ? 'none' : 'none';
+    // Glow atmosphere
+    planets.forEach(p => {
+      p.atmMat.opacity = p.id === hoveredPlanet.id
+        ? p.originalAtmOpacity * 3
+        : p.originalAtmOpacity;
+    });
+  } else {
+    hoveredPlanet = null;
+    cursor.classList.remove('hover');
+    tooltip.classList.remove('visible');
+    planets.forEach(p => { p.atmMat.opacity = p.originalAtmOpacity; });
+  }
+
+  updateLabels();
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// ─── RESIZE ─────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
