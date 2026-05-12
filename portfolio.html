@@ -362,7 +362,7 @@ function rgba(hex,a){return`rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.s
 // ── INTERAZIONE — copia esatta da cheviaggio.xyz ──────────────────
 const hit=document.getElementById('hit');
 const isMobile=/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)||innerWidth<=768;
-const CAM_MIN=isMobile?1.3:1.2,CAM_MAX=4.2;
+const CAM_MIN=isMobile?1.3:1.2,CAM_MAX=3.8;
 
 const _startCity=cities[Math.floor(Math.random()*cities.length)];
 const _sPhi=(90-_startCity.la)*Math.PI/180,_sTheta=(_startCity.lo+180)*Math.PI/180;
