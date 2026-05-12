@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>inFi — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f12;
+    --surface: #16181d;
+    --surface2: #1e2028;
+    --border: #2a2d38;
+    --text: #e8eaf0;
+    --muted: #7a7f94;
+    --accent-blue: #4a7cff;
+    --accent-red: #e8344a;
+    --accent-green: #22c55e;
+    --accent-yellow: #f59e0b;
+    --accent-purple: #a78bfa;
+    --tag-bg: #1e2028;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 10vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(74,124,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: 20%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(232,52,74,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 span.red { color: var(--accent-red); }
+
+  .hero-desc {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 48px;
+    font-style: italic;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    max-width: 760px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--border);
+  }
+
+  .meta-item {
+    background: var(--surface);
+    padding: 20px 24px;
+  }
+
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .meta-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 10vw;
+  }
+
+  section {
+    padding: 100px 10vw;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── PHASE HEADER ── */
+  .phase-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .phase-title {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+
+  .phase-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    margin-bottom: 48px;
+  }
+
+  /* ── DIVIDER LINE ── */
+  .phase-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .phase-divider .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .phase-divider .line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── ARTIFACT BLOCK ── */
+  .artifacts {
+    margin: 40px 0;
+    padding: 28px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    border-left: 3px solid var(--accent-blue);
+  }
+
+  .artifacts-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 16px;
+  }
+
+  .artifact-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .tag.blue { border-color: rgba(74,124,255,0.4); color: var(--accent-blue); background: rgba(74,124,255,0.08); }
+  .tag.red { border-color: rgba(232,52,74,0.4); color: var(--accent-red); background: rgba(232,52,74,0.08); }
+  .tag.green { border-color: rgba(34,197,94,0.4); color: var(--accent-green); background: rgba(34,197,94,0.08); }
+  .tag.yellow { border-color: rgba(245,158,11,0.4); color: var(--accent-yellow); background: rgba(245,158,11,0.08); }
+  .tag.purple { border-color: rgba(167,139,250,0.4); color: var(--accent-purple); background: rgba(167,139,250,0.08); }
+
+  /* ── CONTENT BLOCKS ── */
+  .content-body {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #c4c8d8;
+    max-width: 660px;
+  }
+
+  .content-body p { margin-bottom: 20px; }
+
+  .content-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    margin: 32px 0;
+    padding: 24px 28px;
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    position: relative;
+    padding-left: 52px;
+  }
+
+  .callout::before {
+    content: attr(data-icon);
+    position: absolute;
+    left: 20px;
+    top: 24px;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .callout-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .callout p {
+    font-size: 15px;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .callout.insight { border-left: 3px solid var(--accent-yellow); }
+  .callout.decision { border-left: 3px solid var(--accent-green); }
+  .callout.problem { border-left: 3px solid var(--accent-red); }
+  .callout.quote { border-left: 3px solid var(--accent-purple); }
+
+  /* ── TWO COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 32px 0;
+  }
+
+  .card {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── METRIC ROW ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+
+  .metric {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .metric-num {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .metric-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* ── STEP LIST ── */
+  .step-list {
+    list-style: none;
+    margin: 24px 0;
+  }
+
+  .step-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    color: #c4c8d8;
+  }
+
+  .step-list li:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 4px;
+    min-width: 24px;
+  }
+
+  /* ── PERSONA CARD ── */
+  .persona {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 16px 0;
+  }
+
+  .persona-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .persona-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    border: 1px solid var(--border);
+  }
+
+  .persona-name { font-weight: 700; font-size: 16px; }
+  .persona-role { font-size: 13px; color: var(--muted); }
+  .persona-quote {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 15px;
+    border-left: 2px solid var(--border);
+    padding-left: 16px;
+    margin-bottom: 12px;
+  }
+  .persona-goals { font-size: 14px; color: #c4c8d8; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(14,15,18,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(42,45,56,0.6);
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo span { color: var(--accent-blue); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── QUOTE LARGE ── */
+  .big-quote {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.4;
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  .big-quote cite {
+    display: block;
+    font-size: 14px;
+    font-style: normal;
+    color: var(--muted);
+    margin-top: 16px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── PROCESS BAR ── */
+  .process-bar {
+    display: flex;
+    gap: 0;
+    margin: 60px 0 80px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .process-step {
+    flex: 1;
+    padding: 20px 16px;
+    background: var(--surface);
+    text-align: center;
+    position: relative;
+    cursor: default;
+    transition: background 0.2s;
+  }
+
+  .process-step:not(:last-child) {
+    border-right: 1px solid var(--border);
+  }
+
+  .process-step:hover { background: var(--surface2); }
+
+  .process-step .ps-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .process-step .ps-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .process-step.active {
+    background: rgba(74,124,255,0.1);
+  }
+
+  .process-step.active .ps-label { color: var(--accent-blue); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 60px 10vw;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p { color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+    .process-bar { flex-direction: column; }
+    .process-step:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
+    nav .nav-links { display: none; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">in<span>fi</span></div>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#empathize">Empathize</a></li>
+    <li><a href="#define">Define</a></li>
+    <li><a href="#ideate">Ideate</a></li>
+    <li><a href="#prototype">Prototype</a></li>
+    <li><a href="#test">Test</a></li>
+    <li><a href="#design">Design</a></li>
+    <li><a href="#results">Results</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="eyebrow">Product Design Case Study · 2020 · SaaS + B2C</p>
+  <h1>Navigate<br>indoors like<br>a <span class="red">Ninja.</span></h1>
+  <p class="hero-desc">How we turned a vague brief — "an app to navigate indoor venues" — into a real-time social navigation platform built on geomagnetic fields, in seven months.</p>
+
+  <div class="meta-grid">
+    <div class="meta-item">
+      <div class="meta-label">My role</div>
+      <div class="meta-value">Product Designer (UX + UI)</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Timeline</div>
+      <div class="meta-value">7 months</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Platform</div>
+      <div class="meta-value">iOS · Android · Web Admin</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Industry</div>
+      <div class="meta-value">Indoor Positioning</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Stack</div>
+      <div class="meta-value">Ionic · Foundation · Figma</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Team</div>
+      <div class="meta-value">PM · 1 Designer · 2 PO · 1 Dev Lead</div>
+    </div>
+  </div>
+</header>
+
+<!-- PROCESS MAP -->
+<section id="overview" style="border-top:none; padding-top: 40px;">
+  <p class="eyebrow" style="margin-bottom:20px;">Design Process at a glance</p>
+  <div class="process-bar">
+    <div class="process-step"><span class="ps-num">01</span><div class="ps-label">Empathize</div></div>
+    <div class="process-step"><span class="ps-num">02</span><div class="ps-label">Define</div></div>
+    <div class="process-step"><span class="ps-num">03</span><div class="ps-label">Ideate</div></div>
+    <div class="process-step"><span class="ps-num">04</span><div class="ps-label">Prototype</div></div>
+    <div class="process-step"><span class="ps-num">05</span><div class="ps-label">Test</div></div>
+    <div class="process-step"><span class="ps-num">06</span><div class="ps-label">Design</div></div>
+    <div class="process-step"><span class="ps-num">07</span><div class="ps-label">Deliver</div></div>
+  </div>
+
+  <div class="callout problem" data-icon="⚡">
+    <div class="callout-title">The Starting Problem</div>
+    <p>The brief was deliberately open: "build something for navigating indoor venues like a ninja." No specs, no target users, no KPIs. Our job was to turn that into a product — fast.</p>
+  </div>
+</section>
+
+<!-- 01 EMPATHIZE -->
+<section id="empathize">
+  <div class="phase-number">Phase 01</div>
+  <h2 class="phase-title">Empathize</h2>
+  <p class="phase-subtitle">Understanding the space, the technology, and the humans we were designing for.</p>
+
+  <div class="content-body">
+    <p>The first thing I did was <strong>challenge my assumptions</strong>. "Indoor navigation" sounded like GPS — simple. But a week of discovery revealed a completely different landscape.</p>
+
+    <p>GPS signals are blocked indoors. The dominant alternative was <strong>IndoorAtlas</strong>, a Finnish platform that uses Earth's geomagnetic field variations to triangulate position inside buildings — accurate to 1–3 metres without any extra hardware.</p>
+
+    <p>I ran stakeholder workshops with the client and combined them with competitive analysis and exploratory user interviews with people who regularly navigate complex venues: conference attendees, museum visitors, airport travellers.</p>
+  </div>
+
+  <div class="callout insight" data-icon="💡">
+    <div class="callout-title">Key Insight from Research</div>
+    <p>Users didn't just want a map. They wanted <em>context</em> — where their colleagues were, what events were happening nearby, how crowded an area was. The social layer wasn't a feature request; it was the underlying need.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Technology Discovery</div>
+      <p>Evaluated 3 indoor positioning SDKs. IndoorAtlas won on accuracy, hardware-free setup, and developer documentation quality. This constrained our tech stack to Ionic Framework for cross-platform support.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Stakeholder Alignment</div>
+      <p>The client (a sports industry executive) brought a strong brand directive: FC Bayern Munich colors — red and dark — as non-negotiable. This became the seed of the visual identity.</p>
+    </div>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts produced in this phase</div>
+    <div class="artifact-tags">
+      <span class="tag blue">Stakeholder Interview Notes</span>
+      <span class="tag blue">Competitive Analysis (3 SDKs)</span>
+      <span class="tag blue">Technology Feasibility Report</span>
+      <span class="tag blue">User Interview Summaries (6 participants)</span>
+      <span class="tag blue">Discovery Workshop Outputs</span>
+    </div>
+  </div>
+</section>
+
+<!-- 02 DEFINE -->
+<section id="define">
+  <div class="phase-number">Phase 02</div>
+  <h2 class="phase-title">Define</h2>
+  <p class="phase-subtitle">Translating research into a sharp problem statement and two distinct user groups.</p>
+
+  <div class="content-body">
+    <p>The research surfaced a critical tension: <strong>inFi had two very different audiences</strong> — end users navigating a venue in real time, and venue admins managing their space and attendees. Both had legitimate, conflicting needs.</p>
+
+    <p>I built out personas, journey maps, and a defined problem statement that would anchor every design decision that followed.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="persona">
+      <div class="persona-header">
+        <div class="persona-avatar">🧭</div>
+        <div>
+          <div class="persona-name">Marco, Conference Attendee</div>
+          <div class="persona-role">First-time visitor · Age 34</div>
+        </div>
+      </div>
+      <p class="persona-quote">"I spent 20 minutes looking for room B3. I missed the talk I flew here for."</p>
+      <div class="persona-goals">Needs: fast orientation, find colleagues, discover POIs. Fears: feeling watched, data misuse.</div>
+    </div>
+
+    <div class="persona">
+      <div class="persona-header">
+        <div class="persona-avatar">🏛️</div>
+        <div>
+          <div class="persona-name">Clara, Venue Manager</div>
+          <div class="persona-role">Hotel Adlon Operations · Age 41</div>
+        </div>
+      </div>
+      <p class="persona-quote">"I need to know if a room is overcrowded before it becomes a safety issue."</p>
+      <div class="persona-goals">Needs: real-time floor traffic, bulk messaging, capacity alerts. Fears: complexity, liability.</div>
+    </div>
+  </div>
+
+  <div class="callout decision" data-icon="✅">
+    <div class="callout-title">Key Design Decision — Privacy by Design</div>
+    <p>The risk of inFi feeling like a surveillance tool was real. I proposed a <strong>mutual visibility model</strong>: you only appear on another user's map if they've also shared their location with you. This became a core product principle, not just a setting.</p>
+  </div>
+
+  <div class="big-quote">
+    "How might we help first-time visitors orient themselves and connect with others in complex indoor venues — without sacrificing their sense of privacy and control?"
+    <cite>Problem statement · inFi, 2020</cite>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts produced in this phase</div>
+    <div class="artifact-tags">
+      <span class="tag red">User Personas (2)</span>
+      <span class="tag red">Jobs-to-be-Done Map</span>
+      <span class="tag red">User Journey Maps</span>
+      <span class="tag red">HMW Statement Bank</span>
+      <span class="tag red">Core Problem Statement</span>
+      <span class="tag red">Privacy Framework Document</span>
+    </div>
+  </div>
+</section>
+
+<!-- 03 IDEATE -->
+<section id="ideate">
+  <div class="phase-number">Phase 03</div>
+  <h2 class="phase-title">Ideate</h2>
+  <p class="phase-subtitle">Generating solutions through structured brainstorming, then converging on the right architecture.</p>
+
+  <div class="content-body">
+    <p>With two distinct products to design — the <strong>mobile app for users</strong> and the <strong>web control panel for admins</strong> — I structured ideation separately for each surface, then looked for shared patterns.</p>
+
+    <p>For the mobile app, I drew inspiration from navigation software (bird's eye and first-person views), FPS game interfaces for spatial orientation, and — deliberately — dating apps for the social discovery layer. If people are comfortable swiping through nearby strangers on Tinder, we could apply that same mental model to finding colleagues in a conference hall.</p>
+  </div>
+
+  <ul class="step-list">
+    <li><span class="step-num">→</span><span><strong>Navigation flows:</strong> User enters venue → sees real-time map → searches or browses POIs → sets destination → follows turn-by-turn guidance.</span></li>
+    <li><span class="step-num">→</span><span><strong>Social flows:</strong> Toggle visibility → see nearby users → send connection request → chat or navigate toward each other.</span></li>
+    <li><span class="step-num">→</span><span><strong>Admin flows:</strong> Monitor live floor plan → view KPIs → send targeted messages → manage capacity limits.</span></li>
+    <li><span class="step-num">→</span><span><strong>Proximity compass:</strong> A gamified radar UI showing nearby opted-in users — inspired by FPS minimap conventions.</span></li>
+  </ul>
+
+  <div class="callout insight" data-icon="💡">
+    <div class="callout-title">A Deliberate Naming Decision</div>
+    <p>We named the app <strong>inFi</strong> — a blend of "indoor" and "fidelity." The logo evolved from paper sketches to a lettermark where the dot of the <em>i</em> and a location pin connect with a navigation path, embedding the product metaphor directly into the identity.</p>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts produced in this phase</div>
+    <div class="artifact-tags">
+      <span class="tag green">User Flows (mobile app)</span>
+      <span class="tag green">User Flows (admin panel)</span>
+      <span class="tag green">Information Architecture</span>
+      <span class="tag green">Lo-Fi Sketches (logo exploration)</span>
+      <span class="tag green">Feature Prioritisation Matrix</span>
+      <span class="tag green">Brainstorming Workshop Outputs</span>
+    </div>
+  </div>
+</section>
+
+<!-- 04 PROTOTYPE -->
+<section id="prototype">
+  <div class="phase-number">Phase 04</div>
+  <h2 class="phase-title">Prototype</h2>
+  <p class="phase-subtitle">From paper sketches to interactive Figma prototypes — keeping fidelity low until the logic was solid.</p>
+
+  <div class="content-body">
+    <p>I started with <strong>paper wireframes</strong>. This isn't a formality — low fidelity forces you to focus on interaction logic rather than visual polish. It's much cheaper to discover a navigation dead-end on paper than in code.</p>
+
+    <p>Once the flows were validated internally, I moved to <strong>mid-fi wireframes</strong> in Figma, building component-by-component with placeholder content. At this stage I could test the real layout density of the indoor map with live user icons, POI markers, and navigation overlays all competing for space.</p>
+
+    <p>For the admin panel I chose the <strong>Foundation Framework</strong> — its responsive grid was the right tool for the data-heavy dashboard with live KPIs, floor plan display, and messaging tools.</p>
+
+    <p>The <strong>hi-fi clickable prototype</strong> was handed directly to stakeholders to test on their personal devices. Seeing the proximity compass move in real time changed the conversation — it went from an abstract feature to something people immediately wanted to play with.</p>
+  </div>
+
+  <div class="callout decision" data-icon="✅">
+    <div class="callout-title">Prototype-Driven Scope Decision</div>
+    <p>During mid-fi prototyping, we realised the first-person perspective view (a sci-fi-inspired feature) was technically risky and added minimal navigation value. It was cut before any hi-fi work began — saving significant dev time.</p>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts produced in this phase</div>
+    <div class="artifact-tags">
+      <span class="tag yellow">Paper Wireframes</span>
+      <span class="tag yellow">Mid-Fi Wireframes (Figma)</span>
+      <span class="tag yellow">Hi-Fi Clickable Prototype (Figma)</span>
+      <span class="tag yellow">Admin Panel Wireframes</span>
+      <span class="tag yellow">Interaction Annotation Document</span>
+      <span class="tag yellow">Component Inventory</span>
+    </div>
+  </div>
+</section>
+
+<!-- 05 TEST -->
+<section id="test">
+  <div class="phase-number">Phase 05</div>
+  <h2 class="phase-title">Test</h2>
+  <p class="phase-subtitle">Usability sessions in realistic environments, plus A/B testing on key decision points.</p>
+
+  <div class="content-body">
+    <p>We recruited <strong>8 participants</strong> across two rounds — a mix of frequent venue visitors (conferences, museums) and venue staff. Testing happened in a realistic environment: a simulated conference hall setup, not a lab.</p>
+  </div>
+
+  <ul class="step-list">
+    <li><span class="step-num">01</span><span><strong>Navigation intuitiveness:</strong> Most users navigated independently. The main failure point was the onboarding — users who skipped it struggled to understand the mutual visibility model on first use.</span></li>
+    <li><span class="step-num">02</span><span><strong>Proximity compass:</strong> Consistently the most-commented feature. Users found it delightful and intuitive — the game-inspired metaphor transferred immediately.</span></li>
+    <li><span class="step-num">03</span><span><strong>POI guidance (A/B test):</strong> We tested icon-only cues vs. icon + contextual text labels. Text-labelled cues improved successful POI navigation by <strong>+23%</strong>.</span></li>
+    <li><span class="step-num">04</span><span><strong>Legibility in low light:</strong> Several users noted the default font size was too small for dimly lit event spaces. Iterated to a larger base size with higher contrast.</span></li>
+    <li><span class="step-num">05</span><span><strong>Admin tooltips:</strong> First-time admin users couldn't interpret KPI toggles without guidance. Added progressive disclosure tooltips on first login.</span></li>
+  </ul>
+
+  <div class="callout problem" data-icon="⚡">
+    <div class="callout-title">Biggest Failure Caught in Testing</div>
+    <p>The initial onboarding assumed users understood geomagnetic positioning. They didn't — and they weren't interested in the explanation. We replaced the technical intro with a benefit-led flow: <em>"See who's nearby. Share your location to connect."</em></p>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts produced in this phase</div>
+    <div class="artifact-tags">
+      <span class="tag purple">Usability Test Script</span>
+      <span class="tag purple">Session Recordings + Notes (8 users)</span>
+      <span class="tag purple">Affinity Map of Findings</span>
+      <span class="tag purple">A/B Test Results (POI guidance)</span>
+      <span class="tag purple">Prioritised Iteration Backlog</span>
+      <span class="tag purple">Revised Onboarding Flow</span>
+    </div>
+  </div>
+</section>
+
+<!-- 06 DESIGN -->
+<section id="design">
+  <div class="phase-number">Phase 06</div>
+  <h2 class="phase-title">Design</h2>
+  <p class="phase-subtitle">From tested wireframes to a polished, documented design system — for both surfaces.</p>
+
+  <div class="content-body">
+    <p>inFi had a genuinely rare design challenge: it had to feel like a <strong>navigation tool</strong> and a <strong>social app</strong> simultaneously, without feeling like either was bolted on. The visual language had to carry both.</p>
+
+    <p>The <strong>color system</strong> anchored to the client brief — FC Bayern-inspired red as the primary action color — but I pushed the overall palette toward a dark, map-like aesthetic that referenced cartography software and felt premium in low-light environments.</p>
+
+    <p>For the <strong>admin panel</strong>, the design language shifted: lighter, more data-dense, built on a structured grid. The same design token system underpinned both products, ensuring consistency without visual monotony.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Mobile App Principles</div>
+      <p>Dark-first. Map as canvas. People as primary content. Navigation iconography borrowed from established wayfinding systems (exit signs, accessibility markers) for instant recognition — no learning curve.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Admin Panel Principles</div>
+      <p>Information density over decoration. Real-time data legibility at a glance. Progressive disclosure for advanced features (tooltips, contextual help) to reduce overwhelm for first-time admins.</p>
+    </div>
+  </div>
+
+  <div class="callout decision" data-icon="✅">
+    <div class="callout-title">Design System Approach</div>
+    <p>I documented all components with their states (default, hover, active, disabled, loading) in a living style guide. When the client later wanted to scale inFi to additional venues, this documentation was what made handoff to a new agency seamless.</p>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts produced in this phase</div>
+    <div class="artifact-tags">
+      <span class="tag blue">Design Tokens (color, spacing, type)</span>
+      <span class="tag blue">Component Library with States</span>
+      <span class="tag blue">Final UI — Mobile App (iOS + Android)</span>
+      <span class="tag blue">Final UI — Admin Web Panel</span>
+      <span class="tag blue">Onboarding Flow Screens</span>
+      <span class="tag blue">Style Guide Documentation</span>
+      <span class="tag blue">Dev Handoff Annotations (Figma Inspect)</span>
+      <span class="tag blue">App Icon Variants (3)</span>
+    </div>
+  </div>
+</section>
+
+<!-- 07 RESULTS -->
+<section id="results">
+  <div class="phase-number">Phase 07</div>
+  <h2 class="phase-title">Results &amp; Learnings</h2>
+  <p class="phase-subtitle">What we shipped, what we measured, and what I'd do differently.</p>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-num" style="color: var(--accent-green);">+23%</div>
+      <div class="metric-label">POI navigation success rate after A/B test iteration</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num" style="color: var(--accent-blue);">90%</div>
+      <div class="metric-label">Target task success rate for unaided navigation</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num" style="color: var(--accent-yellow);">7mo</div>
+      <div class="metric-label">From blank brief to deployed product on both platforms</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num" style="color: var(--accent-red);">&lt;5%</div>
+      <div class="metric-label">Target navigation error rate in venue testing</div>
+    </div>
+  </div>
+
+  <div class="content-body">
+    <p><strong>What I'm most proud of:</strong> the mutual visibility system. It's easy to add a privacy toggle as an afterthought. Making it a foundational product principle — something that shaped the entire social graph — required convincing stakeholders early and holding the line through pressure to simplify. The testing data confirmed it: it was the feature users trusted most.</p>
+
+    <p><strong>What I'd do differently:</strong> I underestimated how technically novel the geomagnetic positioning was for users. A richer, context-appropriate onboarding — not just a feature tour but genuine expectation-setting about how the technology works and when it might be imprecise — would have reduced early drop-off.</p>
+
+    <p>I'd also invest earlier in a proper design token system. The style guide we built was good, but it was built <em>after</em> the hi-fi screens. If I were starting again, tokens first — screens second.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Shipped Features</div>
+      <p>Real-time indoor map · Mutual visibility system · Proximity compass · POI search & navigation · Venue check-in · Admin live floor view · KPI dashboard · Bulk messaging · Capacity management</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Success Metrics Defined</div>
+      <p>Avg. session duration ≥ 10 min · Task success rate ≥ 90% · Weekly engagement ≥ 70% of registered users · Navigation error rate &lt; 5%</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>inFi · UX/UI Case Study</p>
+  <p style="color: var(--muted)">UX Design · UI Design · Prototyping · User Research · Testing</p>
+</footer>
+
+</body>
+</html>
