@@ -321,7 +321,7 @@ function ringPos(angle) {
   // Cerchio nel piano XZ, poi tilt attorno all'asse X
   const x = Math.sin(angle) * RING_R;
   const zFlat = Math.cos(angle) * RING_R;
-  const y = -Math.sin(RING_TILT) * zFlat;
+  const y = -Math.sin(RING_TILT) * zFlat + 1.8;
   const z =  Math.cos(RING_TILT) * zFlat;
   return new THREE.Vector3(x, y, z);
 }
