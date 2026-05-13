@@ -515,6 +515,88 @@
 
   footer p { color: var(--muted); font-size: 14px; }
 
+  /* ── IMAGE PLACEHOLDERS ── */
+  .img-placeholder {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 40px 0;
+    position: relative;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .img-placeholder:hover {
+    border-color: var(--accent-blue);
+  }
+
+  .img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .img-placeholder-inner {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .img-placeholder .ph-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  .img-placeholder .ph-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .img-placeholder .ph-hint {
+    font-size: 13px;
+    color: var(--border);
+    max-width: 320px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* aspect ratio variants */
+  .img-placeholder.ratio-16-9 { aspect-ratio: 16/9; }
+  .img-placeholder.ratio-4-3  { aspect-ratio: 4/3; }
+  .img-placeholder.ratio-phone { aspect-ratio: 9/16; max-width: 320px; }
+
+  /* row of phone screenshots */
+  .phone-row {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin: 40px 0;
+    flex-wrap: wrap;
+  }
+
+  .phone-row .img-placeholder.ratio-phone {
+    flex: 0 0 220px;
+    margin: 0;
+  }
+
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
     .process-bar { flex-direction: column; }
@@ -588,6 +670,15 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <div class="meta-item">
       <div class="meta-label">Team</div>
       <div class="meta-value">PM · 1 Designer · 2 PO · 1 Dev Lead</div>
+    </div>
+  </div>
+
+  <!-- Hero visual: splash screen / app logo showcase -->
+  <div class="img-placeholder ratio-16-9" style="margin-top: 64px; max-width: 860px;">
+    <div class="img-placeholder-inner">
+      <div class="ph-icon">🖼️</div>
+      <div class="ph-label">Hero image · App splash / logo showcase</div>
+      <div class="ph-hint">Suggested: 0_Splash.png or 4_logo.png · Dimensioni consigliate: 1600 × 900px</div>
     </div>
   </div>
 </header>
@@ -738,6 +829,15 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <p>We named the app <strong>inFi</strong> — a blend of "indoor" and "fidelity." The logo evolved from paper sketches to a lettermark where the dot of the <em>i</em> and a location pin connect with a navigation path, embedding the product metaphor directly into the identity.</p>
   </div>
 
+  <!-- Logo variants -->
+  <div class="img-placeholder ratio-16-9">
+    <div class="img-placeholder-inner">
+      <div class="ph-icon">🎨</div>
+      <div class="ph-label">Logo exploration · Icon variants</div>
+      <div class="ph-hint">Suggested: 4_logo.png · Le tre varianti dell'icona app (blu, bianco, rosso)</div>
+    </div>
+  </div>
+
   <div class="artifacts">
     <div class="artifacts-label">→ Artifacts produced in this phase</div>
     <div class="artifact-tags">
@@ -770,6 +870,31 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   <div class="callout decision" data-icon="✅">
     <div class="callout-title">Prototype-Driven Scope Decision</div>
     <p>During mid-fi prototyping, we realised the first-person perspective view (a sci-fi-inspired feature) was technically risky and added minimal navigation value. It was cut before any hi-fi work began — saving significant dev time.</p>
+  </div>
+
+  <!-- Onboarding / intro screens -->
+  <div class="phone-row">
+    <div class="img-placeholder ratio-phone">
+      <div class="img-placeholder-inner">
+        <div class="ph-icon">📱</div>
+        <div class="ph-label">Onboarding 1</div>
+        <div class="ph-hint">Suggested: Intro.png</div>
+      </div>
+    </div>
+    <div class="img-placeholder ratio-phone">
+      <div class="img-placeholder-inner">
+        <div class="ph-icon">📱</div>
+        <div class="ph-label">Splash screen</div>
+        <div class="ph-hint">Suggested: 0_Splash.png</div>
+      </div>
+    </div>
+    <div class="img-placeholder ratio-phone">
+      <div class="img-placeholder-inner">
+        <div class="ph-icon">📱</div>
+        <div class="ph-label">Reset password</div>
+        <div class="ph-hint">Suggested: 2_Reset_psw.png</div>
+      </div>
+    </div>
   </div>
 
   <div class="artifacts">
@@ -849,6 +974,40 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   <div class="callout decision" data-icon="✅">
     <div class="callout-title">Design System Approach</div>
     <p>I documented all components with their states (default, hover, active, disabled, loading) in a living style guide. When the client later wanted to scale inFi to additional venues, this documentation was what made handoff to a new agency seamless.</p>
+  </div>
+
+  <!-- Admin panel full-width -->
+  <div class="img-placeholder ratio-16-9">
+    <div class="img-placeholder-inner">
+      <div class="ph-icon">🖥️</div>
+      <div class="ph-label">Admin panel · Live view</div>
+      <div class="ph-hint">Suggested: INFI_ADMIN_1.png · Dashboard con floor plan, KPI e dropdown menu</div>
+    </div>
+  </div>
+
+  <!-- Mobile app screens row -->
+  <div class="phone-row">
+    <div class="img-placeholder ratio-phone">
+      <div class="img-placeholder-inner">
+        <div class="ph-icon">📱</div>
+        <div class="ph-label">App · Onboarding</div>
+        <div class="ph-hint">Suggested: Intro.png</div>
+      </div>
+    </div>
+    <div class="img-placeholder ratio-phone">
+      <div class="img-placeholder-inner">
+        <div class="ph-icon">📱</div>
+        <div class="ph-label">App · Find Indoor</div>
+        <div class="ph-hint">Suggested: FRIENDS.png</div>
+      </div>
+    </div>
+    <div class="img-placeholder ratio-phone">
+      <div class="img-placeholder-inner">
+        <div class="ph-icon">📱</div>
+        <div class="ph-label">App · Splash</div>
+        <div class="ph-hint">Suggested: 0_Splash.png</div>
+      </div>
+    </div>
   </div>
 
   <div class="artifacts">
