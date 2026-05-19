@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
-<link rel="preload" href="mars.webp" as="image" type="image/jpeg">
+<link rel="preload" href="_mars.webp" as="image" type="image/webp">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -340,7 +340,7 @@ sg.setAttribute('color',new THREE.BufferAttribute(sc,3));
 scene.add(new THREE.Points(sg,new THREE.PointsMaterial({vertexColors:true,size:.048,transparent:true,opacity:1,sizeAttenuation:true})));
 
 function loadTexture(){
-  new THREE.TextureLoader().load('mars.webp',
+  new THREE.TextureLoader().load('_mars.webp',
     tex=>{
       tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
       globe.add(new THREE.Mesh(new THREE.SphereGeometry(1,64,64),new THREE.MeshPhongMaterial({map:tex,specular:0x220800,shininess:8})));
