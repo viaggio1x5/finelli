@@ -195,24 +195,6 @@
     to { width: 120px; height: 120px; opacity: 0; }
   }
 
-  /* ─── STARS ─────────────────────────────────────────────────────────────── */
-  .star {
-    position: fixed;
-    width: 1px;
-    height: 1px;
-    background: white;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .star.twinkle {
-    animation: twinkle 3s ease-in-out infinite;
-  }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-  }
-
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   body { animation: fadeIn 2s ease forwards; }
 </style>
@@ -241,11 +223,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
 <div id="header">
   <h1>Caterina Finelli</h1>
-  <p>Discover the world through design and storytelling</p>
+  <p>Senior Product Designer</p>
 </div>
 
 <div id="planet-info">
-  <div id="planet-name">Podcast</div>
+  <div id="planet-name">Earth</div>
   <div id="planet-sub">cheviaggio.xyz</div>
   <div id="planet-action">— visit —</div>
 </div>
@@ -261,23 +243,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <script>
 const planetData = [
   {
-    id: 'sun',
-    texture: 'sun.webp',
-    radius: 1.8,
-    tilt: 0.0,
-    tipName: 'About Me',
-    sub: 'Contacts',
-    url: 'about.html',
-    atmosphereColor: 0xffaa00,
-    atmosphereOpacity: 0.2,
-    rotSpeed: 0.002
-  },
-  {
-    id: 'podcast',
+    id: 'earth',
     texture: 'earth.webp',
     radius: 1.45,
     tilt: 0.41,
-    tipName: 'Podcast',
+    tipName: 'Earth',
     sub: 'cheviaggio.xyz',
     url: 'https://cheviaggio.xyz',
     atmosphereColor: 0x4488ff,
@@ -285,12 +255,12 @@ const planetData = [
     rotSpeed: 0.003
   },
   {
-    id: 'portfolio',
+    id: 'mars',
     texture: 'mars.webp',
     radius: 1.12,
     tilt: 0.44,
-    tipName: 'Portfolio',
-    sub: 'Product Design',
+    tipName: 'Mars',
+    sub: 'Portfolio · Product Design',
     url: 'https://finelli.xyz/portfolio',
     atmosphereColor: 0xff6633,
     atmosphereOpacity: 0.09,
@@ -300,8 +270,10 @@ const planetData = [
 
 const N = planetData.length;
 
+// ─── SCENE ───────────────────────────────────────────────────────────────────
 const canvas = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new THREE.Scene();
@@ -334,20 +306,6 @@ scene.add(fill);
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   const mat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.55, sizeAttenuation: true, transparent: true, opacity: 0.72 });
   scene.add(new THREE.Points(geo, mat));
-})();
-
-// ─── TWINKLING STARS ───────────────────────────────────────────────────────────
-(function() {
-  const twinkleCnt = 150;
-  for (let i = 0; i < twinkleCnt; i++) {
-    const star = document.createElement('div');
-    star.className = 'star twinkle';
-    star.style.left = Math.random() * 100 + '%';
-    star.style.top = Math.random() * 100 + '%';
-    star.style.animation = `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`;
-    star.style.animationDelay = Math.random() * 5 + 's';
-    document.body.appendChild(star);
-  }
 })();
 
 // ─── RING ────────────────────────────────────────────────────────────────────
@@ -399,7 +357,7 @@ planetData.forEach((p, i) => {
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let ringAngleTarget  = 0;
 let ringAngleCurrent = 0;
-let activeIndex      = 1; // Start from Podcast (index 1)
+let activeIndex      = 0;
 
 // Framerate-independent lerp factor: feel like ~12 frames to settle at 60fps
 const LERP_SPEED = 0.1;

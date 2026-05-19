@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>About Me — Caterina Finelli</title>
+<meta name="description" content="Learn more about Caterina Finelli and get in touch."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --font-sans: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --bg: #000005;
+    --accent: #f0a060;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--bg) 0%, #0a0610 100%);
+    color: rgba(255,255,255,0.9);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  /* ─── STARS BACKGROUND ─────────────────────────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .star.twinkle {
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ─── LAYOUT ─────────────────────────────────────────────────────────────── */
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px clamp(20px, 5vw, 60px);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.3s ease;
+    width: fit-content;
+  }
+  .back-link:hover {
+    color: rgba(255,255,255,0.9);
+  }
+
+  h1 {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,160,96,0.9) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 48px;
+  }
+
+  .bio-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  @media (max-width: 768px) {
+    .bio-section {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  .bio-text {
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    font-size: 15px;
+  }
+
+  .bio-text p {
+    margin-bottom: 20px;
+  }
+
+  .bio-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .bio-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .highlight-card {
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    background: rgba(240,160,96,0.04);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .highlight-card:hover {
+    border-color: rgba(240,160,96,0.3);
+    background: rgba(240,160,96,0.08);
+    transform: translateY(-2px);
+  }
+
+  .highlight-title {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .highlight-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+  }
+
+  /* ─── CONTACT SECTION ─────────────────────────────────────────────────────── */
+  .contact-section {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .contact-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .contact-item {
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    background: rgba(68,136,255,0.03);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .contact-item:hover {
+    border-color: rgba(68,136,255,0.4);
+    background: rgba(68,136,255,0.08);
+    transform: translateY(-4px);
+  }
+
+  .contact-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(68,136,255,0.8);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .contact-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    word-break: break-all;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 18px;
+  }
+
+  .social-link:hover {
+    background: rgba(240,160,96,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* ─── FOOTER ─────────────────────────────────────────────────────────────── */
+  .footer {
+    margin-top: auto;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+    color: rgba(255,255,255,0.3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .container {
+    animation: fadeIn 0.8s ease forwards;
+  }
+</style>
+</head>
+<body>
+
+<!-- Generate twinkling stars -->
+<script>
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star twinkle';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animation = `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`;
+    star.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(star);
+  }
+</script>
+
+<div class="container">
+  <a href="index.html" class="back-link">
+    <span>←</span>
+    <span>Back to Explorer</span>
+  </a>
+
+  <h1>About Me</h1>
+  <p class="subtitle">Get to know me better</p>
+
+  <div class="bio-section">
+    <div class="bio-text">
+      <p>Hi! I'm Caterina Finelli, a Senior Product Designer with a passion for creating meaningful digital experiences. I specialize in translating complex challenges into intuitive, elegant solutions that resonate with users.</p>
+      
+      <p>My journey spans fintech, mobility, and digital health — industries where thoughtful design can genuinely improve lives. I believe design is not decoration, but clarity. It's about understanding the problem deeply and crafting solutions that feel inevitable.</p>
+      
+      <p>Beyond design, I'm the host of <strong>Che Viaggio</strong>, a podcast exploring culture, design, and the stories that shape our world. I'm driven by curiosity and the belief that great design emerges from great conversations.</p>
+    </div>
+
+    <div class="bio-highlights">
+      <div class="highlight-card">
+        <div class="highlight-title">🎯 Expertise</div>
+        <div class="highlight-text">Product design, UX/UI, Design systems, User research, Prototyping</div>
+      </div>
+      
+      <div class="highlight-card">
+        <div class="highlight-title">🌍 Industries</div>
+        <div class="highlight-text">Fintech, Mobility, Digital Health, SaaS, Consumer Apps</div>
+      </div>
+      
+      <div class="highlight-card">
+        <div class="highlight-title">🎙️ Also</div>
+        <div class="highlight-text">Podcast host, Design advocate, Remote-first collaborator</div>
+      </div>
+
+      <div class="highlight-card">
+        <div class="highlight-title">✨ Currently</div>
+        <div class="highlight-text">Working on innovative product experiences and growing the Che Viaggio community</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="contact-section">
+    <h2>Let's Connect</h2>
+    <p style="color: rgba(255,255,255,0.6); margin-bottom: 32px;">Feel free to reach out for collaborations, speaking opportunities, or just to chat about design and storytelling.</p>
+
+    <div class="contact-grid">
+      <a href="mailto:caterina@finelli.xyz" class="contact-item">
+        <span class="contact-label">Email</span>
+        <div class="contact-value">caterina@finelli.xyz</div>
+      </a>
+
+      <a href="https://www.linkedin.com/in/caterinafinelli/" class="contact-item" target="_blank" rel="noopener noreferrer">
+        <span class="contact-label">LinkedIn</span>
+        <div class="contact-value">caterinafinelli</div>
+      </a>
+
+      <a href="https://twitter.com/caterinafinelli" class="contact-item" target="_blank" rel="noopener noreferrer">
+        <span class="contact-label">Twitter / X</span>
+        <div class="contact-value">@caterinafinelli</div>
+      </a>
+
+      <a href="https://cheviaggio.xyz" class="contact-item" target="_blank" rel="noopener noreferrer">
+        <span class="contact-label">Podcast</span>
+        <div class="contact-value">Che Viaggio</div>
+      </a>
+    </div>
+
+    <div>
+      <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px; font-size: 14px;">Follow my work and thoughts across these platforms:</p>
+      <div class="social-links">
+        <a href="https://www.linkedin.com/in/caterinafinelli/" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">in</a>
+        <a href="https://twitter.com/caterinafinelli" target="_blank" rel="noopener noreferrer" class="social-link" title="Twitter">𝕏</a>
+        <a href="https://instagram.com/caterinafinelli" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">📷</a>
+        <a href="https://cheviaggio.xyz" target="_blank" rel="noopener noreferrer" class="social-link" title="Podcast">🎙️</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Designed & crafted by me • Let's make something great together</p>
+  </div>
+</div>
+
+</body>
+</html>
