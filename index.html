@@ -291,7 +291,7 @@ const planetData = [
     tilt: 0.44,
     tipName: 'Portfolio',
     sub: 'Product Design',
-    url: 'https://finelli.xyz/portfolio',
+    url: 'portfolio.html',
     atmosphereColor: 0xff6633,
     atmosphereOpacity: 0.09,
     rotSpeed: 0.0028
@@ -399,7 +399,7 @@ planetData.forEach((p, i) => {
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let ringAngleTarget  = 0;
 let ringAngleCurrent = 0;
-let activeIndex      = 1; // Start from Podcast (index 1)
+let activeIndex      = 0; // Venus/About Me is visually in front at start
 
 // Framerate-independent lerp factor: feel like ~12 frames to settle at 60fps
 const LERP_SPEED = 0.1;
@@ -445,7 +445,7 @@ function updateUI(idx) {
     if (p.url) {
       actionEl.textContent = '— visit —';
       actionEl.className   = 'has-link';
-      actionEl.onclick     = () => window.open(p.url, '_blank');
+      actionEl.onclick     = () => window.open(p.url, p.url.startsWith('http') ? '_blank' : '_self');
     } else {
       actionEl.textContent = '— coming soon —';
       actionEl.className   = '';
@@ -521,7 +521,9 @@ canvas.addEventListener('click', e => {
       if (diff < -N/2) diff += N;
       navigate(-diff);
     } else if (planets[hitIdx].url) {
-      window.open(planets[hitIdx].url, '_blank');
+      const url = planets[hitIdx].url;
+      if (url.startsWith('http')) { window.open(url, '_blank'); }
+      else { window.location.href = url; }
     }
   }
 });
