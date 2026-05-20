@@ -110,6 +110,41 @@
     transition: opacity 0.3s ease;
   }
 
+  .nav-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 12px 16px;
+    transition: color 0.2s ease;
+  }
+  .nav-arrow:hover { color: rgba(255,255,255,0.7); }
+  #nav-left  { left: clamp(16px, 3vw, 36px); }
+  #nav-right { right: clamp(16px, 3vw, 36px); }
+  @media (hover: none) { .nav-arrow { display: none; } }
+
+  #hint {
+    position: fixed;
+    bottom: 26px; right: 36px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(255,255,255,0.18);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    z-index: 100;
+    pointer-events: none;
+    transition: opacity 1s ease;
+  }
+  #hint.hidden { opacity: 0; }
+
   .ripple {
     position: fixed;
     border-radius: 50%;
@@ -132,7 +167,7 @@
     background: white;
     border-radius: 50%;
     pointer-events: none;
-    z-index: 1;
+    z-index: -1;
   }
   .star.twinkle {
     animation: twinkle 3s ease-in-out infinite;
@@ -204,8 +239,14 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <div id="planet-info">
   <div id="planet-name"></div>
   <div id="planet-sub"></div>
+  <div id="planet-action"></div>
 </div>
 
+
+<button class="nav-arrow" id="nav-left">&#8592;</button>
+<button class="nav-arrow" id="nav-right">&#8594;</button>
+
+<div id="hint">&#8592; swipe &#8594;</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -372,8 +413,12 @@ function navigate(dir) {
 // ─── UI ──────────────────────────────────────────────────────────────────────
 const nameEl        = document.getElementById('planet-name');
 const subEl         = document.getElementById('planet-sub');
+const hint          = document.getElementById('hint');
 
-function hideHint() {}
+let hintHidden = false;
+function hideHint() {
+  if (!hintHidden) { hintHidden = true; hint.classList.add('hidden'); }
+}
 
 function updateUI(idx) {
   const p = planetData[idx];
@@ -386,6 +431,15 @@ function updateUI(idx) {
     nameEl.style.opacity   = '1';
     nameEl.style.transform = 'translateY(0)';
     subEl.style.opacity    = '1';
+    if (p.url) {
+      actionEl.textContent = '— visit —';
+      actionEl.className   = 'has-link';
+      actionEl.onclick     = () => window.open(p.url, p.url.startsWith('http') ? '_blank' : '_self');
+    } else {
+      actionEl.textContent = '— coming soon —';
+      actionEl.className   = '';
+      actionEl.onclick     = null;
+    }
   }, 150);
 }
 
@@ -393,12 +447,28 @@ updateUI(activeIndex);
 
 // ─── INPUT ───────────────────────────────────────────────────────────────────
 const cursor = document.getElementById('cursor');
-let mouseDown = false, mouseDragged = false;
+let touchStartX = null, touchStartY = null;
+let mouseStartX = null, mouseDown = false, mouseDragged = false;
+const SWIPE_THRESHOLD = 40;
 
-canvas.addEventListener('mousedown', e => { mouseDown = true; mouseDragged = false; });
+canvas.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+canvas.addEventListener('touchend', e => {
+  if (touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) navigate(dx < 0 ? -1 : 1);
+  touchStartX = null;
+}, { passive: true });
+
+canvas.addEventListener('mousedown', e => { mouseDown = true; mouseDragged = false; mouseStartX = e.clientX; });
 canvas.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top  = e.clientY + 'px';
+  if (mouseDown && Math.abs(e.clientX - mouseStartX) > 5) mouseDragged = true;
   // Hover detect
   const m = new THREE.Vector2(
     (e.clientX / window.innerWidth) * 2 - 1,
@@ -408,7 +478,13 @@ canvas.addEventListener('mousemove', e => {
   ray.setFromCamera(m, camera);
   cursor.classList.toggle('hover', ray.intersectObjects(planets.map(p => p.mesh)).length > 0);
 });
-canvas.addEventListener('mouseup', e => { mouseDown = false; });
+canvas.addEventListener('mouseup', e => {
+  if (mouseDown && mouseDragged) {
+    const dx = e.clientX - mouseStartX;
+    if (Math.abs(dx) > SWIPE_THRESHOLD) navigate(dx < 0 ? -1 : 1);
+  }
+  mouseDown = false;
+});
 
 canvas.addEventListener('click', e => {
   if (mouseDragged) return;
@@ -444,6 +520,9 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  navigate(-1);
   if (e.key === 'ArrowRight') navigate( 1);
 });
+
+document.getElementById('nav-left').addEventListener('click',  () => navigate(-1));
+document.getElementById('nav-right').addEventListener('click', () => navigate( 1));
 
 // ─── RENDER LOOP ─────────────────────────────────────────────────────────────
 let rafId = null;
