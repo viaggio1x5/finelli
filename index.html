@@ -294,7 +294,8 @@ const N = planetData.length;
 const canvas = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+ 
 const scene = new THREE.Scene();
 // On mobile the narrow aspect ratio clips side planets at FOV 45 — use a wider
 // field of view so all three planets fit within the viewport simultaneously.
