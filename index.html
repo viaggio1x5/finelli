@@ -84,7 +84,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 52px;
+    padding-bottom: 180px;
     pointer-events: none;
     z-index: 100;
   }
@@ -128,7 +128,7 @@
 
   #dots {
     position: fixed;
-    bottom: 24px;
+    bottom: 130px;
     left: 50%; transform: translateX(-50%);
     display: flex;
     gap: 8px;
@@ -215,6 +215,14 @@
 
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   body { animation: fadeIn 2s ease forwards; }
+
+#map-copyright{
+  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:5;
+  font-family:var(--font-mono);font-size: 9px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
 </style>
 <!-- Default Statcounter code for finelli.xyz
 https://finelli.xyz/ -->
@@ -236,18 +244,23 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 </head>
 <body>
 
+<div id="map-copyright"><p>© 2026 Caterina Finelli. All Rights Reserved.</p></div>
+
+
 <div id="cursor"></div>
 <canvas id="canvas"></canvas>
 
 <div id="header">
   <h1>Caterina Finelli</h1>
-  <p>Welcome to my online Space</p>
+  <p>Explore my online Space</p>
 </div>
 
+
+
 <div id="planet-info">
-  <div id="planet-name">Podcast</div>
-  <div id="planet-sub">cheviaggio.xyz</div>
-  <div id="planet-action">— visit —</div>
+  <div id="planet-name"></div>
+  <div id="planet-sub"></div>
+  <div id="planet-action"></div>
 </div>
 
 <div id="dots"></div>
@@ -263,7 +276,7 @@ const planetData = [
   {
     id: 'about',
     texture: 'venus.webp',
-    radius: 1.12,
+    radius: 1.7,
     tilt: 0.0,
     tipName: 'About Me',
     sub: 'Background and Contacts',
@@ -275,9 +288,9 @@ const planetData = [
   {
     id: 'podcast',
     texture: 'earth.webp',
-    radius: 1.45,
+    radius: 1.8,
     tilt: 0.41,
-    tipName: 'Podcast',
+    tipName: 'My Podcast',
     sub: 'cheviaggio.xyz',
     url: 'https://cheviaggio.xyz',
     atmosphereColor: 0x4488ff,
@@ -287,9 +300,9 @@ const planetData = [
   {
     id: 'portfolio',
     texture: 'mars.webp',
-    radius: 1.8,
+    radius: 1.6,
     tilt: 0.44,
-    tipName: 'Portfolio',
+    tipName: 'My Portfolio',
     sub: 'Product Design',
     url: 'portfolio.html',
     atmosphereColor: 0xff6633,
@@ -357,7 +370,7 @@ scene.add(fill);
 })();
 
 // ─── RING ────────────────────────────────────────────────────────────────────
-const RING_R    = 7.0;
+const RING_R    = 5.5;
 const RING_TILT = 0.38;
 const STEP      = (2 * Math.PI) / N;
 
@@ -422,7 +435,6 @@ function navigate(dir) {
 // ─── UI ──────────────────────────────────────────────────────────────────────
 const nameEl        = document.getElementById('planet-name');
 const subEl         = document.getElementById('planet-sub');
-const actionEl      = document.getElementById('planet-action');
 const dotsContainer = document.getElementById('dots');
 const hint          = document.getElementById('hint');
 
