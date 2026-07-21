@@ -95,11 +95,48 @@
   .nav-hamburger {
     display: none;
     align-items: center; justify-content: center;
-    width: 54px; height: 54px;
+    width: 48px; height: 48px;
     background: none; border: none; border-radius: 10px;
-    color: var(--text); font-size: 46px;
+    color: var(--text); font-size: 40px;
     cursor: pointer; transition: background 0.2s;
   }
+  .nav-hamburger ion-icon { width: 1em; height: 1em; }
+  .nav-hamburger:hover { background: rgba(255,255,255,0.06); }
+
+  /* ── MOBILE HAMBURGER + FULL-SCREEN MENU ── */
+  .mobile-menu-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 300;
+    background: var(--bg);
+    flex-direction: column;
+  }
+  .mobile-menu-overlay.active { display: flex; }
+
+  .mobile-menu-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(46,46,46,0.6);
+  }
+  .mobile-menu-close {
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px;
+    background: none; border: none; border-radius: 10px;
+    color: var(--text); font-size: 40px;
+    cursor: pointer;
+  }
+  .mobile-menu-close ion-icon { width: 1em; height: 1em; }
+  .mobile-menu-close:hover { background: rgba(255,255,255,0.06); }
+
+  .mobile-menu-links {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px; list-style: none;
+  }
+  .mobile-menu-links a {
+    font-size: 28px; font-weight: 700; color: var(--text); text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .mobile-menu-links a:active { color: var(--accent); }
 
   /* ─── LAYOUT ─────────────────────────────────────────────────────────────── */
   .container {
@@ -540,7 +577,7 @@
   }
 
   @media (max-width: 768px) {
-    nav { padding: 12px 20px; }
+    nav { padding: 14px 20px; }
     .nav-links-back { display: none; }
     .nav-hamburger { display: flex; }
     .container { padding: 90px 20px 60px; }
@@ -559,6 +596,14 @@
     star.style.animationDelay = Math.random() * 5 + 's';
     document.body.appendChild(star);
   }
+
+  function toggleMobileMenu() {
+    const overlay = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    const isOpen = overlay.classList.toggle('active');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
 </script>
 
 <nav>
@@ -568,11 +613,25 @@
       <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
       <li><a href="#lets-connect">Connect</a></li>
     </ul>
-    <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
-      ☰
+    <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <ion-icon name="menu"></ion-icon>
     </button>
   </div>
 </nav>
+
+<!-- MOBILE FULL-SCREEN MENU -->
+<div class="mobile-menu-overlay" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <a href="https://finelli.xyz/portfolio" class="nav-logo" aria-label="Portfolio"><img src="https://finelli.xyz/favicon/favicon-32x32.png" alt="Portfolio"></a>
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close menu">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </div>
+  <ul class="mobile-menu-links">
+    <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
+    <li><a href="#lets-connect">Connect</a></li>
+  </ul>
+</div>
 
 <div class="container">
   <h1 style="text-align: center; margin-bottom: 8px;">Hey, I'm Caterina</h1>
