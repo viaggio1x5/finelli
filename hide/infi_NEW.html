@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>inFi — Product Design Case Study by Caterina Finelli</title>
-<link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-<link rel="manifest" href="favicon/site.webmanifest">
+<link rel="icon" type="image/x-icon" href="https://finelli.xyz/favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="https://finelli.xyz/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://finelli.xyz/favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://finelli.xyz/favicon/apple-touch-icon.png">
+<link rel="manifest" href="https://finelli.xyz/favicon/site.webmanifest">
 <meta name="description" content="How I designed inFi, a social indoor-navigation app built on geomagnetic positioning, from a one-line brief to a live product for airports, museums and conference venues. Full UX process: research, definition, ideation, prototyping, testing, delivery.">
 <meta property="og:title" content="inFi — Product Design Case Study">
 <meta property="og:description" content="From a one-line brief to a live indoor-navigation product. Full design process, from research to delivery.">
@@ -85,6 +85,44 @@
     if (e.key === 'ArrowRight') { e.preventDefault(); showLightboxAt(currentLightboxIndex + 1); }
     if (e.key === 'ArrowLeft')  { e.preventDefault(); showLightboxAt(currentLightboxIndex - 1); }
   });
+
+  // Swipe navigation in the lightbox (mobile): swipe left/right to move
+  // between images, tap the background to close. Listeners are attached to
+  // document (not #lightbox directly) because this script runs before
+  // <body> exists, so the overlay element isn't there yet at parse time.
+  let lbTouchStartX = 0;
+  let lbTouchStartY = 0;
+  let lbJustSwiped = false;
+
+  document.addEventListener('touchstart', (e) => {
+    const overlay = document.getElementById('lightbox');
+    if (!overlay || !overlay.classList.contains('active')) return;
+    if (e.touches.length !== 1) return;
+    lbTouchStartX = e.touches[0].clientX;
+    lbTouchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    const overlay = document.getElementById('lightbox');
+    if (!overlay || !overlay.classList.contains('active')) return;
+    if (currentLightboxIndex === -1) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - lbTouchStartX;
+    const dy = touch.clientY - lbTouchStartY;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      lbJustSwiped = true;
+      if (dx < 0) {
+        showLightboxAt(currentLightboxIndex + 1);
+      } else {
+        showLightboxAt(currentLightboxIndex - 1);
+      }
+    }
+  }, { passive: true });
+
+  function handleLightboxOverlayTap() {
+    if (lbJustSwiped) { lbJustSwiped = false; return; }
+    closeLightbox();
+  }
 
   // Phase Anchors Active Link Highlight
   const phaseAnchors = document.querySelectorAll('.anchors-list a');
@@ -186,6 +224,8 @@
     padding: 6px 10px; border-radius: 12px;
   }
   .nav-logo:hover, .nav-links-back a:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
+  .nav-logo { display: flex; align-items: center; padding: 6px; border-radius: 50%; }
+  .nav-logo img { width: 28px; height: 28px; display: block; border-radius: 50%; }
 
   .nav-links a {
     font-size: 12.5px; color: var(--muted); text-decoration: none;
@@ -308,6 +348,11 @@
   .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
   .tab:hover:not(.active) { color: #ccc; }
   .tab-icon { font-size: 13px; opacity: 0.6; }
+  .tab-label-short { display: none; }
+  @media (max-width: 600px) {
+    .tab-label-full { display: none; }
+    .tab-label-short { display: inline; }
+  }
 
   .tab-content { display: none; }
   .tab-content.active { display: block; }
@@ -384,16 +429,9 @@
   }
   
   @media (max-width: 900px) {
-    .gallery-carousel { 
+    .gallery-carousel {
       grid-template-columns: 1fr;
     }
-    .gallery-column-mobile { flex-direction: row; gap: 16px; }
-    .gallery-mobile { flex: 1; }
-  }
-  
-  @media (max-width: 600px) {
-    .gallery-column-mobile { flex-direction: column; }
-    .gallery-mobile { flex: 1; }
   }
 
   .gallery-item {
@@ -592,6 +630,7 @@
     background: rgba(8,8,12,0.94);
     display: none; align-items: center; justify-content: center;
     padding: 60px; cursor: zoom-out;
+    touch-action: pan-y;
   }
   .lightbox-overlay.active { display: flex; }
   .lightbox-overlay img { max-width: 90vw; max-height: 85vh; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); cursor: default; }
@@ -962,7 +1001,8 @@
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 100px; }
-    .hero-right { display: none; }
+    .hero-right { display: flex; margin-top: 40px; }
+    .hero-image-wrap { width: 100%; max-width: 420px; height: auto; aspect-ratio: 3/2; margin: 0 auto; }
     .info-cards { grid-template-columns: 1fr 1fr; }
     .challenges-grid { grid-template-columns: 1fr; }
     .biz-user-grid { grid-template-columns: 1fr; }
@@ -973,16 +1013,39 @@
     .persona-grid { grid-template-columns: 1fr; }
     .two-col, .ab-grid { grid-template-columns: 1fr; }
     .metrics { grid-template-columns: 1fr 1fr; }
+    nav { padding: 14px 20px; }
     nav .nav-links { display: none; }
     nav .nav-sep { display: none; }
+    .nav-links-back { gap: 10px; }
+    .nav-links-back a { font-size: 12px; padding: 6px 8px; white-space: nowrap; }
     footer { flex-direction: column; gap: 8px; text-align: center; }
     .tab { padding: 14px 20px; font-size: 13px; }
     .cta-block { flex-direction: column; text-align: center; }
+
+    /* Ad-hoc image grids pile vertically instead of squeezing */
+    .ad-grid, .img-grid { grid-template-columns: 1fr !important; }
+
+    /* Gallery "mobile" column becomes a swipeable horizontal carousel */
+    .gallery-column-mobile {
+      flex-direction: row;
+      gap: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .gallery-column-mobile .gallery-mobile {
+      flex: 0 0 70%;
+      scroll-snap-align: center;
+    }
   }
 
   @media (max-width: 600px) {
     .info-cards { grid-template-columns: 1fr; }
     .metrics { grid-template-columns: 1fr; }
+    .gallery-column-mobile .gallery-mobile { flex: 0 0 80%; }
   }
 
   /* ── PHASE ANCHORS NAVBAR ── */
@@ -1067,7 +1130,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="https://finelli.xyz/portfolio" class="nav-logo">Portfolio</a>
+  <a href="https://finelli.xyz/portfolio" class="nav-logo" aria-label="Portfolio"><img src="https://finelli.xyz/favicon/favicon-32x32.png" alt="Portfolio"></a>
   <div class="nav-right">
     <ul class="nav-links-back">
       <li><a href="https://finelli.xyz/about">About Me</a></li>
@@ -1091,8 +1154,8 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-image-wrap zoomable" onclick="openLightbox('https://finelli.xyz/images/infi_hero.webp', 'inFi app screens collage — mobile navigation, admin panel and visibility settings')">
-      <img src="https://finelli.xyz/images/infi_hero.webp" alt="inFi app screens collage — mobile navigation, admin panel and visibility settings">
+    <div class="hero-image-wrap zoomable" onclick="openLightbox('https://finelli.xyz/images/infi_hero.png', 'inFi app screens collage — mobile navigation, admin panel and visibility settings')">
+      <img src="https://finelli.xyz/images/infi_hero.png" alt="inFi app screens collage — mobile navigation, admin panel and visibility settings">
     </div>
   </div>
 </header>
@@ -1119,10 +1182,12 @@
 <div class="tab-section">
   <div class="tabs" role="tablist" aria-label="Case study view">
     <button class="tab active" role="tab" id="tabbtn-quick" aria-selected="true" aria-controls="tab-quick" onclick="switchTab('quick', this)">
-      <span class="tab-icon"><ion-icon name="flash"></ion-icon></span> Quick showcase
+      <span class="tab-icon"><ion-icon name="flash"></ion-icon></span>
+      <span class="tab-label-full">Quick showcase</span><span class="tab-label-short">Showcase</span>
     </button>
     <button class="tab" role="tab" id="tabbtn-detailed" aria-selected="false" aria-controls="tab-detailed" onclick="switchTab('detailed', this)">
-      <span class="tab-icon"><ion-icon name="document-text"></ion-icon></span> Detailed case study
+      <span class="tab-icon"><ion-icon name="document-text"></ion-icon></span>
+      <span class="tab-label-full">Detailed case study</span><span class="tab-label-short">Case study</span>
     </button>
   </div>
 </div>
@@ -1212,34 +1277,34 @@
     <div class="gallery-carousel" id="gallery-carousel">
       <!-- Mobile apps column (left) -->
       <div class="gallery-column-mobile">
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/infi_gallery_01.png', 'inFi — app screen 1')">
-          <img src="images/infi_gallery_01.png" alt="inFi — app screen 1" loading="lazy">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_01.png', 'inFi — app screen 1')">
+          <img src="https://finelli.xyz/images/infi_gallery_01.png" alt="inFi — app screen 1" loading="lazy">
         </div>
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/infi_gallery_03.png', 'inFi — app screen 2')">
-          <img src="images/infi_gallery_03.png" alt="inFi — app screen 2" loading="lazy">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_03.png', 'inFi — app screen 2')">
+          <img src="https://finelli.xyz/images/infi_gallery_03.png" alt="inFi — app screen 2" loading="lazy">
         </div>
   
       </div>
 
       <!-- Desktop admin column (right) -->
       <div class="gallery-column-desktop">
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_02.png', 'inFi — admin panel 1')">
-          <img src="images/infi_gallery_02.png" alt="inFi — admin panel 1" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_02.png', 'inFi — admin panel 1')">
+          <img src="https://finelli.xyz/images/infi_gallery_02.png" alt="inFi — admin panel 1" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_04.png', 'inFi — admin panel 2')">
-          <img src="images/infi_gallery_04.png" alt="inFi — admin panel 2" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_04.png', 'inFi — admin panel 2')">
+          <img src="https://finelli.xyz/images/infi_gallery_04.png" alt="inFi — admin panel 2" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_06.png', 'inFi — admin panel 3')">
-          <img src="images/infi_gallery_06.png" alt="inFi — admin panel 3" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_06.png', 'inFi — admin panel 3')">
+          <img src="https://finelli.xyz/images/infi_gallery_06.png" alt="inFi — admin panel 3" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_08.png', 'inFi — admin panel 4')">
-          <img src="images/infi_gallery_08.png" alt="inFi — admin panel 4" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_08.png', 'inFi — admin panel 4')">
+          <img src="https://finelli.xyz/images/infi_gallery_08.png" alt="inFi — admin panel 4" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_10.png', 'inFi — admin panel 5')">
-          <img src="images/infi_gallery_10.png" alt="inFi — admin panel 5" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_10.png', 'inFi — admin panel 5')">
+          <img src="https://finelli.xyz/images/infi_gallery_10.png" alt="inFi — admin panel 5" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_11.png', 'inFi — admin panel 5')">
-          <img src="images/infi_gallery_11.png" alt="inFi — admin panel 6" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_11.png', 'inFi — admin panel 5')">
+          <img src="https://finelli.xyz/images/infi_gallery_11.png" alt="inFi — admin panel 6" loading="lazy">
         </div>
       </div>
     </div>
@@ -1252,7 +1317,7 @@
           <p class="testimonial-quote">Caterina's attention to edge cases and privacy concerns made us feel like we weren't building a surveillance tool. She held the line on things that mattered.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="images/avatar_1.jpg" alt="Client">
+              <img src="https://finelli.xyz/images/avatar_1.jpg" alt="Client">
             </div>
             <div class="testimonial-info">
               <div class="testimonial-name">Sarah Chen</div>
@@ -1264,7 +1329,7 @@
           <p class="testimonial-quote">The pattern library and interactive specs she handed off let us ship without constant back-and-forth. That's rare. We literally built from her docs.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="images/avatar_2.jpg" alt="Developer">
+              <img src="https://finelli.xyz/images/avatar_2.jpg" alt="Developer">
             </div>
             <div class="testimonial-info">
               <div class="testimonial-name">Marcus Rodriguez</div>
@@ -1276,7 +1341,7 @@
           <p class="testimonial-quote">She showed up as a true partner on this, not just a designer. The way she framed decisions and included us in problem-solving made the work feel collaborative.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="images/avatar_3.jpg" alt="Manager">
+              <img src="https://finelli.xyz/images/avatar_3.jpg" alt="Manager">
             </div>
             <div class="testimonial-info">
               <div class="testimonial-name">Alex Petrov</div>
@@ -1583,17 +1648,17 @@
       <div style="margin-bottom:48px; max-width:880px; margin-left:auto; margin-right:auto;">
         <div class="subgrid-label">Logo development — from pencil to vector, and colour tests</div>
         <div class="img-grid" style="grid-template-columns:repeat(4,1fr);">
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_1.png', 'inFi logo development, step 1: pencil sketch')">
-            <img src="images/infi_logo_1.png" alt="inFi logo development, step 1: pencil sketch" loading="lazy">
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_1.png', 'inFi logo development, step 1: pencil sketch')">
+            <img src="https://finelli.xyz/images/infi_logo_1.png" alt="inFi logo development, step 1: pencil sketch" loading="lazy">
           </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_2.png', 'inFi logo development, step 2: refined sketch')">
-            <img src="images/infi_logo_2.png" alt="inFi logo development, step 2: refined sketch" loading="lazy">
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_2.png', 'inFi logo development, step 2: refined sketch')">
+            <img src="https://finelli.xyz/images/infi_logo_2.png" alt="inFi logo development, step 2: refined sketch" loading="lazy">
           </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_3.png', 'inFi logo development, step 3: vector draft')">
-            <img src="images/infi_logo_3.png" alt="inFi logo development, step 3: vector draft" loading="lazy">
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_3.png', 'inFi logo development, step 3: vector draft')">
+            <img src="https://finelli.xyz/images/infi_logo_3.png" alt="inFi logo development, step 3: vector draft" loading="lazy">
           </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_4.png', 'inFi logo development, step 4: final colour test')">
-            <img src="images/infi_logo_4.png" alt="inFi logo development, step 4: final colour test" loading="lazy">
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_4.png', 'inFi logo development, step 4: final colour test')">
+            <img src="https://finelli.xyz/images/infi_logo_4.png" alt="inFi logo development, step 4: final colour test" loading="lazy">
           </div>
         </div>
       </div>
@@ -1609,8 +1674,8 @@
 
         <div class="design-block">
           <div class="design-block-inner">
-            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('images/infi_map.png', 'inFi mobile app, live indoor map')">
-              <img src="images/infi_map.png" alt="inFi mobile app, live indoor map" style="width:100%; height:100%; object-fit:cover;">
+            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('https://finelli.xyz/images/infi_map.png', 'inFi mobile app, live indoor map')">
+              <img src="https://finelli.xyz/images/infi_map.png" alt="inFi mobile app, live indoor map" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div class="design-desc">
               <h3>Map as canvas</h3>
@@ -1622,12 +1687,12 @@
               </ul>
             </div>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_friends.png', 'inFi mobile app, nearby friends screen')">
-              <img src="images/infi_friends.png" alt="inFi mobile app, nearby friends screen" loading="lazy">
+          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_friends.png', 'inFi mobile app, nearby friends screen')">
+              <img src="https://finelli.xyz/images/infi_friends.png" alt="inFi mobile app, nearby friends screen" loading="lazy">
             </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_messages.png', 'inFi mobile app, messages screen')">
-              <img src="images/infi_messages.png" alt="inFi mobile app, messages screen" loading="lazy">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_messages.png', 'inFi mobile app, messages screen')">
+              <img src="https://finelli.xyz/images/infi_messages.png" alt="inFi mobile app, messages screen" loading="lazy">
             </div>
           </div>
         </div>
@@ -1635,20 +1700,20 @@
         <div class="platform-subgrid">
           <div class="subgrid-label">More mobile screens</div>
           <div class="img-grid" style="grid-template-columns:repeat(5,1fr);">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_notifications.png', 'inFi mobile app, notifications screen')">
-              <img src="images/infi_notifications.png" alt="inFi mobile app, notifications screen" loading="lazy">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_notifications.png', 'inFi mobile app, notifications screen')">
+              <img src="https://finelli.xyz/images/infi_notifications.png" alt="inFi mobile app, notifications screen" loading="lazy">
             </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_settings.png', 'inFi mobile app, settings screen')">
-              <img src="images/infi_settings.png" alt="inFi mobile app, settings screen" loading="lazy">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_settings.png', 'inFi mobile app, settings screen')">
+              <img src="https://finelli.xyz/images/infi_settings.png" alt="inFi mobile app, settings screen" loading="lazy">
             </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_show.png', 'inFi mobile app, visibility settings screen')">
-              <img src="images/infi_show.png" alt="inFi mobile app, visibility settings screen" loading="lazy">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_show.png', 'inFi mobile app, visibility settings screen')">
+              <img src="https://finelli.xyz/images/infi_show.png" alt="inFi mobile app, visibility settings screen" loading="lazy">
             </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_find_indoor.png', 'inFi mobile app, indoor search screen')">
-              <img src="images/infi_find_indoor.png" alt="inFi mobile app, indoor search screen" loading="lazy">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_find_indoor.png', 'inFi mobile app, indoor search screen')">
+              <img src="https://finelli.xyz/images/infi_find_indoor.png" alt="inFi mobile app, indoor search screen" loading="lazy">
             </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_location_alert.png', 'inFi mobile app, location alert screen')">
-              <img src="images/infi_location_alert.png" alt="inFi mobile app, location alert screen" loading="lazy">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_location_alert.png', 'inFi mobile app, location alert screen')">
+              <img src="https://finelli.xyz/images/infi_location_alert.png" alt="inFi mobile app, location alert screen" loading="lazy">
             </div>
           </div>
         </div>
@@ -1665,8 +1730,8 @@
 
         <div class="design-block">
           <div class="design-block-inner reverse">
-            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('images/infi_admin.png', 'inFi admin panel, live floor view')">
-              <img src="images/infi_admin.png" alt="inFi admin panel, live floor view" style="width:100%; height:100%; object-fit:cover;">
+            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('https://finelli.xyz/images/infi_admin.png', 'inFi admin panel, live floor view')">
+              <img src="https://finelli.xyz/images/infi_admin.png" alt="inFi admin panel, live floor view" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div class="design-desc">
               <h3>Information density over decoration</h3>
@@ -1678,12 +1743,12 @@
               </ul>
             </div>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_admin_2.png', 'inFi admin panel, additional view')">
-              <img src="images/infi_admin_2.png" alt="inFi admin panel, additional view" loading="lazy">
+          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_admin_2.png', 'inFi admin panel, additional view')">
+              <img src="https://finelli.xyz/images/infi_admin_2.png" alt="inFi admin panel, additional view" loading="lazy">
             </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_admin_3.png', 'inFi admin panel, additional view')">
-              <img src="images/infi_admin_3.png" alt="inFi admin panel, additional view" loading="lazy">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_admin_3.png', 'inFi admin panel, additional view')">
+              <img src="https://finelli.xyz/images/infi_admin_3.png" alt="inFi admin panel, additional view" loading="lazy">
             </div>
           </div>
         </div>
@@ -1805,7 +1870,7 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+<div class="lightbox-overlay" id="lightbox" onclick="handleLightboxOverlayTap()">
   <button class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();" aria-label="Close"><ion-icon name="close"></ion-icon></button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation();">
 </div>

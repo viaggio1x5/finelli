@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>X32 Behringer — Product Design Case Study by Caterina Finelli</title>
-<link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-<link rel="manifest" href="favicon/site.webmanifest">
+<link rel="icon" type="image/x-icon" href="https://finelli.xyz/favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="https://finelli.xyz/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://finelli.xyz/favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://finelli.xyz/favicon/apple-touch-icon.png">
+<link rel="manifest" href="https://finelli.xyz/favicon/site.webmanifest">
 <meta name="description" content="How I designed the touchscreen interface for the Behringer X32 — a reference-class mixing console — from field research with audio engineers to a validated A/B-tested UI. Full UX process: empathize, define, ideate, prototype, test, deliver.">
 <meta property="og:title" content="X32 Behringer — Product Design Case Study">
 <meta property="og:description" content="Adding a touchscreen to one of the world's most powerful mixing consoles. Full design process from field research to handoff.">
@@ -85,6 +85,44 @@
     if (e.key === 'ArrowRight') { e.preventDefault(); showLightboxAt(currentLightboxIndex + 1); }
     if (e.key === 'ArrowLeft')  { e.preventDefault(); showLightboxAt(currentLightboxIndex - 1); }
   });
+
+  // Swipe navigation in the lightbox (mobile): swipe left/right to move
+  // between images, tap the background to close. Listeners are attached to
+  // document (not #lightbox directly) because this script runs before
+  // <body> exists, so the overlay element isn't there yet at parse time.
+  let lbTouchStartX = 0;
+  let lbTouchStartY = 0;
+  let lbJustSwiped = false;
+
+  document.addEventListener('touchstart', (e) => {
+    const overlay = document.getElementById('lightbox');
+    if (!overlay || !overlay.classList.contains('active')) return;
+    if (e.touches.length !== 1) return;
+    lbTouchStartX = e.touches[0].clientX;
+    lbTouchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    const overlay = document.getElementById('lightbox');
+    if (!overlay || !overlay.classList.contains('active')) return;
+    if (currentLightboxIndex === -1) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - lbTouchStartX;
+    const dy = touch.clientY - lbTouchStartY;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      lbJustSwiped = true;
+      if (dx < 0) {
+        showLightboxAt(currentLightboxIndex + 1);
+      } else {
+        showLightboxAt(currentLightboxIndex - 1);
+      }
+    }
+  }, { passive: true });
+
+  function handleLightboxOverlayTap() {
+    if (lbJustSwiped) { lbJustSwiped = false; return; }
+    closeLightbox();
+  }
 
   // Phase Anchors Active Link Highlight
   const phaseAnchors = document.querySelectorAll('.anchors-list a');
@@ -185,6 +223,8 @@
     padding: 6px 10px; border-radius: 12px;
   }
   .nav-logo:hover, .nav-links-back a:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
+  .nav-logo { display: flex; align-items: center; padding: 6px; border-radius: 50%; }
+  .nav-logo img { width: 28px; height: 28px; display: block; border-radius: 50%; }
 
   .nav-links a {
     font-size: 12.5px; color: var(--muted); text-decoration: none;
@@ -307,6 +347,11 @@
   .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
   .tab:hover:not(.active) { color: #ccc; }
   .tab-icon { font-size: 13px; opacity: 0.6; }
+  .tab-label-short { display: none; }
+  @media (max-width: 600px) {
+    .tab-label-full { display: none; }
+    .tab-label-short { display: inline; }
+  }
 
   .tab-content { display: none; }
   .tab-content.active { display: block; }
@@ -383,16 +428,9 @@
   }
   
   @media (max-width: 900px) {
-    .gallery-carousel { 
+    .gallery-carousel {
       grid-template-columns: 1fr;
     }
-    .gallery-column-mobile { flex-direction: row; gap: 16px; }
-    .gallery-mobile { flex: 1; }
-  }
-  
-  @media (max-width: 600px) {
-    .gallery-column-mobile { flex-direction: column; }
-    .gallery-mobile { flex: 1; }
   }
 
   .gallery-item {
@@ -591,6 +629,7 @@
     background: rgba(8,8,12,0.94);
     display: none; align-items: center; justify-content: center;
     padding: 60px; cursor: zoom-out;
+    touch-action: pan-y;
   }
   .lightbox-overlay.active { display: flex; }
   .lightbox-overlay img { max-width: 90vw; max-height: 85vh; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); cursor: default; }
@@ -608,6 +647,7 @@
   .phase-container { margin-top: 150px; margin-bottom: 80px; }
 
   .meta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 auto 24px; max-width: 880px; }
+  .meta-row-4 { grid-template-columns: repeat(4, 1fr); }
   .meta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
   .meta-box-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
   .meta-box-content { font-size: 15px; color: var(--text); line-height: 1.75; }
@@ -961,7 +1001,8 @@
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 100px; }
-    .hero-right { display: none; }
+    .hero-right { display: flex; margin-top: 40px; }
+    .hero-image-wrap { width: 100%; max-width: 420px; height: auto; aspect-ratio: 3/2; margin: 0 auto; }
     .info-cards { grid-template-columns: 1fr 1fr; }
     .challenges-grid { grid-template-columns: 1fr; }
     .biz-user-grid { grid-template-columns: 1fr; }
@@ -972,16 +1013,39 @@
     .persona-grid { grid-template-columns: 1fr; }
     .two-col, .ab-grid { grid-template-columns: 1fr; }
     .metrics { grid-template-columns: 1fr 1fr; }
+    nav { padding: 14px 20px; }
     nav .nav-links { display: none; }
     nav .nav-sep { display: none; }
+    .nav-links-back { gap: 10px; }
+    .nav-links-back a { font-size: 12px; padding: 6px 8px; white-space: nowrap; }
     footer { flex-direction: column; gap: 8px; text-align: center; }
     .tab { padding: 14px 20px; font-size: 13px; }
     .cta-block { flex-direction: column; text-align: center; }
+
+    /* Ad-hoc image grids pile vertically instead of squeezing */
+    .ad-grid, .img-grid { grid-template-columns: 1fr !important; }
+
+    /* Gallery "mobile" column becomes a swipeable horizontal carousel */
+    .gallery-column-mobile {
+      flex-direction: row;
+      gap: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .gallery-column-mobile .gallery-mobile {
+      flex: 0 0 70%;
+      scroll-snap-align: center;
+    }
   }
 
   @media (max-width: 600px) {
     .info-cards { grid-template-columns: 1fr; }
     .metrics { grid-template-columns: 1fr; }
+    .gallery-column-mobile .gallery-mobile { flex: 0 0 80%; }
   }
 
   /* ── PHASE ANCHORS NAVBAR ── */
@@ -1066,7 +1130,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="https://finelli.xyz/portfolio" class="nav-logo">Portfolio</a>
+  <a href="https://finelli.xyz/portfolio" class="nav-logo" aria-label="Portfolio"><img src="https://finelli.xyz/favicon/favicon-32x32.png" alt="Portfolio"></a>
   <div class="nav-right">
     <ul class="nav-links-back">
       <li><a href="https://finelli.xyz/about">About Me</a></li>
@@ -1089,8 +1153,8 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-image-wrap zoomable" onclick="openLightbox('images/x32_hero.png', 'Behringer X32 touchscreen — final touch EQ interface')">
-      <img src="images/x32_hero.png" alt="Behringer X32 touchscreen — final touch EQ interface">
+    <div class="hero-image-wrap zoomable" onclick="openLightbox('https://finelli.xyz/images/x32_hero.png', 'Behringer X32 touchscreen — final touch EQ interface')">
+      <img src="https://finelli.xyz/images/x32_hero.png" alt="Behringer X32 touchscreen — final touch EQ interface">
     </div>
   </div>
 </header>
@@ -1118,10 +1182,12 @@
 <div class="tab-section">
   <div class="tabs" role="tablist" aria-label="Case study view">
     <button class="tab active" role="tab" id="tabbtn-quick" aria-selected="true" aria-controls="tab-quick" onclick="switchTab('quick', this)">
-      <span class="tab-icon"><ion-icon name="flash"></ion-icon></span> Quick showcase
+      <span class="tab-icon"><ion-icon name="flash"></ion-icon></span>
+      <span class="tab-label-full">Quick showcase</span><span class="tab-label-short">Showcase</span>
     </button>
     <button class="tab" role="tab" id="tabbtn-detailed" aria-selected="false" aria-controls="tab-detailed" onclick="switchTab('detailed', this)">
-      <span class="tab-icon"><ion-icon name="document-text"></ion-icon></span> Detailed case study
+      <span class="tab-icon"><ion-icon name="document-text"></ion-icon></span>
+      <span class="tab-label-full">Detailed case study</span><span class="tab-label-short">Case study</span>
     </button>
   </div>
 </div>
@@ -1185,30 +1251,30 @@
     <div class="gallery-carousel" id="gallery-carousel">
       <!-- Detail crops column (left) -->
       <div class="gallery-column-mobile">
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/x32_screen_4.png', 'X32 — touchscreen detail view 1')">
-          <img src="images/x32_screen_4.png" alt="X32 — touchscreen detail view 1" loading="lazy">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_4.png', 'X32 — touchscreen detail view 1')">
+          <img src="https://finelli.xyz/images/x32_screen_4.png" alt="X32 — touchscreen detail view 1" loading="lazy">
         </div>
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/x32_screen_5.png', 'X32 — touchscreen detail view 2')">
-          <img src="images/x32_screen_5.png" alt="X32 — touchscreen detail view 2" loading="lazy">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 — touchscreen detail view 2')">
+          <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 — touchscreen detail view 2" loading="lazy">
         </div>
       </div>
 
       <!-- Main screens column (right) -->
       <div class="gallery-column-desktop">
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_final_ui.png', 'X32 — final touch EQ interface')">
-          <img src="images/x32_final_ui.png" alt="X32 — final touch EQ interface" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_final_ui.png', 'X32 — final touch EQ interface')">
+          <img src="https://finelli.xyz/images/x32_final_ui.png" alt="X32 — final touch EQ interface" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_hifi_ab.png', 'X32 — hi-fi prototype A/B comparison')">
-          <img src="images/x32_hifi_ab.png" alt="X32 — hi-fi prototype A/B comparison" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_hifi_ab.png', 'X32 — hi-fi prototype A/B comparison')">
+          <img src="https://finelli.xyz/images/x32_hifi_ab.png" alt="X32 — hi-fi prototype A/B comparison" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_screen_2.png', 'X32 — additional screen')">
-          <img src="images/x32_screen_2.png" alt="X32 — additional screen" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_2.png', 'X32 — additional screen')">
+          <img src="https://finelli.xyz/images/x32_screen_2.png" alt="X32 — additional screen" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_screen_3.png', 'X32 — additional screen')">
-          <img src="images/x32_screen_3.png" alt="X32 — additional screen" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_3.png', 'X32 — additional screen')">
+          <img src="https://finelli.xyz/images/x32_screen_3.png" alt="X32 — additional screen" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_handoff.png', 'X32 — design handoff annotations')">
-          <img src="images/x32_handoff.png" alt="X32 — design handoff annotations" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_handoff.png', 'X32 — design handoff annotations')">
+          <img src="https://finelli.xyz/images/x32_handoff.png" alt="X32 — design handoff annotations" loading="lazy">
         </div>
       </div>
     </div>
@@ -1221,7 +1287,7 @@
           <p class="testimonial-quote">Caterina understood our engineers better than we did. She spent real time at venues before drawing a single screen, and it shows in how little explaining the final interface needs.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="images/avatar_1.jpg" alt="Client">
+              <img src="https://finelli.xyz/images/avatar_1.jpg" alt="Client">
             </div>
             <div class="testimonial-info">
               <div class="testimonial-name">Client name</div>
@@ -1233,7 +1299,7 @@
           <p class="testimonial-quote">The A/B testing rigor was the difference here — we didn't ship an opinion, we shipped what the data and the engineers actually preferred. That built real trust with the hardware team.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="images/avatar_2.jpg" alt="Developer">
+              <img src="https://finelli.xyz/images/avatar_2.jpg" alt="Developer">
             </div>
             <div class="testimonial-info">
               <div class="testimonial-name">Engineer name</div>
@@ -1245,7 +1311,7 @@
           <p class="testimonial-quote">Her handoff docs were precise down to the touch target pixel. Our team built from her specs with almost no back-and-forth, which is rare on hardware-embedded UI work.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="images/avatar_3.jpg" alt="Manager">
+              <img src="https://finelli.xyz/images/avatar_3.jpg" alt="Manager">
             </div>
             <div class="testimonial-info">
               <div class="testimonial-name">Manager name</div>
@@ -1289,7 +1355,7 @@
   <div class="detailed-section">
 
     <!-- PROJECT META -->
-    <div class="meta-row" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="meta-row meta-row-4">
       <div class="meta-box">
         <div class="meta-box-label">Client</div>
         <div class="meta-box-content">MusicTribe / Behringer</div>
@@ -1480,8 +1546,8 @@
           <p>During mid-fi prototyping, we realised that the EQ node handles needed to be significantly larger than standard touch targets — live performance means imprecise touches from stressed hands. The final hit areas were sized to 44×44pt minimum, with magnetic snapping to help guide imprecise gestures onto the correct node.</p>
         </div>
 
-        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/x32_hifi_ab.png', 'High-fidelity prototype — Version A and B comparison')">
-          <img src="images/x32_hifi_ab.png" alt="High-fidelity prototype — Version A and B comparison" loading="lazy">
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32_hifi_ab.png', 'High-fidelity prototype — Version A and B comparison')">
+          <img src="https://finelli.xyz/images/x32_hifi_ab.png" alt="High-fidelity prototype — Version A and B comparison" loading="lazy">
         </div>
 
         <div class="artifacts">
@@ -1570,27 +1636,27 @@
           </div>
         </div>
 
-        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/x32_final_ui.png', 'Final UI — touch EQ interface Version B')">
-          <img src="images/x32_final_ui.png" alt="Final UI — touch EQ interface Version B" loading="lazy">
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32_final_ui.png', 'Final UI — touch EQ interface Version B')">
+          <img src="https://finelli.xyz/images/x32_final_ui.png" alt="Final UI — touch EQ interface Version B" loading="lazy">
         </div>
 
-        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:-8px 0 40px;">
-          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_2.png', 'X32 additional screen')">
-            <img src="images/x32_screen_2.png" alt="X32 additional screen" loading="lazy">
+        <div class="ad-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:-8px 0 40px;">
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_2.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_2.png" alt="X32 additional screen" loading="lazy">
           </div>
-          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_3.png', 'X32 additional screen')">
-            <img src="images/x32_screen_3.png" alt="X32 additional screen" loading="lazy">
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_3.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_3.png" alt="X32 additional screen" loading="lazy">
           </div>
-          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_4.png', 'X32 additional screen')">
-            <img src="images/x32_screen_4.png" alt="X32 additional screen" loading="lazy">
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_4.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_4.png" alt="X32 additional screen" loading="lazy">
           </div>
-          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_5.png', 'X32 additional screen')">
-            <img src="images/x32_screen_5.png" alt="X32 additional screen" loading="lazy">
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 additional screen" loading="lazy">
           </div>
         </div>
 
-        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/x32_handoff.png', 'Design handoff — annotated specs and components')">
-          <img src="images/x32_handoff.png" alt="Design handoff — annotated specs and components" loading="lazy">
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32_handoff.png', 'Design handoff — annotated specs and components')">
+          <img src="https://finelli.xyz/images/x32_handoff.png" alt="Design handoff — annotated specs and components" loading="lazy">
         </div>
 
         <div class="artifacts">
@@ -1671,7 +1737,7 @@
 <!-- /tab-detailed -->
 
 <!-- LIGHTBOX -->
-<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+<div class="lightbox-overlay" id="lightbox" onclick="handleLightboxOverlayTap()">
   <button class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();" aria-label="Close"><ion-icon name="close"></ion-icon></button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation();">
 </div>
