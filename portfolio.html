@@ -146,7 +146,7 @@ html,body{
   padding:6px 14px;border-radius:12px;
   background:rgba(232,52,74,.08);border:1px solid rgba(232,52,74,.25);color:var(--text);
 }
-/* ── PROJECT HERO + PASSWORD GATE ── */
+/* ── PROJECT HERO + PASSWORD-PAGE CTA ── */
 .project-hero{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.15rem;}
 .project-cover{
   width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;
@@ -157,28 +157,16 @@ html,body{
 .project-title{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--text);line-height:1.2;}
 .project-subtitle{font-size:.8rem;font-style:italic;color:var(--muted);margin-top:-.35rem;}
 .project-desc{font-size:.86rem;line-height:1.65;color:#c8cfdf;}
-.gate-block{display:flex;flex-direction:column;gap:.55rem;padding-top:1rem;margin-top:.2rem;border-top:1px solid var(--border);}
+.project-action{display:flex;flex-direction:column;gap:.6rem;padding-top:1rem;margin-top:.2rem;border-top:1px solid var(--border);}
 .gate-label{font-size:.68rem;font-weight:600;letter-spacing:.03em;color:var(--muted);}
-.gate-row{display:flex;gap:.5rem;}
-.gate-input{
-  flex:1;min-width:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);
-  border-radius:8px;padding:.65rem .8rem;color:var(--text);font-size:.86rem;font-family:inherit;
-  outline:none;transition:border-color .15s,background .15s;
-  -webkit-user-select:text;user-select:text;touch-action:manipulation;
-}
-.gate-input::placeholder{color:var(--muted);}
-.gate-input:focus{border-color:rgba(232,52,74,.55);background:rgba(255,255,255,.07);}
-.gate-input.shake{animation:gshake .35s;}
-@keyframes gshake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-5px)}40%,60%{transform:translateX(5px)}}
-.gate-btn{
-  flex-shrink:0;background:var(--accent);color:#fff;border:2px solid rgba(255,255,255,.15);border-radius:8px;
-  padding:.6rem 1.05rem;font-size:.82rem;font-weight:700;cursor:pointer;
+.project-cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+  background:var(--accent);color:#fff;border:2px solid rgba(255,255,255,.15);border-radius:8px;
+  padding:.7rem 1.1rem;font-size:.86rem;font-weight:700;text-decoration:none;
   transition:filter .15s,transform .1s;touch-action:manipulation;
 }
-.gate-btn:hover{filter:brightness(1.1);}
-.gate-btn:active{transform:scale(.96);}
-.gate-error{font-size:.72rem;font-weight:500;color:#ff6b6b;display:none;}
-.gate-error.show{display:block;}
+.project-cta:hover{filter:brightness(1.1);}
+.project-cta:active{transform:scale(.97);}
 /* ── OPEN INFO PANEL (all projects except inFi / X32) ── */
 .project-meta{display:flex;flex-direction:column;gap:.15rem;padding-top:1rem;margin-top:.2rem;border-top:1px solid var(--border);}
 .project-meta-row{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;font-size:.8rem;}
@@ -270,14 +258,14 @@ const PROJECTS=[
    desc:'How I designed inFi — a social indoor-navigation app built on geomagnetic positioning — from a one-line brief into a live product for airports, museums, and conference venues.',
    tags:['SaaS + B2C','Mobile + Web Admin','Social','Indoor Positioning'],
    cover:'https://cdn.prod.website-files.com/69e6351a6a69ae90b1469140/69e6351a6a69ae90b14691e4_INFI.png',
-   url:'https://finelli.xyz/infi', gated:true,
+   url:'https://finelli.xyz/infi', passwordUrl:'https://finelli.xyz/infi-password', gated:true,
    emoji:'✦', la:16, lo:-35, col:'#e80b59', panel:'infi'},
 
   {n:'X32 Behringer', tag:'Tablet App', subtitle:'Revolutionizing Live Sound',
    desc:'How I added a touchscreen to the Behringer X32 — and made one of the most powerful mixing consoles in the world feel like it was designed for humans.',
    tags:['Hardware UX','Embedded Touch UI','A/B Testing','Pro Audio'],
    cover:'https://cdn.prod.website-files.com/69e6351a6a69ae90b1469140/69e6351a6a69ae90b14691fe_X32.png',
-   url:'https://finelli.xyz/x32', gated:true,
+   url:'https://finelli.xyz/x32', passwordUrl:'https://finelli.xyz/x32-password', gated:true,
    emoji:'◈', la:-18, lo:70, col:'#3b009a', panel:'x32'},
 
   {n:'Live REC', tag:'Apple Watch', subtitle:'Music Composition for Wearables',
@@ -327,7 +315,9 @@ const PROJECTS=[
 // subtitle + description) shared by all, then either a password gate
 // (inFi / X32) or the full meta info directly (everyone else).
 // TODO: swap 'password' for a real per-project password (or a shared one) before going live.
-const PROJECT_PASSWORD='password';
+// TODO: point passwordUrl at each project's actual password-entry page —
+// currently defaulting to the project URL itself (e.g. a Webflow page with
+// native password protection prompts right there when you land on it).
 
 function buildHeroHTML(p){
   return (
@@ -351,14 +341,11 @@ function buildHeroHTML(p){
     panel.style.display='none';
 
     if(p.gated){
+      const passwordUrl=p.passwordUrl||p.url;
       panel.innerHTML=buildHeroHTML(p)+
-        '<div class="gate-block">'+
-          '<label class="gate-label" for="pw-'+p.panel+'">Enter the password to view the full case study</label>'+
-          '<div class="gate-row">'+
-            '<input type="password" class="gate-input" id="pw-'+p.panel+'" placeholder="Password" autocomplete="off" spellcheck="false">'+
-            '<button type="button" class="gate-btn">Enter →</button>'+
-          '</div>'+
-          '<div class="gate-error">Incorrect password — try again.</div>'+
+        '<div class="project-action">'+
+          '<p class="gate-label">This case study is password-protected.</p>'+
+          '<a class="project-cta" href="'+passwordUrl+'">Enter password →</a>'+
         '</div>';
     }else{
       const metaRows=(p.meta||[]).map(([label,value])=>
@@ -369,28 +356,6 @@ function buildHeroHTML(p){
     }
 
     playerRoot.appendChild(panel);
-    if(!p.gated)return;
-
-    const input=panel.querySelector('.gate-input');
-    const btn=panel.querySelector('.gate-btn');
-    const err=panel.querySelector('.gate-error');
-
-    function attemptUnlock(){
-      if(input.value===PROJECT_PASSWORD){
-        window.location.href=p.url;
-      }else{
-        err.classList.add('show');
-        input.classList.remove('shake');
-        void input.offsetWidth; // restart the shake animation
-        input.classList.add('shake');
-      }
-    }
-
-    btn.addEventListener('click',e=>{e.stopPropagation();attemptUnlock();});
-    input.addEventListener('keydown',e=>{
-      if(e.key==='Enter'){e.preventDefault();attemptUnlock();}
-    });
-    input.addEventListener('input',()=>err.classList.remove('show'));
   });
 })();
 
@@ -550,14 +515,7 @@ function openPlayer(idx){
   document.querySelectorAll('.panel-content').forEach(p=>p.style.display='none');
   const panelId='panel-'+c.panel;
   const panelEl=document.getElementById(panelId);
-  if(panelEl){
-    panelEl.style.display='';
-    // Reset the password gate to a clean state every time the project is opened
-    const gateInput=panelEl.querySelector('.gate-input');
-    const gateError=panelEl.querySelector('.gate-error');
-    if(gateInput)gateInput.value='';
-    if(gateError)gateError.classList.remove('show');
-  }
+  if(panelEl)panelEl.style.display='';
 
   playerEl.classList.add('on');
   hit.classList.add('player-open');
