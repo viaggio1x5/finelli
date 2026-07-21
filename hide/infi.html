@@ -21,16 +21,37 @@
 <script nomodule src="https://unpkg.com/ionicons@7.2.0/dist/ionicons/ionicons.js"></script>
 
 <script>
+  // Keep the tab bar and phase subnav flush against the fixed top nav, with
+  // no gap, at any viewport size and after switching tabs.
+  function updateStickyOffsets() {
+    const navEl = document.querySelector('nav');
+    const tabSectionEl = document.querySelector('.tab-section');
+    const phaseAnchorsEl = document.querySelector('.phase-anchors');
+    if (!navEl || !tabSectionEl) return;
+    const navH = navEl.offsetHeight;
+    const tabH = tabSectionEl.offsetHeight;
+    const anchorsH = (phaseAnchorsEl && phaseAnchorsEl.offsetParent !== null) ? phaseAnchorsEl.offsetHeight : 0;
+    document.documentElement.style.setProperty('--nav-h', navH + 'px');
+    document.documentElement.style.setProperty('--tabsec-h', tabH + 'px');
+    document.documentElement.style.setProperty('--stack-h', (navH + tabH + anchorsH) + 'px');
+  }
+
   function switchTab(name, el) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => {
       t.classList.remove('active');
       t.setAttribute('aria-selected', 'false');
     });
-    document.getElementById('tab-' + name).classList.add('active');
+    const targetContent = document.getElementById('tab-' + name);
+    targetContent.classList.add('active');
     el.classList.add('active');
     el.setAttribute('aria-selected', 'true');
-    window.scrollTo({ top: document.querySelector('.tab-section').offsetTop - 57, behavior: 'smooth' });
+    // Recalculate the sticky offsets now, synchronously, since the newly
+    // shown tab (and its phase subnav, for "detailed") just changed height.
+    updateStickyOffsets();
+    // Scroll to the start of the CONTENT below the tab bar (not the tab bar
+    // itself, which is sticky and already pinned at the top either way).
+    targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function toggleMobileMenu() {
@@ -133,38 +154,35 @@
   }
 
   // Phase Anchors Active Link Highlight
-  const phaseAnchors = document.querySelectorAll('.anchors-list a');
-  const phaseContainers = document.querySelectorAll('#research, #define, #ideate, #prototype, #test, #design, #handoff, #results');
+  // NB: elements are queried inside DOMContentLoaded (not at the top level),
+  // because this <script> runs in <head> before <body> exists — querying at
+  // parse time returns a permanently-empty NodeList and nothing ever works.
+  document.addEventListener('DOMContentLoaded', () => {
+    const phaseAnchors = document.querySelectorAll('.anchors-list a');
+    const phaseContainers = document.querySelectorAll('#research, #define, #ideate, #prototype, #test, #design, #handoff, #results');
 
-  function updateActiveAnchor() {
-    let activeAnchor = null;
-    phaseContainers.forEach(container => {
-      const rect = container.getBoundingClientRect();
-      if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
-        activeAnchor = container.id;
-      }
-    });
+    function updateActiveAnchor() {
+      let activeAnchor = null;
+      phaseContainers.forEach(container => {
+        const rect = container.getBoundingClientRect();
+        if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+          activeAnchor = container.id;
+        }
+      });
 
-    phaseAnchors.forEach(anchor => {
-      anchor.classList.remove('active');
-      if (activeAnchor && anchor.getAttribute('href') === '#' + activeAnchor) {
-        anchor.classList.add('active');
-        // Scroll the anchor into view if needed
-        anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    });
-  }
+      phaseAnchors.forEach(anchor => {
+        anchor.classList.remove('active');
+        if (activeAnchor && anchor.getAttribute('href') === '#' + activeAnchor) {
+          anchor.classList.add('active');
+        }
+      });
+    }
 
-  document.addEventListener('scroll', updateActiveAnchor, { passive: true });
-  // Initial call to set active anchor on page load
-  setTimeout(updateActiveAnchor, 100);
+    document.addEventListener('scroll', updateActiveAnchor, { passive: true });
+    setTimeout(updateActiveAnchor, 100);
 
-  // When you tap an anchor, centre it horizontally right away, instead of
-  // waiting for the page scroll to catch up and trigger updateActiveAnchor.
-  phaseAnchors.forEach(anchor => {
-    anchor.addEventListener('click', () => {
-      anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    });
+    updateStickyOffsets();
+    window.addEventListener('resize', updateStickyOffsets);
   });
 </script>
 
@@ -210,7 +228,7 @@
   }
 
   /* anchors land below the fixed nav + sticky tab bar + sticky phase menu */
-  [id] { scroll-margin-top: 175px; }
+  [id] { scroll-margin-top: var(--stack-h, 175px); }
 
   a:focus-visible, button:focus-visible, .tab:focus-visible {
     outline: 2px solid var(--accent-blue);
@@ -247,9 +265,9 @@
   .nav-hamburger {
     display: none;
     align-items: center; justify-content: center;
-    width: 40px; height: 40px;
+    width: 48px; height: 48px;
     background: none; border: none; border-radius: 10px;
-    color: var(--text); font-size: 30px;
+    color: var(--text); font-size: 38px;
     cursor: pointer; transition: background 0.2s;
   }
   .nav-hamburger:hover { background: rgba(255,255,255,0.06); }
@@ -269,9 +287,9 @@
   }
   .mobile-menu-close {
     display: flex; align-items: center; justify-content: center;
-    width: 40px; height: 40px;
+    width: 48px; height: 48px;
     background: none; border: none; border-radius: 10px;
-    color: var(--text); font-size: 26px;
+    color: var(--text); font-size: 38px;
     cursor: pointer;
   }
   .mobile-menu-close:hover { background: rgba(255,255,255,0.06); }
@@ -395,7 +413,7 @@
   /* ── TAB SWITCHER ── */
   .tab-section {
     padding: 0; border-bottom: 1px solid var(--border);
-    position: sticky; top: 57px; z-index: 90; background: var(--bg);
+    position: sticky; top: var(--nav-h, 57px); z-index: 90; background: var(--bg);
   }
   .tabs { display: flex; justify-content: center; gap: 0; }
 
@@ -462,6 +480,29 @@
   .cta-btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
   .cta-btn.primary:hover { filter: brightness(1.08); }
   .cta-btn.secondary:hover { background: rgba(255,255,255,0.05); }
+
+  /* ── PROJECT NAV (prev/next) ── */
+  .project-nav {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    max-width: 960px; margin: 100px auto 0; padding: 0 24px 64px;
+  }
+  .project-nav-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; text-decoration: none; transition: all 0.2s;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .project-nav-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
+  .project-nav-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); font-family: var(--font-sans);
+  }
+  .project-nav-title { font-size: 19px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+  .project-nav-next { text-align: right; align-items: flex-end; }
+
+  @media (max-width: 600px) {
+    .project-nav { grid-template-columns: 1fr; margin-top: 64px; }
+    .project-nav-next { text-align: left; align-items: flex-start; }
+  }
 
   /* ── GALLERY CAROUSEL ── */
   .gallery-carousel {
@@ -1099,28 +1140,11 @@
   .phase-anchors {
     display: none;
     position: sticky;
-    top: 112px;
+    top: calc(var(--nav-h, 57px) + var(--tabsec-h, 55px));
     z-index: 50;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 12px 10vw;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-
-  .phase-anchors::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .phase-anchors::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .phase-anchors::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 2px;
+    padding: 10px 10vw;
   }
 
   #tab-detailed .phase-anchors {
@@ -1129,9 +1153,7 @@
 
   .anchors-list {
     display: contents;
-    gap: 2px;
     list-style: none;
-    white-space: nowrap;
   }
 
   .anchors-list a {
@@ -1158,12 +1180,16 @@
   }
 
   @media (max-width: 768px) {
+    /* No horizontal scrolling: the anchors simply wrap onto more than one
+       row, so every phase is visible without any swipe/drag gesture. */
     .phase-anchors {
-      padding: 12px 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 4px;
+      padding: 10px 16px;
     }
-    /* Readable but not bigger than the tab labels (13px) */
     .anchors-list a {
-      padding: 8px 14px;
+      padding: 7px 12px;
       font-size: 13px;
     }
   }
@@ -1938,6 +1964,19 @@
 <div class="lightbox-overlay" id="lightbox" onclick="handleLightboxOverlayTap()">
   <button class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();" aria-label="Close"><ion-icon name="close"></ion-icon></button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation();">
+</div>
+
+<!-- PROJECT NAV -->
+<!-- TODO: update hrefs with the live URLs for these case studies once hosted -->
+<div class="project-nav">
+  <a href="https://finelli.xyz/portfolio" class="project-nav-card">
+    <span class="project-nav-label">← Previous project</span>
+    <span class="project-nav-title">More on the portfolio</span>
+  </a>
+  <a href="https://finelli.xyz/x32" class="project-nav-card project-nav-next">
+    <span class="project-nav-label">Next project →</span>
+    <span class="project-nav-title">X32 Behringer — Touch UI</span>
+  </a>
 </div>
 
 <!-- FOOTER -->
