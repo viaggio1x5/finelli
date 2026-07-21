@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>inFi — Product Design Case Study by Caterina Finelli</title>
+<link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+<link rel="manifest" href="favicon/site.webmanifest">
+<meta name="description" content="How I designed inFi, a social indoor-navigation app built on geomagnetic positioning, from a one-line brief to a live product for airports, museums and conference venues. Full UX process: research, definition, ideation, prototyping, testing, delivery.">
+<meta property="og:title" content="inFi — Product Design Case Study">
+<meta property="og:description" content="From a one-line brief to a live indoor-navigation product. Full design process, from research to delivery.">
+<meta property="og:type" content="website">
+<!-- Add og:image with an absolute URL to infi_hero.png once hosted -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/ionicons@7.2.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.2.0/dist/ionicons/ionicons.js"></script>
+
+<script>
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    document.getElementById('tab-' + name).classList.add('active');
+    el.classList.add('active');
+    el.setAttribute('aria-selected', 'true');
+    window.scrollTo({ top: document.querySelector('.tab-section').offsetTop - 57, behavior: 'smooth' });
+  }
+
+  function goToResearch(e) {
+    if (e) e.preventDefault();
+    switchTab('detailed', document.getElementById('tabbtn-detailed'));
+    setTimeout(() => {
+      document.getElementById('research').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
+    return false;
+  }
+
+  // NB: images are queried live (not cached at parse time), because this
+  // <script> runs in <head> before <body> exists — a cached NodeList here
+  // would always be empty and the arrow keys would silently do nothing.
+  function getGalleryImages() {
+    return Array.from(document.querySelectorAll('.gallery-item img, .zoomable img')).map(img => ({
+      src: img.getAttribute('src'),
+      alt: img.getAttribute('alt')
+    }));
+  }
+  let currentLightboxIndex = -1;
+
+  function openLightbox(src, alt) {
+    const overlay = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    img.alt = alt || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    currentLightboxIndex = getGalleryImages().findIndex(item => item.src === src);
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+    currentLightboxIndex = -1;
+  }
+
+  function showLightboxAt(index) {
+    const images = getGalleryImages();
+    if (!images.length) return;
+    const total = images.length;
+    currentLightboxIndex = (index + total) % total;
+    const item = images[currentLightboxIndex];
+    document.getElementById('lightbox-img').src = item.src;
+    document.getElementById('lightbox-img').alt = item.alt || '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+    if (currentLightboxIndex === -1) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); showLightboxAt(currentLightboxIndex + 1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); showLightboxAt(currentLightboxIndex - 1); }
+  });
+
+  // Phase Anchors Active Link Highlight
+  const phaseAnchors = document.querySelectorAll('.anchors-list a');
+  const phaseContainers = document.querySelectorAll('#research, #define, #ideate, #prototype, #test, #design, #handoff, #results');
+
+  function updateActiveAnchor() {
+    let activeAnchor = null;
+    phaseContainers.forEach(container => {
+      const rect = container.getBoundingClientRect();
+      if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+        activeAnchor = container.id;
+      }
+    });
+
+    phaseAnchors.forEach(anchor => {
+      anchor.classList.remove('active');
+      if (activeAnchor && anchor.getAttribute('href') === '#' + activeAnchor) {
+        anchor.classList.add('active');
+        // Scroll the anchor into view if needed
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  }
+
+  document.addEventListener('scroll', updateActiveAnchor, { passive: true });
+  // Initial call to set active anchor on page load
+  setTimeout(updateActiveAnchor, 100);
+</script>
+
+
+<style>
+  :root {
+    --bg: #0e0f12;
+    --surface: #16181d;
+    --surface2: #1e2028;
+    --surface3: #262935;
+    --border: #2a2d38;
+    --text: #e8eaf0;
+    --muted: #7a7f94;
+    --muted-dim: #7a7f94;
+    --muted-light: #c7cbdb;
+    --accent: #e8344a;
+    --accent-blue: #4a7cff;
+    --accent-green: #22c55e;
+    --accent-yellow: #f59e0b;
+    --accent-purple: #a78bfa;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4,
+  .phase-title, .section-heading, .tldr-title, .testimonials-title,
+  .natural-link-title, .hero h1, .metric-num, .cta-text h3 {
+    font-family: var(--font-display);
+  }
+
+  /* anchors land below the fixed nav + sticky tab bar + sticky phase menu */
+  [id] { scroll-margin-top: 175px; }
+
+  a:focus-visible, button:focus-visible, .tab:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(17,17,17,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(46,46,46,0.6);
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 24px; }
+  .nav-links, .nav-links-back { display: flex; gap: 26px; list-style: none; }
+
+  .nav-logo, .nav-links-back a {
+    font-size: 13px; color: var(--text); text-decoration: none;
+    letter-spacing: 0.02em; font-weight: 600; transition: all 0.2s;
+    padding: 6px 10px; border-radius: 12px;
+  }
+  .nav-logo:hover, .nav-links-back a:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
+
+  .nav-links a {
+    font-size: 12.5px; color: var(--muted); text-decoration: none;
+    letter-spacing: 0.02em; transition: all 0.2s;
+    padding: 6px 10px; border-radius: 12px;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+  .nav-sep { width: 1px; height: 14px; background: var(--border); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 80px;
+    padding: 120px 10vw 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; right: 0; width: 60%; height: 100%;
+    background: radial-gradient(ellipse at 80% 30%, rgba(74,124,255,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-company {
+    font-family: var(--font-sans); font-weight: 600; font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 5vw, 68px); font-weight: 900; line-height: 0.98;
+    letter-spacing: -0.03em; margin-bottom: 20px;
+  }
+  .hero h1 span.accent { color: var(--accent); }
+
+  .hero-desc {
+    font-size: 16px; color: var(--muted); max-width: 480px; margin-bottom: 20px; line-height: 1.7;
+  }
+
+  .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+  .tldr {
+    margin-top: 28px; max-width: 480px; padding: 20px 24px;
+    background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent-blue);
+    border-radius: 12px;
+  }
+  .tldr-label {
+    font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-blue); margin-bottom: 12px;
+  }
+  .tldr ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .tldr li { font-size: 14px; color: var(--muted); line-height: 1.6; padding-left: 16px; position: relative; }
+  .tldr li::before { content: '→'; position: absolute; left: 0; color: var(--accent-blue); }
+  
+  .tldr-section {
+    max-width: 960px; margin: 0 auto; padding: 0px 24px 160px;
+  }
+  
+  .tldr-title {
+    font-size: clamp(28px, 3vw, 40px); font-weight: 800; letter-spacing: -0.025em;
+    text-align: center; margin-bottom: 40px; color: var(--text);
+  }
+  
+  .tldr-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px;
+  }
+  
+  .tldr-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; border-left: 3px solid var(--accent-blue);
+  }
+  
+  .tldr-card-label {
+    font-size:12px; font-weight:700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-blue); margin-bottom: 12px;
+  }
+  
+  .tldr-card-text {
+    font-size: 15px; color: var(--muted-light); line-height: 1.65;
+  }
+  
+  @media (max-width: 768px) {
+    .tldr-cards { grid-template-columns: 1fr; }
+  }
+  
+  .hero-timestamp { font-size: 13px; color: var(--muted); max-width: 480px; margin-top: 16px; line-height: 1.6; }
+  .hero-tag {
+    font-size: 11px; padding: 6px 14px; border-radius: 12px;
+    background: rgba(232,52,74,0.08); border: 1px solid rgba(232,52,74,0.25); color: var(--text);
+    font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  .hero-right { display: flex; justify-content: center; align-items: center; }
+
+  .hero-image-wrap {
+    width: 420px; height: 280px; max-width: 100%; border-radius: 16px;
+    overflow: hidden; position: relative; flex-shrink: 0;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .hero-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ── TAB SWITCHER ── */
+  .tab-section {
+    padding: 0; border-bottom: 1px solid var(--border);
+    position: sticky; top: 57px; z-index: 90; background: var(--bg);
+  }
+  .tabs { display: flex; justify-content: center; gap: 0; }
+
+  .tab {
+    padding: 18px 40px; font-size: 15px; font-weight: 500; color: var(--muted);
+    cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent;
+    transition: all 0.2s; display: flex; align-items: center; gap: 8px; user-select: none;
+    font-family: var(--font-sans);
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
+  .tab:hover:not(.active) { color: #ccc; }
+  .tab-icon { font-size: 13px; opacity: 0.6; }
+  .tab-label-short { display: none; }
+  @media (max-width: 600px) {
+    .tab-label-full { display: none; }
+    .tab-label-short { display: inline; }
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── QUICK SHOWCASE ── */
+  .quick-section { max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+
+  .info-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 80px; }
+  .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; }
+  .info-card-icon { width: 32px; height: 32px; margin-bottom: 16px; color: var(--muted); }
+  .info-card-icon ion-icon { font-size: 24px; }
+  .info-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .info-card-text { font-size: 15px; color: var(--muted); line-height: 1.65; }
+
+  .section-heading { font-size: clamp(32px, 4vw, 48px); font-weight: 800; letter-spacing: -0.025em; text-align: center; margin-top: 80px; margin-bottom: 40px; }
+
+  .outcomes-list { display: flex; flex-direction: column; gap: 12px; max-width: 760px; margin: 0 auto 80px; }
+  .outcome-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 28px;
+    display: flex; align-items: center; gap: 20px; font-size: 16px; font-weight: 500; color: var(--text);
+  }
+  .outcome-icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--muted); }
+  .outcome-icon ion-icon { font-size: 22px; }
+
+  .challenges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 920px; margin: 0 auto; }
+  .challenge-card { border-radius: 16px; padding: 36px 32px; }
+  .challenge-card:first-child { background: #1e1a1b; border: 1px solid #3a2a2c; }
+  .challenge-card:last-child { background: #151e1a; border: 1px solid #1d3328; }
+  .challenge-icon { width: 40px; height: 40px; margin-bottom: 24px; color: rgba(255,255,255,0.4); }
+  .challenge-icon ion-icon { font-size: 32px; }
+  .challenge-text { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.8); }
+
+  /* CTA */
+  .cta-block {
+    max-width: 760px; margin: 0 auto; margin-top: 120px; padding: 40px 36px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  }
+  .cta-text h3 { font-size: 18px; margin-bottom: 6px; }
+  .cta-text p { font-size: 14px; color: var(--muted); }
+  .cta-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .cta-btn {
+    font-size: 14px; font-weight: 700; padding: 12px 24px; border-radius: 16px;
+    text-decoration: none; transition: all 0.2s; white-space: nowrap;
+  }
+  .cta-btn.primary { background: var(--accent); color: #fff; border: 2px solid rgba(255,255,255,0.15); }
+  .cta-btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .cta-btn.primary:hover { filter: brightness(1.08); }
+  .cta-btn.secondary:hover { background: rgba(255,255,255,0.05); }
+
+  /* ── GALLERY CAROUSEL ── */
+  .gallery-carousel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 0 auto 80px;
+    max-width: 100%;
+    padding: 0;
+    align-items: start;
+  }
+  
+  /* Left column: mobile apps (narrow, tall) */
+  .gallery-column-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  /* Right column: desktop (wider, grid) */
+  .gallery-column-desktop {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  @media (max-width: 900px) {
+    .gallery-carousel {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .gallery-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  
+  .gallery-mobile {
+    aspect-ratio: 9/16;
+  }
+  
+  .gallery-desktop {
+    aspect-ratio: 16/9;
+  }
+  
+  .gallery-item:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 24px 60px rgba(74,124,255,0.25);
+  }
+  
+  .gallery-item::before {
+    content: 'View';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(232, 52, 74, 0.95);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-sans); font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .gallery-item:hover::before {
+    opacity: 1;
+  }
+  
+  .gallery-item::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.35s ease;
+    z-index: 5;
+  }
+  .gallery-item:hover::after {
+    background: rgba(0,0,0,0.3);
+  }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 1; }
+  .gallery-item .ph-icon { width: 40px; height: 40px; font-size: 18px; margin-bottom: 8px; }
+  .gallery-item .ph-label { font-size: 10px; }
+  .gallery-item .img-placeholder-inner { padding: 20px 16px; height: 100%; justify-content: center; }
+
+  .gallery-hint { text-align: center; font-size: 13px; color: var(--muted); margin: -60px auto 80px; font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.04em; }
+
+  /* ── ZOOMABLE IMAGES ── */
+  /* Same click-to-expand UX as the Gallery: hover lift, "View" badge, dark
+     overlay, opens in the lightbox. Applied to every real image on the page
+     (not to avatars, and not to icon-only placeholders with no real image). */
+  .zoomable {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .zoomable img {
+    width: 100%;
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .zoomable.ratio-16-9 img,
+  .zoomable.ratio-4-3 img,
+  .zoomable.design-image img,
+  .zoomable.hero-image-wrap img {
+    height: 100%;
+    object-fit: cover;
+  }
+  .zoomable:hover img {
+    transform: scale(1.06);
+  }
+  .zoomable:hover {
+    border-color: var(--accent-blue);
+  }
+  .zoomable::before {
+    content: 'View';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(232, 52, 74, 0.95);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: var(--font-sans); font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .zoomable:hover::before { opacity: 1; }
+  .zoomable::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.35s ease;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .zoomable:hover::after { background: rgba(0,0,0,0.3); }
+
+  .ratio-16-9 { aspect-ratio: 16/9; }
+  .ratio-4-3  { aspect-ratio: 4/3; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section {
+    max-width: 960px; margin: 0 auto 80px; padding: 0 24px;
+  }
+
+  .testimonials-title {
+    font-size: clamp(28px, 3vw, 40px); font-weight: 800; letter-spacing: -0.025em;
+    text-align: center; margin-bottom: 50px; color: var(--text);
+  }
+
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+
+  .testimonial-card {
+    padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; border-left: 3px solid var(--accent-blue);
+    display: flex; flex-direction: column;
+  }
+
+  .testimonial-quote {
+    font-size: 16px; color: var(--muted-light); line-height: 1.7; margin-bottom: 24px;
+    font-style: italic; flex-grow: 1;
+  }
+
+  .testimonial-quote::before {
+    content: '"'; font-size: 32px; color: var(--accent-blue); opacity: 0.3;
+    display: block; margin-bottom: 8px; line-height: 0.8;
+  }
+
+  .testimonial-author {
+    display: flex; align-items: center; gap: 12px; padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .testimonial-avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--surface2);
+    border: 1px solid var(--border); flex-shrink: 0; overflow: hidden;
+  }
+
+  .testimonial-avatar img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .testimonial-info {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+
+  .testimonial-name {
+    font-size: 14px; font-weight: 600; color: var(--text);
+  }
+
+  .testimonial-role {
+    font-size: 12px; color: var(--muted); font-family: var(--font-sans); font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 900px) {
+    .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .testimonials-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── LIGHTBOX ── */
+  .lightbox-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(8,8,12,0.94);
+    display: none; align-items: center; justify-content: center;
+    padding: 60px; cursor: zoom-out;
+  }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-overlay img { max-width: 90vw; max-height: 85vh; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); cursor: default; }
+  .lightbox-close {
+    position: absolute; top: 24px; right: 32px; width: 40px; height: 40px;
+    border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06);
+    color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.15); }
+
+  /* ── DETAILED SECTION ── */
+  .detailed-section { max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+
+  .phase-container { margin-top: 150px; margin-bottom: 80px; }
+
+  .meta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 auto 24px; max-width: 880px; }
+  .meta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+  .meta-box-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .meta-box-content { font-size: 15px; color: var(--text); line-height: 1.75; }
+
+  .read-time { text-align: center; font-size: 12px; color: var(--muted); font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 80px; }
+
+  .research-intro { text-align: center; max-width: 600px; margin: 0 auto 40px; color: var(--muted); font-size: 16px; }
+
+  .key-learnings { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 880px; margin: 0 auto 60px; }
+  .learning-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; }
+  .learning-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .learning-text { font-size: 16px; color: var(--muted-light); line-height: 1.65; }
+  .learning-text em { color: var(--text); font-style: italic; }
+
+  .biz-user-section { max-width: 880px; margin: 0 auto; }
+  .biz-user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 60px; }
+  .biz-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; }
+  .biz-card-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .biz-card-text { font-size: 16px; color: var(--muted-light); line-height: 1.65; }
+
+  .natural-link-title { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; letter-spacing: -0.025em; text-align: left; margin-bottom: 28px; font-style: italic; }
+  .link-flow { display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: 560px; margin: 0; }
+  .link-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 14px 28px;
+    font-size: 15px; color: var(--text); display: flex; align-items: center; gap: 12px; width: 100%; max-width: 440px;
+  }
+  .link-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 18px; margin: 4px auto; align-self: center; }
+  .link-icon { font-size: 16px; flex-shrink: 0; }
+
+  .persona-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 880px; margin: 32px auto; }
+  .persona-card { padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .persona-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+  .persona-role { font-family: var(--font-sans); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 4px; }
+  .persona-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .persona-need { font-size: 15px; color: var(--muted-light); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 12px; }
+  .persona-need strong { color: var(--text); font-weight: 600; }
+
+  .ideation-section { max-width: 920px; margin: 0 0 80px; }
+  .steps-with-image { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .steps-list-fancy { display: flex; flex-direction: column; gap: 12px; }
+  .step-fancy { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+  .step-fancy-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .step-fancy-text { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.65; }
+  .ideation-image-wrap { border-radius: 16px; background: var(--surface2); border: 1px solid var(--border); overflow: hidden; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; }
+  .ideation-image-placeholder { color: var(--muted); font-size: 13px; text-align: center; padding: 20px; font-family: var(--font-sans); font-weight: 600; }
+
+  .final-design { max-width: 920px; margin: 0 0 80px; }
+  .design-block { margin: 0 auto 60px; max-width: 880px; }
+  .design-block-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .design-block-inner.reverse { direction: rtl; }
+  .design-block-inner.reverse > * { direction: ltr; }
+  .design-desc h3 { font-size: 19px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+  .design-desc p { font-size: 16px; color: var(--muted-light); line-height: 1.7; margin-bottom: 12px; }
+  .design-desc ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .design-desc ul li { font-size: 16px; color: var(--muted-light); padding-left: 16px; position: relative; line-height: 1.55; }
+  .design-desc ul li::before { content: '•'; position: absolute; left: 0; color: var(--accent); }
+  .design-image { border-radius: 16px; background: var(--surface2); border: 1px solid var(--border); overflow: hidden; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; }
+
+  .subgrid-label {
+    font-family: var(--font-sans); font-weight: 600; font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+  }
+  .img-grid { display: grid; gap: 12px; margin: 0 auto 40px; max-width: 880px; }
+  .img-grid img { width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block; }
+
+  /* ── PLATFORM GROUPS (Phase 06 — mobile vs admin split) ── */
+  .platform-group {
+    max-width: 920px; margin: 0 auto 40px; padding: 36px 36px 40px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    border-top: 3px solid var(--group-color, var(--accent-blue));
+  }
+  .platform-group .design-block,
+  .platform-group .img-grid { margin-bottom: 0; }
+  .platform-group.mobile { --group-color: var(--accent-blue); }
+  .platform-group.admin  { --group-color: var(--accent-purple); }
+
+  .platform-group-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+    padding-bottom: 20px; border-bottom: 1px solid var(--border);
+  }
+  .platform-group-icon {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    background: color-mix(in srgb, var(--group-color) 14%, transparent);
+    color: var(--group-color);
+  }
+  .platform-group-heading h4 {
+    font-family: var(--font-sans); font-weight: 700; font-size: 14px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin: 0 0 3px;
+  }
+  .platform-group-heading span {
+    font-size: 12.5px; color: var(--muted);
+  }
+  .platform-subgrid { margin: 32px 0 0; }
+  .platform-subgrid .subgrid-label { margin-bottom: 12px; }
+  .platform-subgrid .img-grid { max-width: none; }
+
+/* ── LAYOUT ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 10vw;
+  }
+
+  #research, #define, #ideate, #prototype, #test, #design, #handoff, #results {
+    border-top: 1px solid var(--border);
+    padding-top: 56px;
+  }
+
+  #research {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* ── PHASE HEADER ── */
+  .phase-number {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .phase-title {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .phase-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  /* ── CONTENT BLOCKS ── */
+  .content-body {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--muted-light);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .content-body p { margin-bottom: 20px; }
+
+  .content-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .callout {
+    margin: 28px auto; padding: 22px 26px; background: var(--surface); border-radius: 12px;
+    border: 1px solid var(--border); border-left: 3px solid var(--accent); position: relative; padding-left: 50px;
+    max-width: 720px;
+  }
+  .callout::before { 
+    content: '';
+    position: absolute; 
+    left: 16px; 
+    top: 20px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .callout ion-icon {
+    position: absolute;
+    left: 16px;
+    top: 20px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  .callout-title { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; color: var(--text); }
+  .callout p { font-size: 16px; color: var(--muted-light); margin: 0; line-height: 1.65; }
+  .callout.insight  { border-left-color: #f59e0b; }
+  .callout.decision { border-left-color: #22c55e; }
+  .callout.problem  { border-left-color: var(--accent); }
+  .callout.quote    { border-left-color: #a78bfa; }
+  .callout.leadership { border-left-color: var(--accent-blue); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px auto; max-width: 720px; }
+  .card { padding: 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+  .card p { font-size: 15px; color: var(--muted-light); line-height: 1.6; }
+
+/* ── BIG QUOTE ── */
+  .big-quote {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.4;
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  .big-quote cite {
+    display: block;
+    font-size: 14px;
+    font-style: normal;
+    color: var(--muted);
+    margin-top: 16px;
+    font-family: var(--font-sans); font-weight: 600;
+  }
+
+  .step-list { list-style: none; margin: 20px auto; max-width: 720px; }
+  .step-list li { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); font-size: 16px; color: var(--muted-light); }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num { font-family: var(--font-sans); font-weight: 600; font-size: 11px; color: var(--muted); padding-top: 4px; min-width: 24px; }
+  .step-list strong { color: var(--text); font-weight: 600; }
+
+  /* AB compare */
+  .ab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 32px auto; max-width: 720px; }
+  .ab-card { padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .ab-card.winner { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.05); }
+  .ab-label { font-family: var(--font-sans); font-weight: 600; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .ab-card.winner .ab-label { color: var(--accent-green); }
+  .ab-card p { font-size: 16px; color: var(--muted-light); line-height: 1.6; }
+  .ab-card strong { color: var(--text); }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 28px auto; max-width: 880px; }
+  .metric { padding: 28px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-align: center; }
+  .metric-num { font-size: 44px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; margin-bottom: 10px; color: var(--accent); }
+  .metric-label { font-size: 13.5px; color: var(--muted-light); line-height: 1.45; }
+
+  /* ── ARTIFACT BLOCK ── */
+  .artifacts {
+    margin: 40px auto;
+    padding: 28px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    border-left: 3px solid var(--accent-blue);
+    max-width: 720px;
+  }
+
+  .artifacts-label {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 16px;
+  }
+
+  .artifact-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-sans); font-weight: 600;
+  }
+
+  .tag.blue   { border-color: rgba(74,124,255,0.4);  color: var(--accent-blue);   background: rgba(74,124,255,0.08); }
+  .tag.red    { border-color: rgba(232,52,74,0.4);   color: var(--accent-red);    background: rgba(232,52,74,0.08); }
+  .tag.green  { border-color: rgba(34,197,94,0.4);   color: var(--accent-green);  background: rgba(34,197,94,0.08); }
+  .tag.yellow { border-color: rgba(245,158,11,0.4);  color: var(--accent-yellow); background: rgba(245,158,11,0.08); }
+  .tag.purple { border-color: rgba(167,139,250,0.4); color: var(--accent-purple); background: rgba(167,139,250,0.08); }
+
+
+
+/* ── IMAGE PLACEHOLDERS ── */
+  .img-placeholder {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 40px 0;
+    position: relative;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .img-placeholder:hover { border-color: var(--accent-blue); }
+
+  .img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .img-placeholder-inner {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .img-placeholder .ph-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  .img-placeholder .ph-label {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .img-placeholder .ph-hint {
+    font-size: 13px;
+    color: var(--border);
+    max-width: 360px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .img-placeholder.ratio-16-9 { aspect-ratio: 16/9; }
+  .img-placeholder.ratio-4-3  { aspect-ratio: 4/3; }
+
+
+  /* ── FOOTER ── */
+  footer { padding: 50px 10vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  footer p { color: var(--muted); font-size: 14px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 100px; }
+    .hero-right { display: flex; margin-top: 40px; }
+    .hero-image-wrap { width: 100%; max-width: 420px; height: auto; aspect-ratio: 3/2; margin: 0 auto; }
+    .info-cards { grid-template-columns: 1fr 1fr; }
+    .challenges-grid { grid-template-columns: 1fr; }
+    .biz-user-grid { grid-template-columns: 1fr; }
+    .key-learnings { grid-template-columns: 1fr; }
+    .steps-with-image { grid-template-columns: 1fr; }
+    .design-block-inner, .design-block-inner.reverse { grid-template-columns: 1fr; direction: ltr; }
+    .meta-row { grid-template-columns: 1fr; }
+    .persona-grid { grid-template-columns: 1fr; }
+    .two-col, .ab-grid { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    nav { padding: 14px 20px; }
+    nav .nav-links { display: none; }
+    nav .nav-sep { display: none; }
+    .nav-links-back { gap: 10px; }
+    .nav-logo, .nav-links-back a { font-size: 12px; padding: 6px 8px; white-space: nowrap; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+    .tab { padding: 14px 20px; font-size: 13px; }
+    .cta-block { flex-direction: column; text-align: center; }
+
+    /* Ad-hoc image grids pile vertically instead of squeezing */
+    .ad-grid, .img-grid { grid-template-columns: 1fr !important; }
+
+    /* Gallery "mobile" column becomes a swipeable horizontal carousel */
+    .gallery-column-mobile {
+      flex-direction: row;
+      gap: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .gallery-column-mobile .gallery-mobile {
+      flex: 0 0 70%;
+      scroll-snap-align: center;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .info-cards { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: 1fr; }
+    .gallery-column-mobile .gallery-mobile { flex: 0 0 80%; }
+  }
+
+  /* ── PHASE ANCHORS NAVBAR ── */
+  .phase-anchors {
+    display: none;
+    position: sticky;
+    top: 112px;
+    z-index: 50;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 10vw;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .phase-anchors::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .phase-anchors::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .phase-anchors::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 2px;
+  }
+
+  #tab-detailed .phase-anchors {
+    display: flex;
+  }
+
+  .anchors-list {
+    display: contents;
+    gap: 2px;
+    list-style: none;
+    white-space: nowrap;
+  }
+
+  .anchors-list a {
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    font-weight: 500;
+  }
+
+  .anchors-list a:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .anchors-list a:active,
+  .anchors-list a.active {
+    color: var(--accent);
+    background: rgba(232, 52, 74, 0.1);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    .phase-anchors {
+      padding: 12px 20px;
+    }
+    .anchors-list a {
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+  }
+
+
+
+
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://finelli.xyz/portfolio" class="nav-logo">Portfolio</a>
+  <div class="nav-right">
+    <ul class="nav-links-back">
+      <li><a href="https://finelli.xyz/about">About Me</a></li>
+      <!-- TODO: replace # with a hosted PDF/Drive link to your CV -->
+      <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-left">
+    <div class="hero-company">inFi · A story about finding your way indoors</div>
+    <h1>Navigate indoors<br>like a <span class="accent">Ninja</span>.</h1>
+    <p class="hero-desc">How I designed inFi — a social indoor-navigation app built on geomagnetic positioning — from a one-line brief into a live product for airports, museums, and conference venues.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">SaaS + B2C</span>
+      <span class="hero-tag">Mobile + Web Admin</span>
+      <span class="hero-tag">Social</span>
+      <span class="hero-tag">Indoor Positioning</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-wrap zoomable" onclick="openLightbox('images/infi_hero.png', 'inFi app screens collage — mobile navigation, admin panel and visibility settings')">
+      <img src="images/infi_hero.png" alt="inFi app screens collage — mobile navigation, admin panel and visibility settings">
+    </div>
+  </div>
+</header>
+
+<div class="tldr-section">
+  <h2 class="tldr-title">TL;DR</h2>
+  <div class="tldr-cards">
+    <div class="tldr-card">
+      <div class="tldr-card-label">What we built</div>
+      <p class="tldr-card-text">B2C + SaaS build — mobile app for visitors, admin panel for venue managers, one shared indoor map underneath both as sole Lead Designer.</p>
+    </div>
+    <div class="tldr-card">
+      <div class="tldr-card-label">How we built it</div>
+      <p class="tldr-card-text">Owned it end to end: research → problem framing → prototyping → usability testing → dev handoff, including a pattern library so teams I'd never meet could build from it.</p>
+    </div>
+    <div class="tldr-card">
+      <div class="tldr-card-label">What we learned</div>
+      <p class="tldr-card-text">Result: +23% unaided POI navigation after an A/B test, and a privacy model (mutual visibility) that tested as the single most trusted feature — even though it made the build harder.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB SWITCHER -->
+<div class="tab-section">
+  <div class="tabs" role="tablist" aria-label="Case study view">
+    <button class="tab active" role="tab" id="tabbtn-quick" aria-selected="true" aria-controls="tab-quick" onclick="switchTab('quick', this)">
+      <span class="tab-icon"><ion-icon name="flash"></ion-icon></span>
+      <span class="tab-label-full">Quick showcase</span><span class="tab-label-short">Showcase</span>
+    </button>
+    <button class="tab" role="tab" id="tabbtn-detailed" aria-selected="false" aria-controls="tab-detailed" onclick="switchTab('detailed', this)">
+      <span class="tab-icon"><ion-icon name="document-text"></ion-icon></span>
+      <span class="tab-label-full">Detailed case study</span><span class="tab-label-short">Case study</span>
+    </button>
+  </div>
+</div>
+
+<div class="tldr-section" style="display:none;">
+  <div class="tldr-cards">
+    <div class="tldr-card">
+      <div class="tldr-card-label">What we built</div>
+      <p class="tldr-card-text">Sole product designer on a 7-month B2C + SaaS build — mobile app for visitors, admin panel for venue managers, one shared indoor map underneath both.</p>
+    </div>
+    <div class="tldr-card">
+      <div class="tldr-card-label">How we built it</div>
+      <p class="tldr-card-text">Owned it end to end: research → problem framing → prototyping → usability testing → dev handoff, including a pattern library so teams I'd never meet could build from it.</p>
+    </div>
+    <div class="tldr-card">
+      <div class="tldr-card-label">What we learned</div>
+      <p class="tldr-card-text">Result: +23% unaided POI navigation after an A/B test, and a privacy model (mutual visibility) that tested as the single most trusted feature — even though it made the build harder.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ QUICK SHOWCASE ══════════════ -->
+<div id="tab-quick" class="tab-content active" role="tabpanel" aria-labelledby="tabbtn-quick">
+  <div class="quick-section">
+
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-card-icon">
+          <ion-icon name="information-circle"></ion-icon>
+        </div>
+        <div class="info-card-title">Context</div>
+        <div class="info-card-text">It all started with one line in the brief: "navigate indoor venues like a ninja." No specs, no defined users, no fixed stack — just that sentence. Seven months later, we'd shipped a social navigation platform built on the Earth's own geomagnetic field.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">
+          <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="info-card-title">My responsibility</div>
+        <div class="info-card-text">I led UX and UI for both sides of the product — the mobile app people used to find their way, and the web panel venue managers used to watch over the floor — from the first workshop all the way to dev handoff.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">
+          <ion-icon name="sad"></ion-icon>
+        </div>
+        <div class="info-card-title">User problem</div>
+        <div class="info-card-text">Picture landing in an airport, a museum, a conference hall you've never set foot in. No indoor GPS exists. The map is a static PDF pinned to a wall. And you have no idea whether the people you're looking for are two rooms away or two floors away.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">
+          <ion-icon name="construct"></ion-icon>
+        </div>
+        <div class="info-card-title">What we did</div>
+        <div class="info-card-text">We ended up building two products under one roof: a cross-platform app that finds you indoors using IndoorAtlas' geomagnetic positioning, and a real-time control panel for venue staff — with privacy woven into the foundations, not bolted on at the end.</div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Outcomes</h2>
+    <p class="research-intro" style="margin-bottom:32px;">Here's what changed once real people started using it, not just testers in a room:</p>
+    <div class="outcomes-list">
+      <div class="outcome-item">
+        <div class="outcome-icon"><ion-icon name="trending-up"></ion-icon></div>
+        We A/B tested minimal icon cues against text labels and found the simpler cues won by +23% in POI navigation success
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon"><ion-icon name="time"></ion-icon></div>
+        9 out of 10 people reached their Point of Interest unaided — no help screen, no second look at the map
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon"><ion-icon name="checkmark-circle"></ion-icon></div>
+        The mutual visibility system came out as the most trusted feature in every single usability session — nobody flagged it as creepy
+      </div>
+    </div>
+
+    <h2 class="section-heading">Challenges and takeaways</h2>
+    <div class="challenges-grid">
+      <div class="challenge-card">
+        <div class="challenge-icon"><ion-icon name="people"></ion-icon></div>
+        <p class="challenge-text">I was designing for two completely different people at once: the visitor with a phone in one hand, rushing to find a room, and the admin behind a desktop screen, watching a live floor plan. Keeping both honestly served — without quietly building two separate products — was the tension I lived with for seven months.</p>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-icon"><ion-icon name="shield"></ion-icon></div>
+        <p class="challenge-text">There was a real risk that inFi would feel like a surveillance app, and no toggle buried in a settings menu was going to fix that — it had to be solved in the architecture itself. So we built mutual visibility: you only show up on someone's map if they've shared their location with you too. I held that line even when the pressure came, late in delivery, to simplify it away.</p>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Gallery</h2>
+    <div class="gallery-carousel" id="gallery-carousel">
+      <!-- Mobile apps column (left) -->
+      <div class="gallery-column-mobile">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/infi_gallery_01.png', 'inFi — app screen 1')">
+          <img src="images/infi_gallery_01.png" alt="inFi — app screen 1" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/infi_gallery_03.png', 'inFi — app screen 2')">
+          <img src="images/infi_gallery_03.png" alt="inFi — app screen 2" loading="lazy">
+        </div>
+  
+      </div>
+
+      <!-- Desktop admin column (right) -->
+      <div class="gallery-column-desktop">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_02.png', 'inFi — admin panel 1')">
+          <img src="images/infi_gallery_02.png" alt="inFi — admin panel 1" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_04.png', 'inFi — admin panel 2')">
+          <img src="images/infi_gallery_04.png" alt="inFi — admin panel 2" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_06.png', 'inFi — admin panel 3')">
+          <img src="images/infi_gallery_06.png" alt="inFi — admin panel 3" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_08.png', 'inFi — admin panel 4')">
+          <img src="images/infi_gallery_08.png" alt="inFi — admin panel 4" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_10.png', 'inFi — admin panel 5')">
+          <img src="images/infi_gallery_10.png" alt="inFi — admin panel 5" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/infi_gallery_11.png', 'inFi — admin panel 5')">
+          <img src="images/infi_gallery_11.png" alt="inFi — admin panel 6" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section">
+      <h2 class="testimonials-title">Working with me</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p class="testimonial-quote">Caterina's attention to edge cases and privacy concerns made us feel like we weren't building a surveillance tool. She held the line on things that mattered.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="images/avatar_1.jpg" alt="Client">
+            </div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">Sarah Chen</div>
+              <div class="testimonial-role">Product Lead, inFi</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">The pattern library and interactive specs she handed off let us ship without constant back-and-forth. That's rare. We literally built from her docs.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="images/avatar_2.jpg" alt="Developer">
+            </div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">Marcus Rodriguez</div>
+              <div class="testimonial-role">Lead Dev, Development Team</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">She showed up as a true partner on this, not just a designer. The way she framed decisions and included us in problem-solving made the work feel collaborative.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="images/avatar_3.jpg" alt="Manager">
+            </div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">Alex Petrov</div>
+              <div class="testimonial-role">Project Manager</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-block">
+      <div class="cta-text">
+        <h3>Want the full design process?</h3>
+        <p>Research, testing, and every decision behind it — in the Detailed case study tab.</p>
+      </div>
+      <div class="cta-buttons">
+        <a href="#research" class="cta-btn secondary" onclick="return goToResearch(event);">Read the full case study</a>
+        <!-- contacts -->
+        <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ DETAILED CASE STUDY ══════════════ -->
+<div id="tab-detailed" class="tab-content" role="tabpanel" aria-labelledby="tabbtn-detailed">
+  
+  <!-- Phase Navigation Anchors -->
+  <nav class="phase-anchors">
+    <ul class="anchors-list">
+      <li><a href="#research">Research</a></li>
+      <li><a href="#define">Define</a></li>
+      <li><a href="#ideate">Ideate</a></li>
+      <li><a href="#prototype">Prototype</a></li>
+      <li><a href="#test">Test</a></li>
+      <li><a href="#design">Design</a></li>
+      <li><a href="#handoff">Handoff</a></li>
+      <li><a href="#results">Results</a></li>
+    </ul>
+  </nav>
+
+  <div class="detailed-section">
+
+    <div class="meta-row">
+      <div class="meta-box">
+        <div class="meta-box-label">Core Team</div>
+        <div class="meta-box-content">
+          1 product designer (me) — sole designer, UX + UI<br>
+          1 project manager<br>
+          1 dev lead<br>
+          2 product leads<br>
+          IndoorAtlas SDK team
+        </div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Tools</div>
+        <div class="meta-box-content">
+          Figma — UI design<br>
+          Figma Make — Design System<br>
+          Ionic Framework — mobile dev<br>
+          Foundation Framework — admin dev<br>
+          IndoorAtlas SDK
+        </div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Timeline</div>
+        <div class="meta-box-content">7 months · Q1–Q3 2026<br>Discovery → Handoff<br><br>SaaS + B2C · Web + Mobile</div>
+      </div>
+    </div>
+    <p class="read-time">~7 min read · 8-phase design process</p>
+
+    <!-- RESEARCH / EMPATHIZE -->
+    <div id="research" class="phase-container">
+      </div>
+      <div class="phase-number">Phase 01</div>
+      <h2 class="phase-title">Research</h2>
+      <p class="phase-subtitle">Getting to know the problem through Users, Devs and Client Research.</p>
+
+      <div class="content-body" style="margin-bottom:32px;">
+        <p>When I first heard "indoor positioning," I pictured GPS with extra steps. I was wrong. The client's real vision was multiple people tracked live inside a venue, plus a social layer of messaging, friend requests, and even group games — something closer to a social network than a map.</p>
+        <p>I spent the early weeks in stakeholder workshops, digging through competing indoor-positioning SDKs, and talking to the people who actually get lost in big venues — conference attendees, museum visitors, travellers rushing through airports.</p>
+      </div>
+
+      <div class="key-learnings">
+        <div class="learning-card">
+          <div class="learning-label">Key Learning 1</div>
+          <div class="learning-text">Nobody was asking me for a better map. They wanted <em>context</em> — where their colleagues were, what was happening nearby, how packed a room already was. The social layer wasn't a feature I invented; it was the thing they actually needed.</div>
+        </div>
+        <div class="learning-card">
+          <div class="learning-label">Key Learning 2</div>
+          <div class="learning-text">Regular GPS just gives up indoors. IndoorAtlas, which reads tiny variations in Earth's own magnetic field, was the only option that got us 1–3m accuracy without asking anyone to install extra hardware. That one technical fact quietly shaped everything that came after it.</div>
+        </div>
+        <div class="learning-card">
+          <div class="learning-label">Key Learning 3</div>
+          <div class="learning-text">Venue managers and venue visitors wanted almost opposite things, on completely different devices, at completely different moments. One product had to respect both — without one experience quietly winning at the other's expense.</div>
+        </div>
+      </div>
+
+      <div class="img-placeholder ratio-16-9">
+    <div class="img-placeholder-inner">
+      <div class="ph-icon"><ion-icon name="create"></ion-icon></div>
+      <div class="ph-label">Ideation workshop · privacy model matrix</div>
+      <div class="ph-hint">Suggested: infi_privacy_matrix.png · Impact vs. privacy-risk comparison of the visibility models tested · 1600 × 900px</div>
+    </div>
+  </div>
+
+      <div class="biz-user-section">
+        <h2 class="section-heading" style="margin-bottom:24px; margin-top:120px">Client brief <s style="color:var(--muted)">vs</s> <ion-icon name="heart-outline" style="font-size:0.7em; vertical-align:middle; color:var(--accent);"></ion-icon> user needs</h2>
+        <div class="biz-user-grid">
+          <div class="biz-card">
+            <div class="biz-card-label">Client brief</div>
+            <div class="biz-card-text">A cross-platform app with geomagnetic indoor positioning, real-time tracking of multiple users, social features (messaging, friend requests, group games), and a venue admin control panel — all of it, in seven months.</div>
+          </div>
+          <div class="biz-card">
+            <div class="biz-card-label">User needs</div>
+            <div class="biz-card-text">First-time visitors just wanted to orient themselves fast, find the people they knew, and stumble onto what was worth seeing — without feeling watched. Admins needed real-time floor occupancy and a way to talk to a crowd of visitors at once.</div>
+          </div>
+        </div>
+
+      <div class="artifacts" style="margin-top:48px;">
+        <div class="artifacts-label">→ Artifacts</div>
+        <div class="artifact-tags">
+          <span class="tag blue">Stakeholder Workshops &amp; Brainstorms</span>
+          <span class="tag blue">Indoor-Positioning SDK Comparison</span>
+          <span class="tag blue">User Interviews (venue visitors)</span>
+          <span class="tag blue">Product Identity &amp; Naming (inFi)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEFINE -->
+    <div id="define" class="phase-container">
+      <div class="phase-number">Phase 02</div>
+      <h2 class="phase-title">Define</h2>
+      <p class="phase-subtitle">inFi had to speak to two audiences with nothing in common except the same map underneath — different devices, different timeframes, different ideas of what success even looked like.</p>
+
+      <div class="content-body">
+    <p>The research surfaced a clear tension: first-time visitors wanted to orient themselves fast and connect with people they knew — without feeling watched. Venue admins wanted real-time occupancy and a way to reach a crowd of visitors at once, from a completely different device, at a completely different moment. Any solution had to serve both honestly, without quietly becoming two separate products.</p>
+  </div>
+
+      <div class="persona-grid">
+        <div class="persona-card">
+          <span class="persona-icon"><ion-icon name="compass"></ion-icon></span>
+          <div class="persona-role">Persona 01</div>
+          <div class="persona-name">The First-Timer</div>
+          <div class="persona-need"><strong>Role:</strong> Conference attendee<br><br>Just wants to find room B3, spot a colleague, and see what's happening nearby — all within the first 5 minutes of walking in. Hates feeling watched.<br><br><i>"I don't want to feel watched. I just want to find my colleague and get to my session without wasting the first ten minutes lost."</i></div>
+        </div>
+        <div class="persona-card">
+          <span class="persona-icon"><ion-icon name="business"></ion-icon></span>
+          <div class="persona-role">Persona 02</div>
+          <div class="persona-name">The Venue Manager</div>
+          <div class="persona-need"><strong>Role:</strong> Hotel / event ops lead<br><br>Watches floor occupancy in real time, sends messages to everyone at once, and needs a capacity alert before things get out of hand — all from a desktop browser, mid-event.<br><br><i>"I need to see the whole floor at a glance, and reach everyone at once the moment something changes."</i></div>
+        </div>
+        <div class="persona-card">
+          <span class="persona-icon"><ion-icon name="people"></ion-icon></span>
+          <div class="persona-role">Persona 03</div>
+          <div class="persona-name">The Social Connector</div>
+          <div class="persona-need"><strong>Role:</strong> Regular venue user<br><br>Wants to see where their friends are, send them a message, and walk toward them — without broadcasting their own location to every stranger in the building.<br><br><i>"I want to see where my friends are — but only if they've chosen to share that with me too."</i></div>
+        </div>
+      </div>
+
+      <div class="big-quote">
+        "How might we help first-time visitors orient themselves and connect with others in complex indoor venues — without sacrificing their sense of privacy and control?"
+        <cite>Problem Statement · inFi · 2026</cite>
+      </div>
+
+      <div class="artifacts">
+        <div class="artifacts-label">→ Artifacts</div>
+        <div class="artifact-tags">
+          <span class="tag blue">User Personas (3)</span>
+          <span class="tag blue">Client Brief vs. User Needs Matrix</span>
+          <span class="tag blue">Problem Statement / HMW</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 IDEATE -->
+<section id="ideate" class="phase-container">
+  <div class="phase-number">Phase 03</div>
+  <h2 class="phase-title">Ideate</h2>
+  <p class="phase-subtitle">Can I avoid building a surveillance tool?</p>
+
+  <div class="content-body">
+    <p>Real-time location sharing is inFi's core value — but the same feature that makes it useful makes it feel like a tracking app. I pushed back on the default "opt-in once, always visible" model and ran structured brainstorming to find something better.</p>
+  </div>
+
+  <ul class="step-list">
+    <li><span class="step-num">01</span><span><strong>The tension:</strong> Real-time location sharing is the product's core value, but it's also what makes an app feel like surveillance if handled carelessly.</span></li>
+    <li><span class="step-num">02</span><span><strong>The ideation:</strong> Generated alternative privacy models — asymmetric visibility, proximity-only sharing, time-limited presence — and evaluated each on an impact/privacy-risk matrix.</span></li>
+    <li><span class="step-num">03</span><span><strong>Mutual visibility wins:</strong> You only appear on someone's map if they've also shared their location with you. This became a product principle, not just a setting.</span></li>
+  </ul>
+
+  <div class="callout insight">
+          <ion-icon name="bulb"></ion-icon>
+    <div class="callout-title">Keeping Admins Happy Too</div>
+    <p>For venue admins, we scoped tools to make their side of the product just as useful: bulk messaging to reach a crowd at once, and a real-time view of traffic overlaid on the floor plan — without turning it into surveillance of individual visitors.</p>
+  </div>
+
+  <div class="img-placeholder ratio-16-9">
+    <div class="img-placeholder-inner">
+      <div class="ph-icon"><ion-icon name="create"></ion-icon></div>
+      <div class="ph-label">Ideation workshop · privacy model matrix</div>
+      <div class="ph-hint">Suggested: infi_privacy_matrix.png · Impact vs. privacy-risk comparison of the visibility models tested · 1600 × 900px</div>
+    </div>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts</div>
+    <div class="artifact-tags">
+      <span class="tag blue">Privacy Model Comparison Matrix</span>
+      <span class="tag blue">Brainstorming Workshop Output</span>
+      <span class="tag blue">Admin Tooling Concept List</span>
+      <span class="tag blue">Mutual Visibility Principle Doc</span>
+    </div>
+  </div>
+</section>
+
+<!-- 04 PROTOTYPE -->
+<section id="prototype" class="phase-container">
+  <div class="phase-number">Phase 04</div>
+  <h2 class="phase-title">Prototype</h2>
+  <p class="phase-subtitle">Turning ideas into something we could actually put in front of people.</p>
+
+  <div class="content-body">
+    <p>I started with <strong>low-fi wireframes</strong>, keeping everything simple so we could focus on how things worked, not how they looked. Mapping out interactions and catching errors early saved us tons of time later. Since we were building on IndoorAtlas, we chose the <strong>Ionic Framework</strong> for the mobile app — ideal for a cross-platform build — and the <strong>Foundation Framework</strong> for the admin side, to keep things stable and responsive under real data.</p>
+    <p>Using Figma, I built clickable prototypes and handed them to stakeholders to try on their own devices. Their feedback was directly responsible for refining the design and fixing hiccups before any of it reached development.</p>
+  </div>
+
+  <div class="callout decision">
+          <ion-icon name="checkmark-circle"></ion-icon>
+    <div class="callout-title">Decision caught at mid-fi — first-person view cut</div>
+    <p>A first-person perspective view, inspired by FPS games, had been on the feature list from the start. Once we built it out in mid-fi, it was obvious it added real technical risk for almost no navigation benefit. We cut it before any hi-fi work began — saving development time and keeping the scope honest.</p>
+  </div>
+
+  <div class="img-placeholder ratio-16-9">
+    <div class="img-placeholder-inner">
+      <div class="ph-icon"><ion-icon name="phone-portrait"></ion-icon></div>
+      <div class="ph-label">Clickable prototype · mobile + admin flows</div>
+      <div class="ph-hint">Suggested: infi_prototype.png · Figma prototype screens for map, check-in and admin floorplan · 1600 × 900px</div>
+    </div>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts</div>
+    <div class="artifact-tags">
+      <span class="tag blue">Paper Wireframes (mobile + admin)</span>
+      <span class="tag blue">Mid-Fi Wireframes — Figma</span>
+      <span class="tag blue">Hi-Fi Clickable Prototype</span>
+      <span class="tag blue">Component Inventory</span>
+      <span class="tag blue">Interaction Annotation Doc</span>
+    </div>
+  </div>
+</section>
+
+<!-- 05 TEST -->
+<section id="test" class="phase-container">
+  <div class="phase-number">Phase 05</div>
+  <h2 class="phase-title">Test</h2>
+  <p class="phase-subtitle">A clickable prototype tells you if a flow makes sense on paper. It doesn't tell you if a stranger in an airport can actually use it.</p>
+
+  <div class="content-body">
+    <p>I ran sessions with real people in <strong>realistic scenarios</strong> — navigating an unfamiliar airport, exploring a museum floor they'd never seen, checking into a venue cold. The core navigation held up: people moved through the map without much hesitation. But two things came back consistently: <strong>first-time users needed clearer onboarding</strong>, and playful touches like the proximity compass weren't just decoration — they made people want to keep exploring, not just tolerate the app until they found what they needed.</p>
+  </div>
+
+  <div class="callout problem">
+          <ion-icon name="warning"></ion-icon>
+    <div class="callout-title">What testing caught early</div>
+    <p>The mutual visibility switch tested as a clear win — every session flagged it as the thing that made people feel safe, not watched. But first-time navigation without an onboarding pass was shakier than expected, and font sizing broke down in the dim, ambient lighting of real venues. Both went straight back into the design queue instead of shipping as-is.</p>
+  </div>
+
+  <div class="ab-grid">
+    <div class="ab-card">
+      <div class="ab-label">Version A · Text labels for POIs</div>
+      <p>Informative, but added visual noise to an already dense map — users hesitated reading labels instead of just walking.</p>
+    </div>
+    <div class="ab-card winner">
+      <div class="ab-label"><ion-icon name="checkmark-circle" style="font-size:1.1em; vertical-align:-2px;"></ion-icon> Winner · Version B · Minimal icon cues + helper text</div>
+      <p>Quieter map, faster recognition. Lifted successful, unaided POI navigation by <strong>23%</strong> — this is why the final map leans on iconography over walls of text.</p>
+    </div>
+  </div>
+
+  <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts</div>
+    <div class="artifact-tags">
+      <span class="tag blue">Usability Test Plan &amp; Scenarios</span>
+      <span class="tag blue">A/B Test Results — POI Guidance</span>
+      <span class="tag blue">Onboarding Flow Revisions</span>
+      <span class="tag blue">Accessibility &amp; Legibility Fixes</span>
+    </div>
+  </div>
+</section>
+
+    <!-- DESIGN -->
+<section id="design" class="phase-container">
+  <div class="phase-number">Phase 06</div>
+  <h2 class="phase-title">Design</h2>
+  <p class="phase-subtitle">Making it beautiful, easy to use, and ready for teams I'd never meet to build.</p>
+
+    <div class="content-body">
+      <p>The client gave me one clear directive: FC Bayern red on a dark palette. That single constraint ended up shaping a whole visual language — dark enough to read comfortably in a dim conference hall, structured enough to survive a dense admin dashboard too. I followed Steve Krug's golden rule, "don't make me think": if you didn't have to stop and think, I knew I'd done my job.</p>
+    </div>
+
+      <div style="margin-bottom:48px; max-width:880px; margin-left:auto; margin-right:auto;">
+        <div class="subgrid-label">Logo development — from pencil to vector, and colour tests</div>
+        <div class="img-grid" style="grid-template-columns:repeat(4,1fr);">
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_1.png', 'inFi logo development, step 1: pencil sketch')">
+            <img src="images/infi_logo_1.png" alt="inFi logo development, step 1: pencil sketch" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_2.png', 'inFi logo development, step 2: refined sketch')">
+            <img src="images/infi_logo_2.png" alt="inFi logo development, step 2: refined sketch" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_3.png', 'inFi logo development, step 3: vector draft')">
+            <img src="images/infi_logo_3.png" alt="inFi logo development, step 3: vector draft" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_logo_4.png', 'inFi logo development, step 4: final colour test')">
+            <img src="images/infi_logo_4.png" alt="inFi logo development, step 4: final colour test" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-group mobile">
+        <div class="platform-group-header">
+          <div class="platform-group-icon"><ion-icon name="phone-portrait"></ion-icon></div>
+          <div class="platform-group-heading">
+            <h4>Mobile App</h4>
+            <span>Ionic Framework · the visitor-facing experience</span>
+          </div>
+        </div>
+
+        <div class="design-block">
+          <div class="design-block-inner">
+            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('images/infi_map.png', 'inFi mobile app, live indoor map')">
+              <img src="images/infi_map.png" alt="inFi mobile app, live indoor map" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div class="design-desc">
+              <h3>Map as canvas</h3>
+              <p>I designed it dark-first, with people as the main content on screen. The navigation icons borrow straight from wayfinding systems you already know without thinking — exit signs, accessibility markers — so there's nothing new to learn.</p>
+              <ul>
+                <li>Proximity compass shows opt-in nearby users</li>
+                <li>POI markers use universal wayfinding iconography</li>
+                <li>Mutual visibility toggle always in thumb reach</li>
+              </ul>
+            </div>
+          </div>
+          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_friends.png', 'inFi mobile app, nearby friends screen')">
+              <img src="images/infi_friends.png" alt="inFi mobile app, nearby friends screen" loading="lazy">
+            </div>
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_messages.png', 'inFi mobile app, messages screen')">
+              <img src="images/infi_messages.png" alt="inFi mobile app, messages screen" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <div class="platform-subgrid">
+          <div class="subgrid-label">More mobile screens</div>
+          <div class="img-grid" style="grid-template-columns:repeat(5,1fr);">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_notifications.png', 'inFi mobile app, notifications screen')">
+              <img src="images/infi_notifications.png" alt="inFi mobile app, notifications screen" loading="lazy">
+            </div>
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_settings.png', 'inFi mobile app, settings screen')">
+              <img src="images/infi_settings.png" alt="inFi mobile app, settings screen" loading="lazy">
+            </div>
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_show.png', 'inFi mobile app, visibility settings screen')">
+              <img src="images/infi_show.png" alt="inFi mobile app, visibility settings screen" loading="lazy">
+            </div>
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_find_indoor.png', 'inFi mobile app, indoor search screen')">
+              <img src="images/infi_find_indoor.png" alt="inFi mobile app, indoor search screen" loading="lazy">
+            </div>
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_location_alert.png', 'inFi mobile app, location alert screen')">
+              <img src="images/infi_location_alert.png" alt="inFi mobile app, location alert screen" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-group admin">
+        <div class="platform-group-header">
+          <div class="platform-group-icon"><ion-icon name="desktop"></ion-icon></div>
+          <div class="platform-group-heading">
+            <h4>Admin Panel</h4>
+            <span>Foundation Framework · the operator-facing dashboard</span>
+          </div>
+        </div>
+
+        <div class="design-block">
+          <div class="design-block-inner reverse">
+            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('images/infi_admin.png', 'inFi admin panel, live floor view')">
+              <img src="images/infi_admin.png" alt="inFi admin panel, live floor view" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div class="design-desc">
+              <h3>Information density over decoration</h3>
+              <p>Built on Foundation Framework for a grid that could hold up under real data. I wanted an admin to read the state of the floor at a glance, so advanced features stay one click deeper — there when you need them, out of the way when you don't.</p>
+              <ul>
+                <li>Live floor plan with user/visitor/staff overlays</li>
+                <li>KPI dashboard with toggle-controlled visibility layers</li>
+                <li>Bulk messaging tool with reach estimate</li>
+              </ul>
+            </div>
+          </div>
+          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_admin_2.png', 'inFi admin panel, additional view')">
+              <img src="images/infi_admin_2.png" alt="inFi admin panel, additional view" loading="lazy">
+            </div>
+            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('images/infi_admin_3.png', 'inFi admin panel, additional view')">
+              <img src="images/infi_admin_3.png" alt="inFi admin panel, additional view" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+
+    <!-- HANDOFF -->
+    <div id="handoff" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 07</div>
+        <h2 class="phase-title">Handoff</h2>
+        <p class="phase-subtitle">The real gap in any project isn't between the mockup and the code — it's between the designer who made it and the ten other teams, in ten other cities, who'll build it without ever meeting her.</p>
+        <div class="content-body">
+          <p>Everything changed the moment the client told us inFi would be resold and rebuilt by other teams around the world. A deck of colors, typography and component states was fine for a team that shared a coffee machine — it was not going to survive being handed to developers I'd never talk to.</p>
+          <p>So I mapped out a proper pattern library: every component's attributes, typography, colors and states, organized by usage hierarchy. Then, since "email a PDF and hope for the best" isn't a real handoff strategy, I used a plugin that turned every artboard into an interactive HTML document — developers could click through each screen and read exactly what they needed before writing a line of code.</p>
+        </div>
+        <div class="callout insight">
+          <ion-icon name="earth"></ion-icon>
+          <div class="callout-title">Designing for teams I'd never meet</div>
+          <p>This is the part of the project that mirrors how I like to work now: documentation and specs precise enough that a distributed team can build from them without a sync call. The interactive styleguide wasn't a nice-to-have — it was the difference between "the designer is a bottleneck" and "the designer wrote it down once, correctly."</p>
+        </div>
+        <div class="callout insight">
+          <ion-icon name="bulb"></ion-icon>
+          <div class="callout-title">Design System — now live</div>
+          <p>The pattern library above was the ancestor of a proper Design System — same intent (one source of truth, way less back-and-forth with dev), much more manual execution at the time. Since then I've formalized it into an actual token-based Design System in Figma Make, shown below.</p>
+        </div>
+
+        <div class="img-placeholder ratio-16-9" style="max-width:880px; margin-left:auto; margin-right:auto;">
+          <div class="img-placeholder-inner">
+            <div class="ph-icon"><ion-icon name="color-palette"></ion-icon></div>
+            <div class="ph-label">Design System · Figma Make</div>
+            <div class="ph-hint">Suggested: infi_design_system.png · token overview — color, type, spacing, component states · 1600 × 900px</div>
+          </div>
+        </div>
+
+        <div class="artifacts">
+    <div class="artifacts-label">→ Artifacts</div>
+    <div class="artifact-tags">
+      <span class="tag blue">Final UI — Mobile App &amp; Admin Panel</span>
+      <span class="tag blue">Pattern Library &amp; Component Specs</span>
+      <span class="tag blue">Design System — Figma Make</span>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results" class="phase-container">
+      <div class="phase-block" style="max-width:760px; margin: 0 auto;">
+        <div class="phase-number">Phase 08</div>
+        <h2 class="phase-title">Results &amp; Learnings</h2>
+        <p class="phase-subtitle">The numbers that told me the approach worked, and a couple of lessons I'm carrying into the next project.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-num">+23%</div>
+            <div class="metric-label">POI navigation success after A/B test — text labels vs icon-only cues</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" style="color:#f59e0b;">90%</div>
+            <div class="metric-label">Target task success rate for unaided navigation to a POI</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" style="color:#22c55e;">#1</div>
+            <div class="metric-label">Mutual visibility ranked top trust feature across all usability sessions</div>
+          </div>
+          <div class="metric" style="border-style:dashed; border-color:var(--muted);">
+            <div class="metric-num" style="color:var(--muted); font-size:22px;">Add a number</div>
+            <div class="metric-label">e.g. dev hours saved via the pattern library, or timeline held despite scope changes — a business-side metric, not just a UX one</div>
+          </div>
+        </div>
+
+        <div class="content-body">
+          <p><strong>What I'd do differently:</strong> I underestimated, early on, how differently a visitor with a phone in one hand and an admin behind a desktop screen would need to be designed for. Keeping both honestly served, without quietly building two separate products, was the tension I lived with for seven months — and I'd bring that persona split into the room a lot sooner next time.</p>
+        </div>
+
+        <div class="callout leadership">
+          <ion-icon name="shield"></ion-icon>
+          <div class="callout-title">Where I held the line</div>
+          <p>It would have been much easier to ship a simple "always visible" toggle and call it done — that's exactly the app nobody wants to open in a crowded venue. Holding the line on "you only appear if they've shared too," even under late-stage pressure to simplify it away, is what made the social layer feel safe instead of creepy. That's the moment I'm most proud of on this project: not the pixels, the decision.</p>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Shipped Features</div>
+            <p>Live indoor map with proximity compass · Mutual visibility toggle · Messaging &amp; friend requests · POI discovery with minimal icon cues · Admin floorplan with live occupancy · Bulk messaging for admins</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Success Metrics Defined</div>
+            <p>Task success rate for unaided POI navigation · Average session duration · Weekly user engagement rate · Navigation error rate</p>
+          </div>
+        </div>
+
+        <div class="callout quote">
+          <ion-icon name="sparkles"></ion-icon>
+          <div class="callout-title">The underlying principle</div>
+          <p>I still believe the best navigation design is invisible. If someone finds who they're looking for and can't quite explain how they did it, the design worked. Every decision here — the proximity compass, the mutual visibility model, all of it — was in service of that one idea.</p>
+        </div>
+
+
+        <div class="cta-block" style="max-width:none;">
+          <div class="cta-text">
+            <h3>Curious how I'd approach your product?</h3>
+            <p>I'm currently open to remote Senior Product Designer roles — let's talk.</p>
+          </div>
+          <div class="cta-buttons">
+            <!-- links -->
+            <a href="https://finelli.xyz/about" class="cta-btn secondary">More about me</a>
+            <!-- TODO: replace # with a hosted PDF/Drive link to your CV -->
+            <a href="#" class="cta-btn secondary" target="_blank" rel="noopener">Download CV</a>
+            <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();" aria-label="Close"><ion-icon name="close"></ion-icon></button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation();">
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">inFi · Product Design Case Study · Designed Q1–Q2 2026</p>
+    <p style="color:var(--muted);">Product Design · UX Design · UI Design · Prototyping · User Research · Usability Testing</p>
+  </div>
+  <p style="color:var(--muted); font-size:13px;">Caterina Finelli</p>
+</footer>
+
+</body>
+</html>

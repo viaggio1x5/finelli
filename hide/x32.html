@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X32 Behringer — Product Design Case Study by Caterina Finelli</title>
+<link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+<link rel="manifest" href="favicon/site.webmanifest">
+<meta name="description" content="How I designed the touchscreen interface for the Behringer X32 — a reference-class mixing console — from field research with audio engineers to a validated A/B-tested UI. Full UX process: empathize, define, ideate, prototype, test, deliver.">
+<meta property="og:title" content="X32 Behringer — Product Design Case Study">
+<meta property="og:description" content="Adding a touchscreen to one of the world's most powerful mixing consoles. Full design process from field research to handoff.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/ionicons@7.2.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.2.0/dist/ionicons/ionicons.js"></script>
+
+<script>
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    document.getElementById('tab-' + name).classList.add('active');
+    el.classList.add('active');
+    el.setAttribute('aria-selected', 'true');
+    window.scrollTo({ top: document.querySelector('.tab-section').offsetTop - 57, behavior: 'smooth' });
+  }
+
+  function goToEmpathize(e) {
+    if (e) e.preventDefault();
+    switchTab('detailed', document.getElementById('tabbtn-detailed'));
+    setTimeout(() => {
+      document.getElementById('empathize').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
+    return false;
+  }
+
+  // Gallery lightbox
+  // NB: images are queried live (not cached at parse time), because this
+  // <script> runs in <head> before <body> exists — a cached NodeList here
+  // would always be empty and the arrow keys would silently do nothing.
+  function getGalleryImages() {
+    return Array.from(document.querySelectorAll('.gallery-item img, .zoomable img')).map(img => ({
+      src: img.getAttribute('src'),
+      alt: img.getAttribute('alt')
+    }));
+  }
+  let currentLightboxIndex = -1;
+
+  function openLightbox(src, alt) {
+    const overlay = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    img.alt = alt || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    currentLightboxIndex = getGalleryImages().findIndex(item => item.src === src);
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+    currentLightboxIndex = -1;
+  }
+
+  function showLightboxAt(index) {
+    const images = getGalleryImages();
+    if (!images.length) return;
+    const total = images.length;
+    currentLightboxIndex = (index + total) % total;
+    const item = images[currentLightboxIndex];
+    document.getElementById('lightbox-img').src = item.src;
+    document.getElementById('lightbox-img').alt = item.alt || '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+    if (currentLightboxIndex === -1) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); showLightboxAt(currentLightboxIndex + 1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); showLightboxAt(currentLightboxIndex - 1); }
+  });
+
+  // Phase Anchors Active Link Highlight
+  const phaseAnchors = document.querySelectorAll('.anchors-list a');
+  const phaseContainers = document.querySelectorAll('#empathize, #define, #ideate, #prototype, #test, #design, #results');
+
+  function updateActiveAnchor() {
+    let activeAnchor = null;
+    phaseContainers.forEach(container => {
+      const rect = container.getBoundingClientRect();
+      if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+        activeAnchor = container.id;
+      }
+    });
+
+    phaseAnchors.forEach(anchor => {
+      anchor.classList.remove('active');
+      if (activeAnchor && anchor.getAttribute('href') === '#' + activeAnchor) {
+        anchor.classList.add('active');
+        // Scroll the anchor into view if needed
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  }
+
+  document.addEventListener('scroll', updateActiveAnchor, { passive: true });
+  // Initial call to set active anchor on page load
+  setTimeout(updateActiveAnchor, 100);
+</script>
+
+<style>
+  :root {
+    --bg: #0e0f12;
+    --surface: #16181d;
+    --surface2: #1e2028;
+    --surface3: #262935;
+    --border: #2a2d38;
+    --text: #e8eaf0;
+    --muted: #7a7f94;
+    --muted-dim: #7a7f94;
+    --muted-light: #c7cbdb;
+    --accent: #e8344a;
+    --accent-blue: #4a7cff;
+    --accent-green: #22c55e;
+    --accent-yellow: #f59e0b;
+    --accent-purple: #a78bfa;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4,
+  .phase-title, .section-heading, .tldr-title, .testimonials-title,
+  .natural-link-title, .hero h1, .metric-num, .cta-text h3 {
+    font-family: var(--font-display);
+  }
+
+  /* anchors land below the fixed nav + sticky tab bar + sticky phase menu */
+  [id] { scroll-margin-top: 175px; }
+
+  a:focus-visible, button:focus-visible, .tab:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(17,17,17,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(46,46,46,0.6);
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 24px; }
+  .nav-links, .nav-links-back { display: flex; gap: 26px; list-style: none; }
+
+  .nav-logo, .nav-links-back a {
+    font-size: 13px; color: var(--text); text-decoration: none;
+    letter-spacing: 0.02em; font-weight: 600; transition: all 0.2s;
+    padding: 6px 10px; border-radius: 12px;
+  }
+  .nav-logo:hover, .nav-links-back a:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
+
+  .nav-links a {
+    font-size: 12.5px; color: var(--muted); text-decoration: none;
+    letter-spacing: 0.02em; transition: all 0.2s;
+    padding: 6px 10px; border-radius: 12px;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+  .nav-sep { width: 1px; height: 14px; background: var(--border); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 80px;
+    padding: 120px 10vw 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; right: 0; width: 60%; height: 100%;
+    background: radial-gradient(ellipse at 80% 30%, rgba(74,124,255,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-company {
+    font-family: var(--font-sans); font-weight: 600; font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 5vw, 68px); font-weight: 900; line-height: 0.98;
+    letter-spacing: -0.03em; margin-bottom: 20px;
+  }
+  .hero h1 span.accent { color: var(--accent); }
+
+  .hero-desc {
+    font-size: 16px; color: var(--muted); max-width: 480px; margin-bottom: 20px; line-height: 1.7;
+  }
+
+  .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+  .tldr {
+    margin-top: 28px; max-width: 480px; padding: 20px 24px;
+    background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent-blue);
+    border-radius: 12px;
+  }
+  .tldr-label {
+    font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-blue); margin-bottom: 12px;
+  }
+  .tldr ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .tldr li { font-size: 14px; color: var(--muted); line-height: 1.6; padding-left: 16px; position: relative; }
+  .tldr li::before { content: '→'; position: absolute; left: 0; color: var(--accent-blue); }
+  
+  .tldr-section {
+    max-width: 960px; margin: 0 auto; padding: 0px 24px 160px;
+  }
+  
+  .tldr-title {
+    font-size: clamp(28px, 3vw, 40px); font-weight: 800; letter-spacing: -0.025em;
+    text-align: center; margin-bottom: 40px; color: var(--text);
+  }
+  
+  .tldr-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px;
+  }
+  
+  .tldr-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; border-left: 3px solid var(--accent-blue);
+  }
+  
+  .tldr-card-label {
+    font-size:12px; font-weight:700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-blue); margin-bottom: 12px;
+  }
+  
+  .tldr-card-text {
+    font-size: 15px; color: var(--muted-light); line-height: 1.65;
+  }
+  
+  @media (max-width: 768px) {
+    .tldr-cards { grid-template-columns: 1fr; }
+  }
+  
+  .hero-timestamp { font-size: 13px; color: var(--muted); max-width: 480px; margin-top: 16px; line-height: 1.6; }
+  .hero-tag {
+    font-size: 11px; padding: 6px 14px; border-radius: 12px;
+    background: rgba(232,52,74,0.08); border: 1px solid rgba(232,52,74,0.25); color: var(--text);
+    font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  .hero-right { display: flex; justify-content: center; align-items: center; }
+
+  .hero-image-wrap {
+    width: 420px; height: 280px; max-width: 100%; border-radius: 16px;
+    overflow: hidden; position: relative; flex-shrink: 0;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .hero-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ── TAB SWITCHER ── */
+  .tab-section {
+    padding: 0; border-bottom: 1px solid var(--border);
+    position: sticky; top: 57px; z-index: 90; background: var(--bg);
+  }
+  .tabs { display: flex; justify-content: center; gap: 0; }
+
+  .tab {
+    padding: 18px 40px; font-size: 15px; font-weight: 500; color: var(--muted);
+    cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent;
+    transition: all 0.2s; display: flex; align-items: center; gap: 8px; user-select: none;
+    font-family: var(--font-sans);
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
+  .tab:hover:not(.active) { color: #ccc; }
+  .tab-icon { font-size: 13px; opacity: 0.6; }
+  .tab-label-short { display: none; }
+  @media (max-width: 600px) {
+    .tab-label-full { display: none; }
+    .tab-label-short { display: inline; }
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── QUICK SHOWCASE ── */
+  .quick-section { max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+
+  .info-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 80px; }
+  .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; }
+  .info-card-icon { width: 32px; height: 32px; margin-bottom: 16px; color: var(--muted); }
+  .info-card-icon ion-icon { font-size: 24px; }
+  .info-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .info-card-text { font-size: 15px; color: var(--muted); line-height: 1.65; }
+
+  .section-heading { font-size: clamp(32px, 4vw, 48px); font-weight: 800; letter-spacing: -0.025em; text-align: center; margin-top: 80px; margin-bottom: 40px; }
+
+  .outcomes-list { display: flex; flex-direction: column; gap: 12px; max-width: 760px; margin: 0 auto 80px; }
+  .outcome-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 28px;
+    display: flex; align-items: center; gap: 20px; font-size: 16px; font-weight: 500; color: var(--text);
+  }
+  .outcome-icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--muted); }
+  .outcome-icon ion-icon { font-size: 22px; }
+
+  .challenges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 920px; margin: 0 auto; }
+  .challenge-card { border-radius: 16px; padding: 36px 32px; }
+  .challenge-card:first-child { background: #1e1a1b; border: 1px solid #3a2a2c; }
+  .challenge-card:last-child { background: #151e1a; border: 1px solid #1d3328; }
+  .challenge-icon { width: 40px; height: 40px; margin-bottom: 24px; color: rgba(255,255,255,0.4); }
+  .challenge-icon ion-icon { font-size: 32px; }
+  .challenge-text { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.8); }
+
+  /* CTA */
+  .cta-block {
+    max-width: 760px; margin: 0 auto; margin-top: 120px; padding: 40px 36px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  }
+  .cta-text h3 { font-size: 18px; margin-bottom: 6px; }
+  .cta-text p { font-size: 14px; color: var(--muted); }
+  .cta-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .cta-btn {
+    font-size: 14px; font-weight: 700; padding: 12px 24px; border-radius: 16px;
+    text-decoration: none; transition: all 0.2s; white-space: nowrap;
+  }
+  .cta-btn.primary { background: var(--accent); color: #fff; border: 2px solid rgba(255,255,255,0.15); }
+  .cta-btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .cta-btn.primary:hover { filter: brightness(1.08); }
+  .cta-btn.secondary:hover { background: rgba(255,255,255,0.05); }
+
+  /* ── GALLERY CAROUSEL ── */
+  .gallery-carousel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 0 auto 80px;
+    max-width: 100%;
+    padding: 0;
+    align-items: start;
+  }
+  
+  /* Left column: mobile apps (narrow, tall) */
+  .gallery-column-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  /* Right column: desktop (wider, grid) */
+  .gallery-column-desktop {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  @media (max-width: 900px) {
+    .gallery-carousel {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .gallery-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  
+  .gallery-mobile {
+    aspect-ratio: 9/16;
+  }
+  
+  .gallery-desktop {
+    aspect-ratio: 16/9;
+  }
+  
+  .gallery-item:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 24px 60px rgba(74,124,255,0.25);
+  }
+  
+  .gallery-item::before {
+    content: 'View';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(232, 52, 74, 0.95);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-sans); font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .gallery-item:hover::before {
+    opacity: 1;
+  }
+  
+  .gallery-item::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.35s ease;
+    z-index: 5;
+  }
+  .gallery-item:hover::after {
+    background: rgba(0,0,0,0.3);
+  }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 1; }
+  .gallery-item .ph-icon { width: 40px; height: 40px; font-size: 18px; margin-bottom: 8px; }
+  .gallery-item .ph-label { font-size: 10px; }
+  .gallery-item .img-placeholder-inner { padding: 20px 16px; height: 100%; justify-content: center; }
+
+  .gallery-hint { text-align: center; font-size: 13px; color: var(--muted); margin: -60px auto 80px; font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.04em; }
+
+  /* ── ZOOMABLE IMAGES ── */
+  /* Same click-to-expand UX as the Gallery: hover lift, "View" badge, dark
+     overlay, opens in the lightbox. Applied to every real image on the page
+     (not to avatars, and not to icon-only placeholders with no real image). */
+  .zoomable {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .zoomable img {
+    width: 100%;
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .zoomable.ratio-16-9 img,
+  .zoomable.ratio-4-3 img,
+  .zoomable.design-image img,
+  .zoomable.hero-image-wrap img {
+    height: 100%;
+    object-fit: cover;
+  }
+  .zoomable:hover img {
+    transform: scale(1.06);
+  }
+  .zoomable:hover {
+    border-color: var(--accent-blue);
+  }
+  .zoomable::before {
+    content: 'View';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(232, 52, 74, 0.95);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: var(--font-sans); font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .zoomable:hover::before { opacity: 1; }
+  .zoomable::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.35s ease;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .zoomable:hover::after { background: rgba(0,0,0,0.3); }
+
+  .ratio-16-9 { aspect-ratio: 16/9; }
+  .ratio-4-3  { aspect-ratio: 4/3; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section {
+    max-width: 960px; margin: 0 auto 80px; padding: 0 24px;
+  }
+
+  .testimonials-title {
+    font-size: clamp(28px, 3vw, 40px); font-weight: 800; letter-spacing: -0.025em;
+    text-align: center; margin-bottom: 50px; color: var(--text);
+  }
+
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+
+  .testimonial-card {
+    padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; border-left: 3px solid var(--accent-blue);
+    display: flex; flex-direction: column;
+  }
+
+  .testimonial-quote {
+    font-size: 16px; color: var(--muted-light); line-height: 1.7; margin-bottom: 24px;
+    font-style: italic; flex-grow: 1;
+  }
+
+  .testimonial-quote::before {
+    content: '"'; font-size: 32px; color: var(--accent-blue); opacity: 0.3;
+    display: block; margin-bottom: 8px; line-height: 0.8;
+  }
+
+  .testimonial-author {
+    display: flex; align-items: center; gap: 12px; padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .testimonial-avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--surface2);
+    border: 1px solid var(--border); flex-shrink: 0; overflow: hidden;
+  }
+
+  .testimonial-avatar img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .testimonial-info {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+
+  .testimonial-name {
+    font-size: 14px; font-weight: 600; color: var(--text);
+  }
+
+  .testimonial-role {
+    font-size: 12px; color: var(--muted); font-family: var(--font-sans); font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 900px) {
+    .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .testimonials-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── LIGHTBOX ── */
+  .lightbox-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(8,8,12,0.94);
+    display: none; align-items: center; justify-content: center;
+    padding: 60px; cursor: zoom-out;
+  }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-overlay img { max-width: 90vw; max-height: 85vh; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); cursor: default; }
+  .lightbox-close {
+    position: absolute; top: 24px; right: 32px; width: 40px; height: 40px;
+    border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06);
+    color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.15); }
+
+  /* ── DETAILED SECTION ── */
+  .detailed-section { max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+
+  .phase-container { margin-top: 150px; margin-bottom: 80px; }
+
+  .meta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 auto 24px; max-width: 880px; }
+  .meta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+  .meta-box-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .meta-box-content { font-size: 15px; color: var(--text); line-height: 1.75; }
+
+  .read-time { text-align: center; font-size: 12px; color: var(--muted); font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 80px; }
+
+  .research-intro { text-align: center; max-width: 600px; margin: 0 auto 40px; color: var(--muted); font-size: 16px; }
+
+  .key-learnings { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 880px; margin: 0 auto 60px; }
+  .learning-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; }
+  .learning-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .learning-text { font-size: 16px; color: var(--muted-light); line-height: 1.65; }
+  .learning-text em { color: var(--text); font-style: italic; }
+
+  .biz-user-section { max-width: 880px; margin: 0 auto; }
+  .biz-user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 60px; }
+  .biz-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; }
+  .biz-card-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .biz-card-text { font-size: 16px; color: var(--muted-light); line-height: 1.65; }
+
+  .natural-link-title { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; letter-spacing: -0.025em; text-align: left; margin-bottom: 28px; font-style: italic; }
+  .link-flow { display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: 560px; margin: 0; }
+  .link-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 14px 28px;
+    font-size: 15px; color: var(--text); display: flex; align-items: center; gap: 12px; width: 100%; max-width: 440px;
+  }
+  .link-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 18px; margin: 4px auto; align-self: center; }
+  .link-icon { font-size: 16px; flex-shrink: 0; }
+
+  .persona-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 880px; margin: 32px auto; }
+  .persona-card { padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .persona-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+  .persona-role { font-family: var(--font-sans); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 4px; }
+  .persona-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .persona-need { font-size: 15px; color: var(--muted-light); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 12px; }
+  .persona-need strong { color: var(--text); font-weight: 600; }
+
+  .ideation-section { max-width: 920px; margin: 0 0 80px; }
+  .steps-with-image { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .steps-list-fancy { display: flex; flex-direction: column; gap: 12px; }
+  .step-fancy { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+  .step-fancy-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .step-fancy-text { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.65; }
+  .ideation-image-wrap { border-radius: 16px; background: var(--surface2); border: 1px solid var(--border); overflow: hidden; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; }
+  .ideation-image-placeholder { color: var(--muted); font-size: 13px; text-align: center; padding: 20px; font-family: var(--font-sans); font-weight: 600; }
+
+  .final-design { max-width: 920px; margin: 0 0 80px; }
+  .design-block { margin: 0 auto 60px; max-width: 880px; }
+  .design-block-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .design-block-inner.reverse { direction: rtl; }
+  .design-block-inner.reverse > * { direction: ltr; }
+  .design-desc h3 { font-size: 19px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+  .design-desc p { font-size: 16px; color: var(--muted-light); line-height: 1.7; margin-bottom: 12px; }
+  .design-desc ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .design-desc ul li { font-size: 16px; color: var(--muted-light); padding-left: 16px; position: relative; line-height: 1.55; }
+  .design-desc ul li::before { content: '•'; position: absolute; left: 0; color: var(--accent); }
+  .design-image { border-radius: 16px; background: var(--surface2); border: 1px solid var(--border); overflow: hidden; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; }
+
+  .subgrid-label {
+    font-family: var(--font-sans); font-weight: 600; font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+  }
+  .img-grid { display: grid; gap: 12px; margin: 0 auto 40px; max-width: 880px; }
+  .img-grid img { width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block; }
+
+  /* ── PLATFORM GROUPS (Phase 06 — mobile vs admin split) ── */
+  .platform-group {
+    max-width: 920px; margin: 0 auto 40px; padding: 36px 36px 40px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    border-top: 3px solid var(--group-color, var(--accent-blue));
+  }
+  .platform-group .design-block,
+  .platform-group .img-grid { margin-bottom: 0; }
+  .platform-group.mobile { --group-color: var(--accent-blue); }
+  .platform-group.admin  { --group-color: var(--accent-purple); }
+
+  .platform-group-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+    padding-bottom: 20px; border-bottom: 1px solid var(--border);
+  }
+  .platform-group-icon {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    background: color-mix(in srgb, var(--group-color) 14%, transparent);
+    color: var(--group-color);
+  }
+  .platform-group-heading h4 {
+    font-family: var(--font-sans); font-weight: 700; font-size: 14px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin: 0 0 3px;
+  }
+  .platform-group-heading span {
+    font-size: 12.5px; color: var(--muted);
+  }
+  .platform-subgrid { margin: 32px 0 0; }
+  .platform-subgrid .subgrid-label { margin-bottom: 12px; }
+  .platform-subgrid .img-grid { max-width: none; }
+
+/* ── LAYOUT ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 10vw;
+  }
+
+  #empathize, #define, #ideate, #prototype, #test, #design, #results {
+    border-top: 1px solid var(--border);
+    padding-top: 56px;
+  }
+
+  #empathize {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* ── PHASE HEADER ── */
+  .phase-number {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .phase-title {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .phase-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  /* ── CONTENT BLOCKS ── */
+  .content-body {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--muted-light);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .content-body p { margin-bottom: 20px; }
+
+  .content-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .callout {
+    margin: 28px auto; padding: 22px 26px; background: var(--surface); border-radius: 12px;
+    border: 1px solid var(--border); border-left: 3px solid var(--accent); position: relative; padding-left: 50px;
+    max-width: 720px;
+  }
+  .callout::before { 
+    content: '';
+    position: absolute; 
+    left: 16px; 
+    top: 20px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .callout ion-icon {
+    position: absolute;
+    left: 16px;
+    top: 20px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  .callout-title { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; color: var(--text); }
+  .callout p { font-size: 16px; color: var(--muted-light); margin: 0; line-height: 1.65; }
+  .callout.insight  { border-left-color: #f59e0b; }
+  .callout.decision { border-left-color: #22c55e; }
+  .callout.problem  { border-left-color: var(--accent); }
+  .callout.quote    { border-left-color: #a78bfa; }
+  .callout.leadership { border-left-color: var(--accent-blue); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px auto; max-width: 720px; }
+  .card { padding: 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+  .card p { font-size: 15px; color: var(--muted-light); line-height: 1.6; }
+
+/* ── BIG QUOTE ── */
+  .big-quote {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.4;
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  .big-quote cite {
+    display: block;
+    font-size: 14px;
+    font-style: normal;
+    color: var(--muted);
+    margin-top: 16px;
+    font-family: var(--font-sans); font-weight: 600;
+  }
+
+  .step-list { list-style: none; margin: 20px auto; max-width: 720px; }
+  .step-list li { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); font-size: 16px; color: var(--muted-light); }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num { font-family: var(--font-sans); font-weight: 600; font-size: 11px; color: var(--muted); padding-top: 4px; min-width: 24px; }
+  .step-list strong { color: var(--text); font-weight: 600; }
+
+  /* AB compare */
+  .ab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 32px auto; max-width: 720px; }
+  .ab-card { padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .ab-card.winner { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.05); }
+  .ab-label { font-family: var(--font-sans); font-weight: 600; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .ab-card.winner .ab-label { color: var(--accent-green); }
+  .ab-card p { font-size: 16px; color: var(--muted-light); line-height: 1.6; }
+  .ab-card strong { color: var(--text); }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 28px auto; max-width: 880px; }
+  .metric { padding: 28px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-align: center; }
+  .metric-num { font-size: 44px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; margin-bottom: 10px; color: var(--accent); }
+  .metric-label { font-size: 13.5px; color: var(--muted-light); line-height: 1.45; }
+
+  /* ── ARTIFACT BLOCK ── */
+  .artifacts {
+    margin: 40px auto;
+    padding: 28px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    border-left: 3px solid var(--accent-blue);
+    max-width: 720px;
+  }
+
+  .artifacts-label {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 16px;
+  }
+
+  .artifact-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-sans); font-weight: 600;
+  }
+
+  .tag.blue   { border-color: rgba(74,124,255,0.4);  color: var(--accent-blue);   background: rgba(74,124,255,0.08); }
+  .tag.red    { border-color: rgba(232,52,74,0.4);   color: var(--accent-red);    background: rgba(232,52,74,0.08); }
+  .tag.green  { border-color: rgba(34,197,94,0.4);   color: var(--accent-green);  background: rgba(34,197,94,0.08); }
+  .tag.yellow { border-color: rgba(245,158,11,0.4);  color: var(--accent-yellow); background: rgba(245,158,11,0.08); }
+  .tag.purple { border-color: rgba(167,139,250,0.4); color: var(--accent-purple); background: rgba(167,139,250,0.08); }
+
+
+
+/* ── IMAGE PLACEHOLDERS ── */
+  .img-placeholder {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 40px 0;
+    position: relative;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .img-placeholder:hover { border-color: var(--accent-blue); }
+
+  .img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .img-placeholder-inner {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .img-placeholder .ph-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  .img-placeholder .ph-label {
+    font-family: var(--font-sans); font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .img-placeholder .ph-hint {
+    font-size: 13px;
+    color: var(--border);
+    max-width: 360px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .img-placeholder.ratio-16-9 { aspect-ratio: 16/9; }
+  .img-placeholder.ratio-4-3  { aspect-ratio: 4/3; }
+
+
+  /* ── FOOTER ── */
+  footer { padding: 50px 10vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  footer p { color: var(--muted); font-size: 14px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 100px; }
+    .hero-right { display: flex; margin-top: 40px; }
+    .hero-image-wrap { width: 100%; max-width: 420px; height: auto; aspect-ratio: 3/2; margin: 0 auto; }
+    .info-cards { grid-template-columns: 1fr 1fr; }
+    .challenges-grid { grid-template-columns: 1fr; }
+    .biz-user-grid { grid-template-columns: 1fr; }
+    .key-learnings { grid-template-columns: 1fr; }
+    .steps-with-image { grid-template-columns: 1fr; }
+    .design-block-inner, .design-block-inner.reverse { grid-template-columns: 1fr; direction: ltr; }
+    .meta-row { grid-template-columns: 1fr; }
+    .persona-grid { grid-template-columns: 1fr; }
+    .two-col, .ab-grid { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    nav { padding: 14px 20px; }
+    nav .nav-links { display: none; }
+    nav .nav-sep { display: none; }
+    .nav-links-back { gap: 10px; }
+    .nav-logo, .nav-links-back a { font-size: 12px; padding: 6px 8px; white-space: nowrap; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+    .tab { padding: 14px 20px; font-size: 13px; }
+    .cta-block { flex-direction: column; text-align: center; }
+
+    /* Ad-hoc image grids pile vertically instead of squeezing */
+    .ad-grid, .img-grid { grid-template-columns: 1fr !important; }
+
+    /* Gallery "mobile" column becomes a swipeable horizontal carousel */
+    .gallery-column-mobile {
+      flex-direction: row;
+      gap: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .gallery-column-mobile .gallery-mobile {
+      flex: 0 0 70%;
+      scroll-snap-align: center;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .info-cards { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: 1fr; }
+    .gallery-column-mobile .gallery-mobile { flex: 0 0 80%; }
+  }
+
+  /* ── PHASE ANCHORS NAVBAR ── */
+  .phase-anchors {
+    display: none;
+    position: sticky;
+    top: 112px;
+    z-index: 50;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 10vw;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .phase-anchors::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .phase-anchors::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .phase-anchors::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 2px;
+  }
+
+  #tab-detailed .phase-anchors {
+    display: flex;
+  }
+
+  .anchors-list {
+    display: contents;
+    gap: 2px;
+    list-style: none;
+    white-space: nowrap;
+  }
+
+  .anchors-list a {
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    font-weight: 500;
+  }
+
+  .anchors-list a:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .anchors-list a:active,
+  .anchors-list a.active {
+    color: var(--accent);
+    background: rgba(232, 52, 74, 0.1);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    .phase-anchors {
+      padding: 12px 20px;
+    }
+    .anchors-list a {
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+  }
+
+
+
+
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://finelli.xyz/portfolio" class="nav-logo">Portfolio</a>
+  <div class="nav-right">
+    <ul class="nav-links-back">
+      <li><a href="https://finelli.xyz/about">About Me</a></li>
+      <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-left">
+    <div class="hero-company">Behringer X32 · UX/UI for embedded hardware</div>
+    <h1>Touch the<br>mix.<span class="accent"> Live.</span></h1>
+    <p class="hero-desc">How I added a touchscreen to the Behringer X32 — and made one of the most powerful mixing consoles in the world feel like it was designed for humans.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Hardware UX</span>
+      <span class="hero-tag">Embedded Touch UI</span>
+      <span class="hero-tag">A/B Testing</span>
+      <span class="hero-tag">Pro Audio</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-wrap zoomable" onclick="openLightbox('images/x32_hero.png', 'Behringer X32 touchscreen — final touch EQ interface')">
+      <img src="images/x32_hero.png" alt="Behringer X32 touchscreen — final touch EQ interface">
+    </div>
+  </div>
+</header>
+
+<!-- TL;DR -->
+<div class="tldr-section">
+  <h2 class="tldr-title">TL;DR</h2>
+  <div class="tldr-cards">
+    <div class="tldr-card">
+      <div class="tldr-card-label">What we built</div>
+      <p class="tldr-card-text">A direct-manipulation touch EQ interface embedded in the Behringer X32 — the industry standard console for live sound, used in venues worldwide.</p>
+    </div>
+    <div class="tldr-card">
+      <div class="tldr-card-label">How we built it</div>
+      <p class="tldr-card-text">Field research at live venues and studios → two competing layout concepts → A/B testing with real audio engineers → handoff with annotated Figma specs for the hardware team.</p>
+    </div>
+    <div class="tldr-card">
+      <div class="tldr-card-label">What landed</div>
+      <p class="tldr-card-text">85% user satisfaction post-launch · −30% time on task for EQ adjustments · 70% adoption rate — and an interface that engineers could trust on stage.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB SWITCHER -->
+<div class="tab-section">
+  <div class="tabs" role="tablist" aria-label="Case study view">
+    <button class="tab active" role="tab" id="tabbtn-quick" aria-selected="true" aria-controls="tab-quick" onclick="switchTab('quick', this)">
+      <span class="tab-icon"><ion-icon name="flash"></ion-icon></span>
+      <span class="tab-label-full">Quick showcase</span><span class="tab-label-short">Showcase</span>
+    </button>
+    <button class="tab" role="tab" id="tabbtn-detailed" aria-selected="false" aria-controls="tab-detailed" onclick="switchTab('detailed', this)">
+      <span class="tab-icon"><ion-icon name="document-text"></ion-icon></span>
+      <span class="tab-label-full">Detailed case study</span><span class="tab-label-short">Case study</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════ QUICK SHOWCASE ══════════════ -->
+<div id="tab-quick" class="tab-content active" role="tabpanel" aria-labelledby="tabbtn-quick">
+  <div class="quick-section">
+
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-card-icon"><ion-icon name="information-circle"></ion-icon></div>
+        <div class="info-card-title">Context</div>
+        <div class="info-card-text">The Behringer X32 is a reference-class mixing console built around physical knobs and buttons. MusicTribe wanted to integrate a touchscreen — without breaking the tactile workflow that professional engineers already trusted.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon"><ion-icon name="person"></ion-icon></div>
+        <div class="info-card-title">My responsibility</div>
+        <div class="info-card-text">Led product design end-to-end for the embedded touchscreen — field research, ideation, A/B-tested prototyping, and handoff to the engineering team, working closely with MusicTribe's hardware constraints.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon"><ion-icon name="sad"></ion-icon></div>
+        <div class="info-card-title">User problem</div>
+        <div class="info-card-text">EQ adjustment relied on tiny physical knobs, often turned in dim light mid-performance. It was the single most friction-heavy task on the console — slow, imprecise, and unforgiving of mistakes.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon"><ion-icon name="construct"></ion-icon></div>
+        <div class="info-card-title">What we did</div>
+        <div class="info-card-text">Designed a direct-manipulation touch EQ graph and a bottom-anchored control layout — validated through A/B testing two competing layouts with real audio engineers under realistic conditions.</div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Outcomes</h2>
+    <div class="outcomes-list">
+      <div class="outcome-item">
+        <div class="outcome-icon"><ion-icon name="trending-up"></ion-icon></div>
+        85% user satisfaction score post-launch, based on surveys and direct feedback from engineers
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon"><ion-icon name="timer"></ion-icon></div>
+        −30% average time on task for EQ adjustments, measured in timed usability sessions
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-icon"><ion-icon name="checkmark-circle"></ion-icon></div>
+        70% adoption rate for the new touchscreen interface, tracked through console analytics post-launch
+      </div>
+    </div>
+
+    <h2 class="section-heading">Challenges and takeaways</h2>
+    <div class="challenges-grid">
+      <div class="challenge-card">
+        <span class="challenge-icon"><ion-icon name="hand-left"></ion-icon></span>
+        <p class="challenge-text"><strong>Precision under live conditions.</strong> Standard mobile touch-target sizing wasn't enough — imprecise touches from stressed hands during live performance meant we had to rethink interaction sizing from scratch. Getting hit areas and gesture logic right took two extra iterations after mid-fidelity testing.</p>
+      </div>
+      <div class="challenge-card">
+        <span class="challenge-icon"><ion-icon name="shield"></ion-icon></span>
+        <p class="challenge-text"><strong>Respecting a 30-year muscle memory.</strong> The X32's knob-and-button workflow was deeply ingrained in every engineer who touched it. The touchscreen had to feel like an extension of that world, not a replacement — otherwise adoption would stall at zero, no matter how good the design was.</p>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Gallery</h2>
+    <div class="gallery-carousel" id="gallery-carousel">
+      <!-- Detail crops column (left) -->
+      <div class="gallery-column-mobile">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/x32_screen_4.png', 'X32 — touchscreen detail view 1')">
+          <img src="images/x32_screen_4.png" alt="X32 — touchscreen detail view 1" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('images/x32_screen_5.png', 'X32 — touchscreen detail view 2')">
+          <img src="images/x32_screen_5.png" alt="X32 — touchscreen detail view 2" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Main screens column (right) -->
+      <div class="gallery-column-desktop">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_final_ui.png', 'X32 — final touch EQ interface')">
+          <img src="images/x32_final_ui.png" alt="X32 — final touch EQ interface" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_hifi_ab.png', 'X32 — hi-fi prototype A/B comparison')">
+          <img src="images/x32_hifi_ab.png" alt="X32 — hi-fi prototype A/B comparison" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_screen_2.png', 'X32 — additional screen')">
+          <img src="images/x32_screen_2.png" alt="X32 — additional screen" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_screen_3.png', 'X32 — additional screen')">
+          <img src="images/x32_screen_3.png" alt="X32 — additional screen" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/x32_handoff.png', 'X32 — design handoff annotations')">
+          <img src="images/x32_handoff.png" alt="X32 — design handoff annotations" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section">
+      <h2 class="testimonials-title">Working with me</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p class="testimonial-quote">Caterina understood our engineers better than we did. She spent real time at venues before drawing a single screen, and it shows in how little explaining the final interface needs.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="images/avatar_1.jpg" alt="Client">
+            </div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">Client name</div>
+              <div class="testimonial-role">Product Lead, MusicTribe</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">The A/B testing rigor was the difference here — we didn't ship an opinion, we shipped what the data and the engineers actually preferred. That built real trust with the hardware team.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="images/avatar_2.jpg" alt="Developer">
+            </div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">Engineer name</div>
+              <div class="testimonial-role">Lead Firmware Engineer</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">Her handoff docs were precise down to the touch target pixel. Our team built from her specs with almost no back-and-forth, which is rare on hardware-embedded UI work.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <img src="images/avatar_3.jpg" alt="Manager">
+            </div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">Manager name</div>
+              <div class="testimonial-role">Project Manager</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-block">
+      <div class="cta-text">
+        <h3>Want the full design process?</h3>
+        <p>Field research, testing, and every decision behind it — in the Detailed case study tab.</p>
+      </div>
+      <div class="cta-buttons">
+        <a href="#empathize" class="cta-btn secondary" onclick="return goToEmpathize(event);">Read the full case study</a>
+        <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ DETAILED CASE STUDY ══════════════ -->
+<div id="tab-detailed" class="tab-content" role="tabpanel" aria-labelledby="tabbtn-detailed">
+
+  <!-- PHASE ANCHORS (sticky) -->
+  <nav class="phase-anchors" aria-label="Jump to phase">
+    <ul class="anchors-list">
+      <li><a href="#empathize">Empathize</a></li>
+      <li><a href="#define">Define</a></li>
+      <li><a href="#ideate">Ideate</a></li>
+      <li><a href="#prototype">Prototype</a></li>
+      <li><a href="#test">Test</a></li>
+      <li><a href="#design">Deliver</a></li>
+      <li><a href="#results">Results</a></li>
+    </ul>
+  </nav>
+
+  <div class="detailed-section">
+
+    <!-- PROJECT META -->
+    <div class="meta-row" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="meta-box">
+        <div class="meta-box-label">Client</div>
+        <div class="meta-box-content">MusicTribe / Behringer</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Role</div>
+        <div class="meta-box-content">Lead Product Designer</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Platform</div>
+        <div class="meta-box-content">Embedded touchscreen (hardware)</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Methods</div>
+        <div class="meta-box-content">Field research · A/B testing · Usability testing</div>
+      </div>
+    </div>
+
+    <!-- META -->
+    <div class="meta-row">
+      <div class="meta-box">
+        <div class="meta-box-label">Brief</div>
+        <div class="meta-box-content">Integrate a touchscreen UI into the Behringer X32 without disrupting the physical workflow that professional engineers depend on.</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Constraints</div>
+        <div class="meta-box-content">Fixed hardware form factor · existing knob layout unchanged · real-time audio environment · embedded system limitations</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Output</div>
+        <div class="meta-box-content">Touch EQ interface · A/B-tested layout · design system handed off to MusicTribe engineering</div>
+      </div>
+    </div>
+
+    <!-- 01 EMPATHIZE -->
+    <div id="empathize" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 01</div>
+        <h2 class="phase-title">Empathize</h2>
+        <p class="phase-subtitle">Spending time where audio professionals actually work — live venues and recording studios.</p>
+
+        <div class="content-body">
+          <p>The X32 lives in two very different environments: the controlled chaos of a live concert and the focused precision of a recording studio. I started by <strong>observing audio engineers in both contexts</strong>, watching how they moved across the console during performance, where hesitation happened, and what workarounds they'd invented for the interface's shortcomings.</p>
+          <p>Field observations were supplemented with in-depth interviews and a review of existing user feedback logs — effectively reading the console's history of frustration as a design brief.</p>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Field Research</div>
+            <p>Embedded observation at live venues and studios. Watched engineers navigate the console under real time pressure — multiple channels, fast transitions, no margin for error.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Feedback Analysis</div>
+            <p>Reviewed interaction logs and existing user feedback as structured data. Identified recurring failure patterns and mapped them against console sections.</p>
+          </div>
+        </div>
+
+        <div class="callout insight">
+          <ion-icon name="bulb"></ion-icon>
+          <div class="callout-title">What We Kept Hearing</div>
+          <p>EQ adjustment was the most friction-heavy task on the console. Engineers were doing precise, continuous parameter tweaks — gain, frequency, Q-factor — using tiny physical knobs, often in dim lighting, often mid-performance. The hardware was getting in the way of the music.</p>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag blue">Field Observation Notes (live venues + studios)</span>
+            <span class="tag blue">User Interview Summaries</span>
+            <span class="tag blue">Interaction Log Analysis</span>
+            <span class="tag blue">Friction Map by Console Section</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 DEFINE -->
+    <div id="define" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 02</div>
+        <h2 class="phase-title">Define</h2>
+        <p class="phase-subtitle">Translating research into a focused design goal — and understanding who we were really designing for.</p>
+
+        <div class="content-body">
+          <p>The research surfaced a clear tension: experienced engineers had <strong>deeply ingrained muscle memory</strong> tied to physical controls, while newer users were often overwhelmed by the density of the interface. Any touchscreen solution needed to serve both without compromising either.</p>
+          <p>The two most critical pain points emerged as: the complexity of EQ adjustment in high-pressure situations, and the difficulty of quickly surfacing and navigating between controls across multiple channels. Both pointed to the same underlying need — <strong>faster access to the right control at the right moment</strong>.</p>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Marco · Live Sound Engineer</div>
+            <p>"During a show I don't have time to hunt for a control. If I can't find it in two seconds, I move on and something in the mix suffers."</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Sara · Studio Musician</div>
+            <p>"I know what I want to hear, but I can never remember which knob does what. I want to touch the sound directly, not translate it through hardware."</p>
+          </div>
+        </div>
+
+        <div class="big-quote">
+          "Create an intuitive and efficient touch-based interface that simplifies parameter adjustments and reduces cognitive load during high-stakes audio work."
+          <cite>Design goal · Behringer X32 Touchscreen Project</cite>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag red">User Personas (2)</span>
+            <span class="tag red">Pain Point Prioritisation Matrix</span>
+            <span class="tag red">Core Design Goal Statement</span>
+            <span class="tag red">Jobs-to-be-Done Map</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 IDEATE -->
+    <div id="ideate" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 03</div>
+        <h2 class="phase-title">Ideate</h2>
+        <p class="phase-subtitle">Sketching new interaction models for a physical device with decades of established conventions.</p>
+
+        <div class="content-body">
+          <p>Designing a touchscreen for an existing hardware product meant working within strict constraints — form factor, existing control layout, user expectations from years of muscle memory. Rather than trying to replace the physical interface, I focused on <strong>augmenting it</strong>: the touchscreen as a precision layer on top of the hardware, not a replacement for it.</p>
+          <p>The central concept that emerged was the <strong>touch-enabled EQ graph</strong>: instead of turning knobs to adjust equalisation parameters, the engineer could directly grab and drag points on a visual frequency curve. It made an invisible signal visible and manipulable in a single gesture.</p>
+        </div>
+
+        <ul class="step-list">
+          <li><span class="step-num">→</span><span><strong>Touch EQ graph:</strong> Direct manipulation of frequency, gain, and Q-factor via draggable nodes on a live curve — the core innovation of the interface.</span></li>
+          <li><span class="step-num">→</span><span><strong>Channel navigation:</strong> Swipe-based channel switching to move quickly across the mix without interrupting the current workflow.</span></li>
+          <li><span class="step-num">→</span><span><strong>Preset system:</strong> Save and recall custom EQ configurations with a single tap — critical for engineers working across multiple events.</span></li>
+          <li><span class="step-num">→</span><span><strong>Visual indicators:</strong> Clear signifiers for active controls — gain level, frequency band, Q width — to reduce mental translation between gesture and result.</span></li>
+        </ul>
+
+        <div class="callout insight">
+          <ion-icon name="bulb"></ion-icon>
+          <div class="callout-title">The Controls Panel Question</div>
+          <p>Early sketching produced two distinct layout approaches for the parameter controls panel — a decision that would go directly to A/B testing rather than being resolved by assumption.</p>
+        </div>
+
+        <div class="ab-grid">
+          <div class="ab-card">
+            <div class="ab-label">Version A · Controls at top</div>
+            <p><strong>Rationale:</strong> Maximum immediate visibility of parameters on screen load. Follows conventional UI patterns for settings panels.</p>
+          </div>
+          <div class="ab-card">
+            <div class="ab-label">Version B · Controls at bottom</div>
+            <p><strong>Rationale:</strong> Optimised for thumb reach during one-handed operation. Controls placed where fingers naturally rest on a surface-mounted screen.</p>
+          </div>
+        </div>
+
+        <div class="img-placeholder ratio-16-9">
+          <div class="img-placeholder-inner">
+            <div class="ph-icon"><ion-icon name="pencil"></ion-icon></div>
+            <div class="ph-label">Wireframes · EQ graph concept + layout variants A/B</div>
+            <div class="ph-hint">Suggested: x32_wireframes.png · Initial sketches of both layouts with EQ graph · 1600 × 900px</div>
+          </div>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag green">Hand-Drawn Wireframes</span>
+            <span class="tag green">Touch EQ Interaction Model</span>
+            <span class="tag green">Layout Variants A + B</span>
+            <span class="tag green">Gesture Vocabulary Document</span>
+            <span class="tag green">Feature Prioritisation Notes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 PROTOTYPE -->
+    <div id="prototype" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 04</div>
+        <h2 class="phase-title">Prototype</h2>
+        <p class="phase-subtitle">From sketches to a high-fidelity Figma prototype — testing interaction logic before it touched hardware.</p>
+
+        <div class="content-body">
+          <p>I moved through fidelity levels deliberately. Low-fidelity paper sketches validated the basic information architecture and gesture model without the distraction of visual polish. Once the core flows were internally consistent, I built <strong>mid-fidelity wireframes in Figma</strong> to stress-test layout density — the EQ graph needed to be large enough for accurate touch manipulation without crowding the rest of the interface.</p>
+          <p>The high-fidelity prototype brought the full experience to life across three key workflows: adjusting EQ parameters in real time, managing presets, and navigating between channels. These scenarios were chosen because they represented the highest-frequency, highest-stakes tasks in a live environment.</p>
+        </div>
+
+        <div class="callout decision">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          <div class="callout-title">Prototype-Driven Decision</div>
+          <p>During mid-fi prototyping, we realised that the EQ node handles needed to be significantly larger than standard touch targets — live performance means imprecise touches from stressed hands. The final hit areas were sized to 44×44pt minimum, with magnetic snapping to help guide imprecise gestures onto the correct node.</p>
+        </div>
+
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/x32_hifi_ab.png', 'High-fidelity prototype — Version A and B comparison')">
+          <img src="images/x32_hifi_ab.png" alt="High-fidelity prototype — Version A and B comparison" loading="lazy">
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag yellow">Paper Wireframes</span>
+            <span class="tag yellow">Mid-Fi Wireframes (Figma)</span>
+            <span class="tag yellow">Hi-Fi Prototype — Version A</span>
+            <span class="tag yellow">Hi-Fi Prototype — Version B</span>
+            <span class="tag yellow">Interaction Annotation Document</span>
+            <span class="tag yellow">Touch Target Specification</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 TEST -->
+    <div id="test" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 05</div>
+        <h2 class="phase-title">Test</h2>
+        <p class="phase-subtitle">A/B testing and hands-on usability sessions with real audio engineers — measuring what mattered.</p>
+
+        <div class="content-body">
+          <p>Testing was structured around the two layout variants and centred on the tasks that defined success in the field: EQ adjustment speed, control discoverability, and cross-channel navigation. Participants included both experienced audio engineers and less technical musicians — the full range of target users.</p>
+        </div>
+
+        <ul class="step-list">
+          <li><span class="step-num">01</span><span><strong>A/B layout test:</strong> Both versions were tested with identical task sets. User performance (time on task) and satisfaction (post-session rating) were recorded for each variant.</span></li>
+          <li><span class="step-num">02</span><span><strong>EQ manipulation accuracy:</strong> Users were asked to reach a target frequency and gain value using the touch graph. We measured time and number of corrections needed.</span></li>
+          <li><span class="step-num">03</span><span><strong>Preset recall:</strong> Engineers tested saving a custom EQ profile and recalling it mid-session. Discoverability of the save function was a common early failure point.</span></li>
+          <li><span class="step-num">04</span><span><strong>Channel navigation:</strong> Cross-channel switching was timed across both layouts to identify where friction remained.</span></li>
+        </ul>
+
+        <div class="ab-grid">
+          <div class="ab-card">
+            <div class="ab-label">Version A · Controls at top</div>
+            <p>Users adapted quickly on first load but reported <strong>fatigue</strong> during extended sessions — reaching upward repeatedly on a console-mounted screen was physically uncomfortable.</p>
+          </div>
+          <div class="ab-card winner">
+            <div class="ab-label">✓ Winner · Version B · Controls at bottom</div>
+            <p>Overwhelming preference in qualitative feedback. <strong>Ergonomically natural</strong> for both standing engineers and seated studio work. Time-on-task scores significantly lower across all tested workflows.</p>
+          </div>
+        </div>
+
+        <div class="callout problem">
+          <ion-icon name="flash"></ion-icon>
+          <div class="callout-title">Key Finding — Preset Discoverability</div>
+          <p>The save/recall function for custom presets was consistently missed in early test sessions. Users expected it adjacent to the EQ graph, not in a separate panel. We relocated it in the next iteration — and first-attempt success rate jumped significantly.</p>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag purple">Usability Test Script</span>
+            <span class="tag purple">A/B Test Results Report</span>
+            <span class="tag purple">Task Performance Data (time on task)</span>
+            <span class="tag purple">Qualitative Feedback Summary</span>
+            <span class="tag purple">Prioritised Iteration Backlog</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 DELIVER -->
+    <div id="design" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 06</div>
+        <h2 class="phase-title">Deliver</h2>
+        <p class="phase-subtitle">Final UI, design handoff documentation, and the visual decisions that carried the interface across the finish line.</p>
+
+        <div class="content-body">
+          <p>The final interface was built around Version B's ergonomic layout, refined through two further rounds of iteration following the test findings. The <strong>touch EQ graph</strong> became the centrepiece of the screen — large, precise, and directly responsive, with the parameter controls (gain, frequency, Q) anchored at the bottom within comfortable thumb reach.</p>
+          <p>Visual decisions were deliberate: a dark, high-contrast palette matched the low-light conditions of live venues. Key control states — active, engaged, clipping — used colour distinctively rather than relying on text labels. The goal was <strong>readability at a glance</strong>, not after parsing.</p>
+          <p>Handoff documentation was prepared for the engineering team with annotated Figma specs covering all interactive states, touch target dimensions, and edge cases — particularly for the EQ graph behaviour at frequency extremes and during multi-node editing.</p>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">EQ Graph Behaviour</div>
+            <p>Direct drag to move frequency nodes. Long-press to isolate a band. Pinch to adjust Q-width. Double-tap node to reset to default. All gestures mapped to established touch conventions — no new learning required.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Cross-Channel Navigation</div>
+            <p>Swipe left/right to move between channels without losing current EQ view state. Channel strip thumbnails in the header provide spatial context and quick jump targets across the full mix.</p>
+          </div>
+        </div>
+
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/x32_final_ui.png', 'Final UI — touch EQ interface Version B')">
+          <img src="images/x32_final_ui.png" alt="Final UI — touch EQ interface Version B" loading="lazy">
+        </div>
+
+        <div class="ad-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:-8px 0 40px;">
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_2.png', 'X32 additional screen')">
+            <img src="images/x32_screen_2.png" alt="X32 additional screen" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_3.png', 'X32 additional screen')">
+            <img src="images/x32_screen_3.png" alt="X32 additional screen" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_4.png', 'X32 additional screen')">
+            <img src="images/x32_screen_4.png" alt="X32 additional screen" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('images/x32_screen_5.png', 'X32 additional screen')">
+            <img src="images/x32_screen_5.png" alt="X32 additional screen" loading="lazy">
+          </div>
+        </div>
+
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/x32_handoff.png', 'Design handoff — annotated specs and components')">
+          <img src="images/x32_handoff.png" alt="Design handoff — annotated specs and components" loading="lazy">
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag blue">Final UI — Touch Interface (Figma)</span>
+            <span class="tag blue">Interactive Prototype (key scenarios)</span>
+            <span class="tag blue">Design Handoff Annotations</span>
+            <span class="tag blue">Touch Target Specification Sheet</span>
+            <span class="tag blue">State Documentation (all interactive elements)</span>
+            <span class="tag blue">Edge Case Reference Document</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 RESULTS -->
+    <div id="results" class="phase-container">
+      <div class="phase-block" style="max-width:760px; margin:0 auto;">
+        <div class="phase-number">Phase 07</div>
+        <h2 class="phase-title">Results &amp; Learnings</h2>
+        <p class="phase-subtitle">What shipped, what we measured, and what I'd approach differently.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-num" style="color:var(--accent-green);">85%</div>
+            <div class="metric-label">User satisfaction score post-launch (surveys + direct feedback)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" style="color:var(--accent-blue);">−30%</div>
+            <div class="metric-label">Average time on task for EQ adjustments (timed usability tests)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" style="color:var(--accent-yellow);">70%</div>
+            <div class="metric-label">Adoption rate for the new touchscreen interface (console analytics)</div>
+          </div>
+        </div>
+
+        <div class="content-body">
+          <p><strong>What I'm most proud of:</strong> the touch EQ graph. It sounds obvious in retrospect — of course you should be able to grab a frequency curve directly — but translating that into a design precise enough for professional work, fast enough for live performance, and accessible enough for less experienced users required significant iteration. The A/B data confirmed we got there.</p>
+          <p><strong>What I'd do differently:</strong> I underestimated how much the testing environment matters for hardware-adjacent interfaces. Usability sessions in a studio chair don't fully capture the physical reality of standing at a console during a live show — hands slightly less stable, attention divided, lighting unpredictable. Earlier in-context testing, even informal, would have surfaced the touch target sizing issue sooner.</p>
+        </div>
+
+        <div class="callout quote">
+          <ion-icon name="sparkles"></ion-icon>
+          <div class="callout-title">The underlying principle</div>
+          <p>The best hardware UI is invisible. If an engineer adjusts three bands in the middle of a set and can't quite explain how they did it — they just reached out and grabbed the sound — the design worked. Every decision here was in service of that one idea.</p>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Shipped Features</div>
+            <p>Touch EQ graph with direct node manipulation · Bottom-anchored parameter controls · Swipe-based channel navigation · Custom preset save &amp; recall · Visual level indicators with colour-coded states</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Success Metrics Defined</div>
+            <p>Task success rate for EQ adjustment · Time on task vs baseline · Adoption rate tracked via console usage analytics · Post-launch satisfaction via user surveys</p>
+          </div>
+        </div>
+
+        <div class="cta-block" style="max-width:none;">
+          <div class="cta-text">
+            <h3>Curious how I'd approach your product?</h3>
+            <p>I'm currently open to remote Senior Product Designer roles — let's talk.</p>
+          </div>
+          <div class="cta-buttons">
+            <a href="https://finelli.xyz/about" class="cta-btn secondary">More about me</a>
+            <a href="#" class="cta-btn secondary" target="_blank" rel="noopener">Download CV</a>
+            <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /tab-detailed -->
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();" aria-label="Close"><ion-icon name="close"></ion-icon></button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation();">
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">Behringer X32 · UX/UI Case Study</p>
+    <p style="color:var(--muted);">Product Design · Field Research · Prototyping · A/B Testing · Design Handoff</p>
+  </div>
+  <p style="color:var(--muted); font-size:13px;">Caterina Finelli</p>
+</footer>
+
+</body>
+</html>
