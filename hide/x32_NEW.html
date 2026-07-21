@@ -32,6 +32,14 @@
     window.scrollTo({ top: document.querySelector('.tab-section').offsetTop - 57, behavior: 'smooth' });
   }
 
+  function toggleMobileMenu() {
+    const overlay = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    const isOpen = overlay.classList.toggle('active');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
   function goToEmpathize(e) {
     if (e) e.preventDefault();
     switchTab('detailed', document.getElementById('tabbtn-detailed'));
@@ -225,6 +233,50 @@
   .nav-logo:hover, .nav-links-back a:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
   .nav-logo { display: flex; align-items: center; padding: 6px; border-radius: 50%; }
   .nav-logo img { width: 28px; height: 28px; display: block; border-radius: 50%; }
+
+  /* ── MOBILE HAMBURGER + FULL-SCREEN MENU ── */
+  .nav-hamburger {
+    display: none;
+    align-items: center; justify-content: center;
+    width: 40px; height: 40px;
+    background: none; border: none; border-radius: 10px;
+    color: var(--text); font-size: 24px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .nav-hamburger:hover { background: rgba(255,255,255,0.06); }
+
+  .mobile-menu-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 300;
+    background: var(--bg);
+    flex-direction: column;
+  }
+  .mobile-menu-overlay.active { display: flex; }
+
+  .mobile-menu-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(46,46,46,0.6);
+  }
+  .mobile-menu-close {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px;
+    background: none; border: none; border-radius: 10px;
+    color: var(--text); font-size: 26px;
+    cursor: pointer;
+  }
+  .mobile-menu-close:hover { background: rgba(255,255,255,0.06); }
+
+  .mobile-menu-links {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px; list-style: none;
+  }
+  .mobile-menu-links a {
+    font-size: 28px; font-weight: 700; color: var(--text); text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .mobile-menu-links a:active { color: var(--accent); }
 
   .nav-links a {
     font-size: 12.5px; color: var(--muted); text-decoration: none;
@@ -1016,8 +1068,9 @@
     nav { padding: 14px 20px; }
     nav .nav-links { display: none; }
     nav .nav-sep { display: none; }
-    .nav-links-back { gap: 10px; }
-    .nav-links-back a { font-size: 12px; padding: 6px 8px; white-space: nowrap; }
+    /* Replaced by the full-screen hamburger menu on mobile */
+    .nav-links-back { display: none; }
+    .nav-hamburger { display: flex; }
     footer { flex-direction: column; gap: 8px; text-align: center; }
     .tab { padding: 14px 20px; font-size: 13px; }
     .cta-block { flex-direction: column; text-align: center; }
@@ -1025,27 +1078,13 @@
     /* Ad-hoc image grids pile vertically instead of squeezing */
     .ad-grid, .img-grid { grid-template-columns: 1fr !important; }
 
-    /* Gallery "mobile" column becomes a swipeable horizontal carousel */
-    .gallery-column-mobile {
-      flex-direction: row;
-      gap: 16px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scroll-snap-type: x mandatory;
-      padding-bottom: 8px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
-    }
-    .gallery-column-mobile .gallery-mobile {
-      flex: 0 0 70%;
-      scroll-snap-align: center;
-    }
+    /* Gallery "mobile" column: stacked one below the other, like everything else */
+    .gallery-column-mobile { flex-direction: column; }
   }
 
   @media (max-width: 600px) {
     .info-cards { grid-template-columns: 1fr; }
     .metrics { grid-template-columns: 1fr; }
-    .gallery-column-mobile .gallery-mobile { flex: 0 0 80%; }
   }
 
   /* ── PHASE ANCHORS NAVBAR ── */
@@ -1111,12 +1150,29 @@
   }
 
   @media (max-width: 768px) {
+    /* Sticky at the BOTTOM on mobile, within thumb reach, instead of top */
     .phase-anchors {
-      padding: 12px 20px;
+      position: fixed;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      border-bottom: none;
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -8px 28px rgba(0,0,0,0.4);
+      z-index: 150;
     }
+    /* Bigger, more legible anchors — fine if fewer fit on screen at once */
     .anchors-list a {
-      padding: 6px 10px;
-      font-size: 11px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    /* Room at the bottom of the detailed tab so content isn't hidden behind the fixed bar */
+    #tab-detailed .detailed-section {
+      padding-bottom: 96px;
     }
   }
 
@@ -1136,8 +1192,25 @@
       <li><a href="https://finelli.xyz/about">About Me</a></li>
       <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
     </ul>
+    <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <ion-icon name="menu-outline"></ion-icon>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE FULL-SCREEN MENU -->
+<div class="mobile-menu-overlay" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <a href="https://finelli.xyz/portfolio" class="nav-logo" aria-label="Portfolio"><img src="https://finelli.xyz/favicon/favicon-32x32.png" alt="Portfolio"></a>
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close menu">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+  <ul class="mobile-menu-links">
+    <li><a href="https://finelli.xyz/about">About Me</a></li>
+    <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
+  </ul>
+</div>
 
 <!-- HERO -->
 <header class="hero">
