@@ -3,17 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>inFi — Product Design Case Study by Caterina Finelli</title>
+<title>X32 Behringer — Product Design Case Study by Caterina Finelli</title>
 <link rel="icon" type="image/x-icon" href="https://finelli.xyz/favicon/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="https://finelli.xyz/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://finelli.xyz/favicon/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://finelli.xyz/favicon/apple-touch-icon.png">
 <link rel="manifest" href="https://finelli.xyz/favicon/site.webmanifest">
-<meta name="description" content="How I designed inFi, a social indoor-navigation app built on geomagnetic positioning, from a one-line brief to a live product for airports, museums and conference venues. Full UX process: research, definition, ideation, prototyping, testing, delivery.">
-<meta property="og:title" content="inFi — Product Design Case Study">
-<meta property="og:description" content="From a one-line brief to a live indoor-navigation product. Full design process, from research to delivery.">
+<meta name="description" content="How I designed the touchscreen interface for the Behringer X32 — a reference-class mixing console — from field research with audio engineers to a validated A/B-tested UI. Full UX process: empathize, define, ideate, prototype, test, deliver.">
+<meta property="og:title" content="X32 Behringer — Product Design Case Study">
+<meta property="og:description" content="Adding a touchscreen to one of the world's most powerful mixing consoles. Full design process from field research to handoff.">
 <meta property="og:type" content="website">
-<!-- Add og:image with an absolute URL to infi_hero.png once hosted -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -41,15 +40,16 @@
     if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   }
 
-  function goToResearch(e) {
+  function goToEmpathize(e) {
     if (e) e.preventDefault();
     switchTab('detailed', document.getElementById('tabbtn-detailed'));
     setTimeout(() => {
-      document.getElementById('research').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('empathize').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 60);
     return false;
   }
 
+  // Gallery lightbox
   // NB: images are queried live (not cached at parse time), because this
   // <script> runs in <head> before <body> exists — a cached NodeList here
   // would always be empty and the arrow keys would silently do nothing.
@@ -134,7 +134,7 @@
 
   // Phase Anchors Active Link Highlight
   const phaseAnchors = document.querySelectorAll('.anchors-list a');
-  const phaseContainers = document.querySelectorAll('#research, #define, #ideate, #prototype, #test, #design, #handoff, #results');
+  const phaseContainers = document.querySelectorAll('#empathize, #define, #ideate, #prototype, #test, #design, #results');
 
   function updateActiveAnchor() {
     let activeAnchor = null;
@@ -158,8 +158,15 @@
   document.addEventListener('scroll', updateActiveAnchor, { passive: true });
   // Initial call to set active anchor on page load
   setTimeout(updateActiveAnchor, 100);
-</script>
 
+  // When you tap an anchor, centre it horizontally right away, instead of
+  // waiting for the page scroll to catch up and trigger updateActiveAnchor.
+  phaseAnchors.forEach(anchor => {
+    anchor.addEventListener('click', () => {
+      anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+  });
+</script>
 
 <style>
   :root {
@@ -241,7 +248,7 @@
     align-items: center; justify-content: center;
     width: 40px; height: 40px;
     background: none; border: none; border-radius: 10px;
-    color: var(--text); font-size: 24px;
+    color: var(--text); font-size: 30px;
     cursor: pointer; transition: background 0.2s;
   }
   .nav-hamburger:hover { background: rgba(255,255,255,0.06); }
@@ -700,6 +707,7 @@
   .phase-container { margin-top: 150px; margin-bottom: 80px; }
 
   .meta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 auto 24px; max-width: 880px; }
+  .meta-row-4 { grid-template-columns: repeat(4, 1fr); }
   .meta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
   .meta-box-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
   .meta-box-content { font-size: 15px; color: var(--text); line-height: 1.75; }
@@ -804,12 +812,12 @@
     padding: 0 10vw;
   }
 
-  #research, #define, #ideate, #prototype, #test, #design, #handoff, #results {
+  #empathize, #define, #ideate, #prototype, #test, #design, #results {
     border-top: 1px solid var(--border);
     padding-top: 56px;
   }
 
-  #research {
+  #empathize {
     border-top: none;
     padding-top: 0;
   }
@@ -1150,29 +1158,13 @@
   }
 
   @media (max-width: 768px) {
-    /* Sticky at the BOTTOM on mobile, within thumb reach, instead of top */
     .phase-anchors {
-      position: fixed;
-      top: auto;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px 16px;
-      padding-bottom: calc(10px + env(safe-area-inset-bottom));
-      border-bottom: none;
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -8px 28px rgba(0,0,0,0.4);
-      z-index: 150;
-    }
-    /* Bigger, more legible anchors — fine if fewer fit on screen at once */
-    .anchors-list a {
       padding: 12px 20px;
-      font-size: 16px;
-      font-weight: 600;
     }
-    /* Room at the bottom of the detailed tab so content isn't hidden behind the fixed bar */
-    #tab-detailed .detailed-section {
-      padding-bottom: 96px;
+    /* Readable but not bigger than the tab labels (13px) */
+    .anchors-list a {
+      padding: 8px 14px;
+      font-size: 13px;
     }
   }
 
@@ -1190,7 +1182,6 @@
   <div class="nav-right">
     <ul class="nav-links-back">
       <li><a href="https://finelli.xyz/about">About Me</a></li>
-      <!-- TODO: replace # with a hosted PDF/Drive link to your CV -->
       <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
     </ul>
     <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
@@ -1216,37 +1207,38 @@
 <!-- HERO -->
 <header class="hero">
   <div class="hero-left">
-    <div class="hero-company">inFi · A story about finding your way indoors</div>
-    <h1>Navigate indoors<br>like a <span class="accent">Ninja</span>.</h1>
-    <p class="hero-desc">How I designed inFi — a social indoor-navigation app built on geomagnetic positioning — from a one-line brief into a live product for airports, museums, and conference venues.</p>
+    <div class="hero-company">Behringer X32 · UX/UI for embedded hardware</div>
+    <h1>Touch the<br>mix.<span class="accent"> Live.</span></h1>
+    <p class="hero-desc">How I added a touchscreen to the Behringer X32 — and made one of the most powerful mixing consoles in the world feel like it was designed for humans.</p>
     <div class="hero-tags">
-      <span class="hero-tag">SaaS + B2C</span>
-      <span class="hero-tag">Mobile + Web Admin</span>
-      <span class="hero-tag">Social</span>
-      <span class="hero-tag">Indoor Positioning</span>
+      <span class="hero-tag">Hardware UX</span>
+      <span class="hero-tag">Embedded Touch UI</span>
+      <span class="hero-tag">A/B Testing</span>
+      <span class="hero-tag">Pro Audio</span>
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-image-wrap zoomable" onclick="openLightbox('https://finelli.xyz/images/infi_hero.png', 'inFi app screens collage — mobile navigation, admin panel and visibility settings')">
-      <img src="https://finelli.xyz/images/infi_hero.png" alt="inFi app screens collage — mobile navigation, admin panel and visibility settings">
+    <div class="hero-image-wrap zoomable" onclick="openLightbox('https://finelli.xyz/images/x32_hero.png', 'Behringer X32 touchscreen — final touch EQ interface')">
+      <img src="https://finelli.xyz/images/x32_hero.png" alt="Behringer X32 touchscreen — final touch EQ interface">
     </div>
   </div>
 </header>
 
+<!-- TL;DR -->
 <div class="tldr-section">
   <h2 class="tldr-title">TL;DR</h2>
   <div class="tldr-cards">
     <div class="tldr-card">
       <div class="tldr-card-label">What we built</div>
-      <p class="tldr-card-text">B2C + SaaS build — mobile app for visitors, admin panel for venue managers, one shared indoor map underneath both as sole Lead Designer.</p>
+      <p class="tldr-card-text">A direct-manipulation touch EQ interface embedded in the Behringer X32 — the industry standard console for live sound, used in venues worldwide.</p>
     </div>
     <div class="tldr-card">
       <div class="tldr-card-label">How we built it</div>
-      <p class="tldr-card-text">Owned it end to end: research → problem framing → prototyping → usability testing → dev handoff, including a pattern library so teams I'd never meet could build from it.</p>
+      <p class="tldr-card-text">Field research at live venues and studios → two competing layout concepts → A/B testing with real audio engineers → handoff with annotated Figma specs for the hardware team.</p>
     </div>
     <div class="tldr-card">
-      <div class="tldr-card-label">What we learned</div>
-      <p class="tldr-card-text">Result: +23% unaided POI navigation after an A/B test, and a privacy model (mutual visibility) that tested as the single most trusted feature — even though it made the build harder.</p>
+      <div class="tldr-card-label">What landed</div>
+      <p class="tldr-card-text">85% user satisfaction post-launch · −30% time on task for EQ adjustments · 70% adoption rate — and an interface that engineers could trust on stage.</p>
     </div>
   </div>
 </div>
@@ -1265,119 +1257,89 @@
   </div>
 </div>
 
-<div class="tldr-section" style="display:none;">
-  <div class="tldr-cards">
-    <div class="tldr-card">
-      <div class="tldr-card-label">What we built</div>
-      <p class="tldr-card-text">Sole product designer on a 7-month B2C + SaaS build — mobile app for visitors, admin panel for venue managers, one shared indoor map underneath both.</p>
-    </div>
-    <div class="tldr-card">
-      <div class="tldr-card-label">How we built it</div>
-      <p class="tldr-card-text">Owned it end to end: research → problem framing → prototyping → usability testing → dev handoff, including a pattern library so teams I'd never meet could build from it.</p>
-    </div>
-    <div class="tldr-card">
-      <div class="tldr-card-label">What we learned</div>
-      <p class="tldr-card-text">Result: +23% unaided POI navigation after an A/B test, and a privacy model (mutual visibility) that tested as the single most trusted feature — even though it made the build harder.</p>
-    </div>
-  </div>
-</div>
-
 <!-- ══════════════ QUICK SHOWCASE ══════════════ -->
 <div id="tab-quick" class="tab-content active" role="tabpanel" aria-labelledby="tabbtn-quick">
   <div class="quick-section">
 
     <div class="info-cards">
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="information-circle"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="information-circle"></ion-icon></div>
         <div class="info-card-title">Context</div>
-        <div class="info-card-text">It all started with one line in the brief: "navigate indoor venues like a ninja." No specs, no defined users, no fixed stack — just that sentence. Seven months later, we'd shipped a social navigation platform built on the Earth's own geomagnetic field.</div>
+        <div class="info-card-text">The Behringer X32 is a reference-class mixing console built around physical knobs and buttons. MusicTribe wanted to integrate a touchscreen — without breaking the tactile workflow that professional engineers already trusted.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="person"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="person"></ion-icon></div>
         <div class="info-card-title">My responsibility</div>
-        <div class="info-card-text">I led UX and UI for both sides of the product — the mobile app people used to find their way, and the web panel venue managers used to watch over the floor — from the first workshop all the way to dev handoff.</div>
+        <div class="info-card-text">Led product design end-to-end for the embedded touchscreen — field research, ideation, A/B-tested prototyping, and handoff to the engineering team, working closely with MusicTribe's hardware constraints.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="sad"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="sad"></ion-icon></div>
         <div class="info-card-title">User problem</div>
-        <div class="info-card-text">Picture landing in an airport, a museum, a conference hall you've never set foot in. No indoor GPS exists. The map is a static PDF pinned to a wall. And you have no idea whether the people you're looking for are two rooms away or two floors away.</div>
+        <div class="info-card-text">EQ adjustment relied on tiny physical knobs, often turned in dim light mid-performance. It was the single most friction-heavy task on the console — slow, imprecise, and unforgiving of mistakes.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="construct"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="construct"></ion-icon></div>
         <div class="info-card-title">What we did</div>
-        <div class="info-card-text">We ended up building two products under one roof: a cross-platform app that finds you indoors using IndoorAtlas' geomagnetic positioning, and a real-time control panel for venue staff — with privacy woven into the foundations, not bolted on at the end.</div>
+        <div class="info-card-text">Designed a direct-manipulation touch EQ graph and a bottom-anchored control layout — validated through A/B testing two competing layouts with real audio engineers under realistic conditions.</div>
       </div>
     </div>
 
     <h2 class="section-heading">Outcomes</h2>
-    <p class="research-intro" style="margin-bottom:32px;">Here's what changed once real people started using it, not just testers in a room:</p>
     <div class="outcomes-list">
       <div class="outcome-item">
         <div class="outcome-icon"><ion-icon name="trending-up"></ion-icon></div>
-        We A/B tested minimal icon cues against text labels and found the simpler cues won by +23% in POI navigation success
+        85% user satisfaction score post-launch, based on surveys and direct feedback from engineers
       </div>
       <div class="outcome-item">
-        <div class="outcome-icon"><ion-icon name="time"></ion-icon></div>
-        9 out of 10 people reached their Point of Interest unaided — no help screen, no second look at the map
+        <div class="outcome-icon"><ion-icon name="timer"></ion-icon></div>
+        −30% average time on task for EQ adjustments, measured in timed usability sessions
       </div>
       <div class="outcome-item">
         <div class="outcome-icon"><ion-icon name="checkmark-circle"></ion-icon></div>
-        The mutual visibility system came out as the most trusted feature in every single usability session — nobody flagged it as creepy
+        70% adoption rate for the new touchscreen interface, tracked through console analytics post-launch
       </div>
     </div>
 
     <h2 class="section-heading">Challenges and takeaways</h2>
     <div class="challenges-grid">
       <div class="challenge-card">
-        <div class="challenge-icon"><ion-icon name="people"></ion-icon></div>
-        <p class="challenge-text">I was designing for two completely different people at once: the visitor with a phone in one hand, rushing to find a room, and the admin behind a desktop screen, watching a live floor plan. Keeping both honestly served — without quietly building two separate products — was the tension I lived with for seven months.</p>
+        <span class="challenge-icon"><ion-icon name="hand-left"></ion-icon></span>
+        <p class="challenge-text"><strong>Precision under live conditions.</strong> Standard mobile touch-target sizing wasn't enough — imprecise touches from stressed hands during live performance meant we had to rethink interaction sizing from scratch. Getting hit areas and gesture logic right took two extra iterations after mid-fidelity testing.</p>
       </div>
       <div class="challenge-card">
-        <div class="challenge-icon"><ion-icon name="shield"></ion-icon></div>
-        <p class="challenge-text">There was a real risk that inFi would feel like a surveillance app, and no toggle buried in a settings menu was going to fix that — it had to be solved in the architecture itself. So we built mutual visibility: you only show up on someone's map if they've shared their location with you too. I held that line even when the pressure came, late in delivery, to simplify it away.</p>
+        <span class="challenge-icon"><ion-icon name="shield"></ion-icon></span>
+        <p class="challenge-text"><strong>Respecting a 30-year muscle memory.</strong> The X32's knob-and-button workflow was deeply ingrained in every engineer who touched it. The touchscreen had to feel like an extension of that world, not a replacement — otherwise adoption would stall at zero, no matter how good the design was.</p>
       </div>
     </div>
 
     <h2 class="section-heading">Gallery</h2>
     <div class="gallery-carousel" id="gallery-carousel">
-      <!-- Mobile apps column (left) -->
+      <!-- Detail crops column (left) -->
       <div class="gallery-column-mobile">
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_01.png', 'inFi — app screen 1')">
-          <img src="https://finelli.xyz/images/infi_gallery_01.png" alt="inFi — app screen 1" loading="lazy">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_4.png', 'X32 — touchscreen detail view 1')">
+          <img src="https://finelli.xyz/images/x32_screen_4.png" alt="X32 — touchscreen detail view 1" loading="lazy">
         </div>
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_03.png', 'inFi — app screen 2')">
-          <img src="https://finelli.xyz/images/infi_gallery_03.png" alt="inFi — app screen 2" loading="lazy">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 — touchscreen detail view 2')">
+          <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 — touchscreen detail view 2" loading="lazy">
         </div>
-  
       </div>
 
-      <!-- Desktop admin column (right) -->
+      <!-- Main screens column (right) -->
       <div class="gallery-column-desktop">
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_02.png', 'inFi — admin panel 1')">
-          <img src="https://finelli.xyz/images/infi_gallery_02.png" alt="inFi — admin panel 1" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_final_ui.png', 'X32 — final touch EQ interface')">
+          <img src="https://finelli.xyz/images/x32_final_ui.png" alt="X32 — final touch EQ interface" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_04.png', 'inFi — admin panel 2')">
-          <img src="https://finelli.xyz/images/infi_gallery_04.png" alt="inFi — admin panel 2" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_hifi_ab.png', 'X32 — hi-fi prototype A/B comparison')">
+          <img src="https://finelli.xyz/images/x32_hifi_ab.png" alt="X32 — hi-fi prototype A/B comparison" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_06.png', 'inFi — admin panel 3')">
-          <img src="https://finelli.xyz/images/infi_gallery_06.png" alt="inFi — admin panel 3" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_2.png', 'X32 — additional screen')">
+          <img src="https://finelli.xyz/images/x32_screen_2.png" alt="X32 — additional screen" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_08.png', 'inFi — admin panel 4')">
-          <img src="https://finelli.xyz/images/infi_gallery_08.png" alt="inFi — admin panel 4" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_3.png', 'X32 — additional screen')">
+          <img src="https://finelli.xyz/images/x32_screen_3.png" alt="X32 — additional screen" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_10.png', 'inFi — admin panel 5')">
-          <img src="https://finelli.xyz/images/infi_gallery_10.png" alt="inFi — admin panel 5" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_11.png', 'inFi — admin panel 5')">
-          <img src="https://finelli.xyz/images/infi_gallery_11.png" alt="inFi — admin panel 6" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_handoff.png', 'X32 — design handoff annotations')">
+          <img src="https://finelli.xyz/images/x32_handoff.png" alt="X32 — design handoff annotations" loading="lazy">
         </div>
       </div>
     </div>
@@ -1387,37 +1349,37 @@
       <h2 class="testimonials-title">Working with me</h2>
       <div class="testimonials-grid">
         <div class="testimonial-card">
-          <p class="testimonial-quote">Caterina's attention to edge cases and privacy concerns made us feel like we weren't building a surveillance tool. She held the line on things that mattered.</p>
+          <p class="testimonial-quote">Caterina understood our engineers better than we did. She spent real time at venues before drawing a single screen, and it shows in how little explaining the final interface needs.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
               <img src="https://finelli.xyz/images/avatar_1.jpg" alt="Client">
             </div>
             <div class="testimonial-info">
-              <div class="testimonial-name">Sarah Chen</div>
-              <div class="testimonial-role">Product Lead, inFi</div>
+              <div class="testimonial-name">Client name</div>
+              <div class="testimonial-role">Product Lead, MusicTribe</div>
             </div>
           </div>
         </div>
         <div class="testimonial-card">
-          <p class="testimonial-quote">The pattern library and interactive specs she handed off let us ship without constant back-and-forth. That's rare. We literally built from her docs.</p>
+          <p class="testimonial-quote">The A/B testing rigor was the difference here — we didn't ship an opinion, we shipped what the data and the engineers actually preferred. That built real trust with the hardware team.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
               <img src="https://finelli.xyz/images/avatar_2.jpg" alt="Developer">
             </div>
             <div class="testimonial-info">
-              <div class="testimonial-name">Marcus Rodriguez</div>
-              <div class="testimonial-role">Lead Dev, Development Team</div>
+              <div class="testimonial-name">Engineer name</div>
+              <div class="testimonial-role">Lead Firmware Engineer</div>
             </div>
           </div>
         </div>
         <div class="testimonial-card">
-          <p class="testimonial-quote">She showed up as a true partner on this, not just a designer. The way she framed decisions and included us in problem-solving made the work feel collaborative.</p>
+          <p class="testimonial-quote">Her handoff docs were precise down to the touch target pixel. Our team built from her specs with almost no back-and-forth, which is rare on hardware-embedded UI work.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
               <img src="https://finelli.xyz/images/avatar_3.jpg" alt="Manager">
             </div>
             <div class="testimonial-info">
-              <div class="testimonial-name">Alex Petrov</div>
+              <div class="testimonial-name">Manager name</div>
               <div class="testimonial-role">Project Manager</div>
             </div>
           </div>
@@ -1428,11 +1390,10 @@
     <div class="cta-block">
       <div class="cta-text">
         <h3>Want the full design process?</h3>
-        <p>Research, testing, and every decision behind it — in the Detailed case study tab.</p>
+        <p>Field research, testing, and every decision behind it — in the Detailed case study tab.</p>
       </div>
       <div class="cta-buttons">
-        <a href="#research" class="cta-btn secondary" onclick="return goToResearch(event);">Read the full case study</a>
-        <!-- contacts -->
+        <a href="#empathize" class="cta-btn secondary" onclick="return goToEmpathize(event);">Read the full case study</a>
         <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
       </div>
     </div>
@@ -1442,485 +1403,384 @@
 
 <!-- ══════════════ DETAILED CASE STUDY ══════════════ -->
 <div id="tab-detailed" class="tab-content" role="tabpanel" aria-labelledby="tabbtn-detailed">
-  
-  <!-- Phase Navigation Anchors -->
-  <nav class="phase-anchors">
+
+  <!-- PHASE ANCHORS (sticky) -->
+  <nav class="phase-anchors" aria-label="Jump to phase">
     <ul class="anchors-list">
-      <li><a href="#research">Research</a></li>
+      <li><a href="#empathize">Empathize</a></li>
       <li><a href="#define">Define</a></li>
       <li><a href="#ideate">Ideate</a></li>
       <li><a href="#prototype">Prototype</a></li>
       <li><a href="#test">Test</a></li>
-      <li><a href="#design">Design</a></li>
-      <li><a href="#handoff">Handoff</a></li>
+      <li><a href="#design">Deliver</a></li>
       <li><a href="#results">Results</a></li>
     </ul>
   </nav>
 
   <div class="detailed-section">
 
+    <!-- PROJECT META -->
+    <div class="meta-row meta-row-4">
+      <div class="meta-box">
+        <div class="meta-box-label">Client</div>
+        <div class="meta-box-content">MusicTribe / Behringer</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Role</div>
+        <div class="meta-box-content">Lead Product Designer</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Platform</div>
+        <div class="meta-box-content">Embedded touchscreen (hardware)</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Methods</div>
+        <div class="meta-box-content">Field research · A/B testing · Usability testing</div>
+      </div>
+    </div>
+
+    <!-- META -->
     <div class="meta-row">
       <div class="meta-box">
-        <div class="meta-box-label">Core Team</div>
-        <div class="meta-box-content">
-          1 product designer (me) — sole designer, UX + UI<br>
-          1 project manager<br>
-          1 dev lead<br>
-          2 product leads<br>
-          IndoorAtlas SDK team
-        </div>
+        <div class="meta-box-label">Brief</div>
+        <div class="meta-box-content">Integrate a touchscreen UI into the Behringer X32 without disrupting the physical workflow that professional engineers depend on.</div>
       </div>
       <div class="meta-box">
-        <div class="meta-box-label">Tools</div>
-        <div class="meta-box-content">
-          Figma — UI design<br>
-          Figma Make — Design System<br>
-          Ionic Framework — mobile dev<br>
-          Foundation Framework — admin dev<br>
-          IndoorAtlas SDK
-        </div>
+        <div class="meta-box-label">Constraints</div>
+        <div class="meta-box-content">Fixed hardware form factor · existing knob layout unchanged · real-time audio environment · embedded system limitations</div>
       </div>
       <div class="meta-box">
-        <div class="meta-box-label">Timeline</div>
-        <div class="meta-box-content">7 months · Q1–Q3 2026<br>Discovery → Handoff<br><br>SaaS + B2C · Web + Mobile</div>
+        <div class="meta-box-label">Output</div>
+        <div class="meta-box-content">Touch EQ interface · A/B-tested layout · design system handed off to MusicTribe engineering</div>
       </div>
     </div>
-    <p class="read-time">~7 min read · 8-phase design process</p>
 
-    <!-- RESEARCH / EMPATHIZE -->
-    <div id="research" class="phase-container">
-      </div>
-      <div class="phase-number">Phase 01</div>
-      <h2 class="phase-title">Research</h2>
-      <p class="phase-subtitle">Getting to know the problem through Users, Devs and Client Research.</p>
+    <!-- 01 EMPATHIZE -->
+    <div id="empathize" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 01</div>
+        <h2 class="phase-title">Empathize</h2>
+        <p class="phase-subtitle">Spending time where audio professionals actually work — live venues and recording studios.</p>
 
-      <div class="content-body" style="margin-bottom:32px;">
-        <p>When I first heard "indoor positioning," I pictured GPS with extra steps. I was wrong. The client's real vision was multiple people tracked live inside a venue, plus a social layer of messaging, friend requests, and even group games — something closer to a social network than a map.</p>
-        <p>I spent the early weeks in stakeholder workshops, digging through competing indoor-positioning SDKs, and talking to the people who actually get lost in big venues — conference attendees, museum visitors, travellers rushing through airports.</p>
-      </div>
-
-      <div class="key-learnings">
-        <div class="learning-card">
-          <div class="learning-label">Key Learning 1</div>
-          <div class="learning-text">Nobody was asking me for a better map. They wanted <em>context</em> — where their colleagues were, what was happening nearby, how packed a room already was. The social layer wasn't a feature I invented; it was the thing they actually needed.</div>
+        <div class="content-body">
+          <p>The X32 lives in two very different environments: the controlled chaos of a live concert and the focused precision of a recording studio. I started by <strong>observing audio engineers in both contexts</strong>, watching how they moved across the console during performance, where hesitation happened, and what workarounds they'd invented for the interface's shortcomings.</p>
+          <p>Field observations were supplemented with in-depth interviews and a review of existing user feedback logs — effectively reading the console's history of frustration as a design brief.</p>
         </div>
-        <div class="learning-card">
-          <div class="learning-label">Key Learning 2</div>
-          <div class="learning-text">Regular GPS just gives up indoors. IndoorAtlas, which reads tiny variations in Earth's own magnetic field, was the only option that got us 1–3m accuracy without asking anyone to install extra hardware. That one technical fact quietly shaped everything that came after it.</div>
-        </div>
-        <div class="learning-card">
-          <div class="learning-label">Key Learning 3</div>
-          <div class="learning-text">Venue managers and venue visitors wanted almost opposite things, on completely different devices, at completely different moments. One product had to respect both — without one experience quietly winning at the other's expense.</div>
-        </div>
-      </div>
 
-      <div class="img-placeholder ratio-16-9">
-    <div class="img-placeholder-inner">
-      <div class="ph-icon"><ion-icon name="create"></ion-icon></div>
-      <div class="ph-label">Ideation workshop · privacy model matrix</div>
-      <div class="ph-hint">Suggested: infi_privacy_matrix.png · Impact vs. privacy-risk comparison of the visibility models tested · 1600 × 900px</div>
-    </div>
-  </div>
-
-      <div class="biz-user-section">
-        <h2 class="section-heading" style="margin-bottom:24px; margin-top:120px">Client brief <s style="color:var(--muted)">vs</s> <ion-icon name="heart-outline" style="font-size:0.7em; vertical-align:middle; color:var(--accent);"></ion-icon> user needs</h2>
-        <div class="biz-user-grid">
-          <div class="biz-card">
-            <div class="biz-card-label">Client brief</div>
-            <div class="biz-card-text">A cross-platform app with geomagnetic indoor positioning, real-time tracking of multiple users, social features (messaging, friend requests, group games), and a venue admin control panel — all of it, in seven months.</div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Field Research</div>
+            <p>Embedded observation at live venues and studios. Watched engineers navigate the console under real time pressure — multiple channels, fast transitions, no margin for error.</p>
           </div>
-          <div class="biz-card">
-            <div class="biz-card-label">User needs</div>
-            <div class="biz-card-text">First-time visitors just wanted to orient themselves fast, find the people they knew, and stumble onto what was worth seeing — without feeling watched. Admins needed real-time floor occupancy and a way to talk to a crowd of visitors at once.</div>
+          <div class="card">
+            <div class="card-title">Feedback Analysis</div>
+            <p>Reviewed interaction logs and existing user feedback as structured data. Identified recurring failure patterns and mapped them against console sections.</p>
           </div>
         </div>
 
-      <div class="artifacts" style="margin-top:48px;">
-        <div class="artifacts-label">→ Artifacts</div>
-        <div class="artifact-tags">
-          <span class="tag blue">Stakeholder Workshops &amp; Brainstorms</span>
-          <span class="tag blue">Indoor-Positioning SDK Comparison</span>
-          <span class="tag blue">User Interviews (venue visitors)</span>
-          <span class="tag blue">Product Identity &amp; Naming (inFi)</span>
+        <div class="callout insight">
+          <ion-icon name="bulb"></ion-icon>
+          <div class="callout-title">What We Kept Hearing</div>
+          <p>EQ adjustment was the most friction-heavy task on the console. Engineers were doing precise, continuous parameter tweaks — gain, frequency, Q-factor — using tiny physical knobs, often in dim lighting, often mid-performance. The hardware was getting in the way of the music.</p>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag blue">Field Observation Notes (live venues + studios)</span>
+            <span class="tag blue">User Interview Summaries</span>
+            <span class="tag blue">Interaction Log Analysis</span>
+            <span class="tag blue">Friction Map by Console Section</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- DEFINE -->
+    <!-- 02 DEFINE -->
     <div id="define" class="phase-container">
-      <div class="phase-number">Phase 02</div>
-      <h2 class="phase-title">Define</h2>
-      <p class="phase-subtitle">inFi had to speak to two audiences with nothing in common except the same map underneath — different devices, different timeframes, different ideas of what success even looked like.</p>
+      <div class="phase-block">
+        <div class="phase-number">Phase 02</div>
+        <h2 class="phase-title">Define</h2>
+        <p class="phase-subtitle">Translating research into a focused design goal — and understanding who we were really designing for.</p>
 
-      <div class="content-body">
-    <p>The research surfaced a clear tension: first-time visitors wanted to orient themselves fast and connect with people they knew — without feeling watched. Venue admins wanted real-time occupancy and a way to reach a crowd of visitors at once, from a completely different device, at a completely different moment. Any solution had to serve both honestly, without quietly becoming two separate products.</p>
-  </div>
-
-      <div class="persona-grid">
-        <div class="persona-card">
-          <span class="persona-icon"><ion-icon name="compass"></ion-icon></span>
-          <div class="persona-role">Persona 01</div>
-          <div class="persona-name">The First-Timer</div>
-          <div class="persona-need"><strong>Role:</strong> Conference attendee<br><br>Just wants to find room B3, spot a colleague, and see what's happening nearby — all within the first 5 minutes of walking in. Hates feeling watched.<br><br><i>"I don't want to feel watched. I just want to find my colleague and get to my session without wasting the first ten minutes lost."</i></div>
+        <div class="content-body">
+          <p>The research surfaced a clear tension: experienced engineers had <strong>deeply ingrained muscle memory</strong> tied to physical controls, while newer users were often overwhelmed by the density of the interface. Any touchscreen solution needed to serve both without compromising either.</p>
+          <p>The two most critical pain points emerged as: the complexity of EQ adjustment in high-pressure situations, and the difficulty of quickly surfacing and navigating between controls across multiple channels. Both pointed to the same underlying need — <strong>faster access to the right control at the right moment</strong>.</p>
         </div>
-        <div class="persona-card">
-          <span class="persona-icon"><ion-icon name="business"></ion-icon></span>
-          <div class="persona-role">Persona 02</div>
-          <div class="persona-name">The Venue Manager</div>
-          <div class="persona-need"><strong>Role:</strong> Hotel / event ops lead<br><br>Watches floor occupancy in real time, sends messages to everyone at once, and needs a capacity alert before things get out of hand — all from a desktop browser, mid-event.<br><br><i>"I need to see the whole floor at a glance, and reach everyone at once the moment something changes."</i></div>
-        </div>
-        <div class="persona-card">
-          <span class="persona-icon"><ion-icon name="people"></ion-icon></span>
-          <div class="persona-role">Persona 03</div>
-          <div class="persona-name">The Social Connector</div>
-          <div class="persona-need"><strong>Role:</strong> Regular venue user<br><br>Wants to see where their friends are, send them a message, and walk toward them — without broadcasting their own location to every stranger in the building.<br><br><i>"I want to see where my friends are — but only if they've chosen to share that with me too."</i></div>
-        </div>
-      </div>
 
-      <div class="big-quote">
-        "How might we help first-time visitors orient themselves and connect with others in complex indoor venues — without sacrificing their sense of privacy and control?"
-        <cite>Problem Statement · inFi · 2026</cite>
-      </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Marco · Live Sound Engineer</div>
+            <p>"During a show I don't have time to hunt for a control. If I can't find it in two seconds, I move on and something in the mix suffers."</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Sara · Studio Musician</div>
+            <p>"I know what I want to hear, but I can never remember which knob does what. I want to touch the sound directly, not translate it through hardware."</p>
+          </div>
+        </div>
 
-      <div class="artifacts">
-        <div class="artifacts-label">→ Artifacts</div>
-        <div class="artifact-tags">
-          <span class="tag blue">User Personas (3)</span>
-          <span class="tag blue">Client Brief vs. User Needs Matrix</span>
-          <span class="tag blue">Problem Statement / HMW</span>
+        <div class="big-quote">
+          "Create an intuitive and efficient touch-based interface that simplifies parameter adjustments and reduces cognitive load during high-stakes audio work."
+          <cite>Design goal · Behringer X32 Touchscreen Project</cite>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag red">User Personas (2)</span>
+            <span class="tag red">Pain Point Prioritisation Matrix</span>
+            <span class="tag red">Core Design Goal Statement</span>
+            <span class="tag red">Jobs-to-be-Done Map</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 03 IDEATE -->
-<section id="ideate" class="phase-container">
-  <div class="phase-number">Phase 03</div>
-  <h2 class="phase-title">Ideate</h2>
-  <p class="phase-subtitle">Can I avoid building a surveillance tool?</p>
-
-  <div class="content-body">
-    <p>Real-time location sharing is inFi's core value — but the same feature that makes it useful makes it feel like a tracking app. I pushed back on the default "opt-in once, always visible" model and ran structured brainstorming to find something better.</p>
-  </div>
-
-  <ul class="step-list">
-    <li><span class="step-num">01</span><span><strong>The tension:</strong> Real-time location sharing is the product's core value, but it's also what makes an app feel like surveillance if handled carelessly.</span></li>
-    <li><span class="step-num">02</span><span><strong>The ideation:</strong> Generated alternative privacy models — asymmetric visibility, proximity-only sharing, time-limited presence — and evaluated each on an impact/privacy-risk matrix.</span></li>
-    <li><span class="step-num">03</span><span><strong>Mutual visibility wins:</strong> You only appear on someone's map if they've also shared their location with you. This became a product principle, not just a setting.</span></li>
-  </ul>
-
-  <div class="callout insight">
-          <ion-icon name="bulb"></ion-icon>
-    <div class="callout-title">Keeping Admins Happy Too</div>
-    <p>For venue admins, we scoped tools to make their side of the product just as useful: bulk messaging to reach a crowd at once, and a real-time view of traffic overlaid on the floor plan — without turning it into surveillance of individual visitors.</p>
-  </div>
-
-  <div class="img-placeholder ratio-16-9">
-    <div class="img-placeholder-inner">
-      <div class="ph-icon"><ion-icon name="create"></ion-icon></div>
-      <div class="ph-label">Ideation workshop · privacy model matrix</div>
-      <div class="ph-hint">Suggested: infi_privacy_matrix.png · Impact vs. privacy-risk comparison of the visibility models tested · 1600 × 900px</div>
-    </div>
-  </div>
-
-  <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Privacy Model Comparison Matrix</span>
-      <span class="tag blue">Brainstorming Workshop Output</span>
-      <span class="tag blue">Admin Tooling Concept List</span>
-      <span class="tag blue">Mutual Visibility Principle Doc</span>
-    </div>
-  </div>
-</section>
-
-<!-- 04 PROTOTYPE -->
-<section id="prototype" class="phase-container">
-  <div class="phase-number">Phase 04</div>
-  <h2 class="phase-title">Prototype</h2>
-  <p class="phase-subtitle">Turning ideas into something we could actually put in front of people.</p>
-
-  <div class="content-body">
-    <p>I started with <strong>low-fi wireframes</strong>, keeping everything simple so we could focus on how things worked, not how they looked. Mapping out interactions and catching errors early saved us tons of time later. Since we were building on IndoorAtlas, we chose the <strong>Ionic Framework</strong> for the mobile app — ideal for a cross-platform build — and the <strong>Foundation Framework</strong> for the admin side, to keep things stable and responsive under real data.</p>
-    <p>Using Figma, I built clickable prototypes and handed them to stakeholders to try on their own devices. Their feedback was directly responsible for refining the design and fixing hiccups before any of it reached development.</p>
-  </div>
-
-  <div class="callout decision">
-          <ion-icon name="checkmark-circle"></ion-icon>
-    <div class="callout-title">Decision caught at mid-fi — first-person view cut</div>
-    <p>A first-person perspective view, inspired by FPS games, had been on the feature list from the start. Once we built it out in mid-fi, it was obvious it added real technical risk for almost no navigation benefit. We cut it before any hi-fi work began — saving development time and keeping the scope honest.</p>
-  </div>
-
-  <div class="img-placeholder ratio-16-9">
-    <div class="img-placeholder-inner">
-      <div class="ph-icon"><ion-icon name="phone-portrait"></ion-icon></div>
-      <div class="ph-label">Clickable prototype · mobile + admin flows</div>
-      <div class="ph-hint">Suggested: infi_prototype.png · Figma prototype screens for map, check-in and admin floorplan · 1600 × 900px</div>
-    </div>
-  </div>
-
-  <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Paper Wireframes (mobile + admin)</span>
-      <span class="tag blue">Mid-Fi Wireframes — Figma</span>
-      <span class="tag blue">Hi-Fi Clickable Prototype</span>
-      <span class="tag blue">Component Inventory</span>
-      <span class="tag blue">Interaction Annotation Doc</span>
-    </div>
-  </div>
-</section>
-
-<!-- 05 TEST -->
-<section id="test" class="phase-container">
-  <div class="phase-number">Phase 05</div>
-  <h2 class="phase-title">Test</h2>
-  <p class="phase-subtitle">A clickable prototype tells you if a flow makes sense on paper. It doesn't tell you if a stranger in an airport can actually use it.</p>
-
-  <div class="content-body">
-    <p>I ran sessions with real people in <strong>realistic scenarios</strong> — navigating an unfamiliar airport, exploring a museum floor they'd never seen, checking into a venue cold. The core navigation held up: people moved through the map without much hesitation. But two things came back consistently: <strong>first-time users needed clearer onboarding</strong>, and playful touches like the proximity compass weren't just decoration — they made people want to keep exploring, not just tolerate the app until they found what they needed.</p>
-  </div>
-
-  <div class="callout problem">
-          <ion-icon name="warning"></ion-icon>
-    <div class="callout-title">What testing caught early</div>
-    <p>The mutual visibility switch tested as a clear win — every session flagged it as the thing that made people feel safe, not watched. But first-time navigation without an onboarding pass was shakier than expected, and font sizing broke down in the dim, ambient lighting of real venues. Both went straight back into the design queue instead of shipping as-is.</p>
-  </div>
-
-  <div class="ab-grid">
-    <div class="ab-card">
-      <div class="ab-label">Version A · Text labels for POIs</div>
-      <p>Informative, but added visual noise to an already dense map — users hesitated reading labels instead of just walking.</p>
-    </div>
-    <div class="ab-card winner">
-      <div class="ab-label"><ion-icon name="checkmark-circle" style="font-size:1.1em; vertical-align:-2px;"></ion-icon> Winner · Version B · Minimal icon cues + helper text</div>
-      <p>Quieter map, faster recognition. Lifted successful, unaided POI navigation by <strong>23%</strong> — this is why the final map leans on iconography over walls of text.</p>
-    </div>
-  </div>
-
-  <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Usability Test Plan &amp; Scenarios</span>
-      <span class="tag blue">A/B Test Results — POI Guidance</span>
-      <span class="tag blue">Onboarding Flow Revisions</span>
-      <span class="tag blue">Accessibility &amp; Legibility Fixes</span>
-    </div>
-  </div>
-</section>
-
-    <!-- DESIGN -->
-<section id="design" class="phase-container">
-  <div class="phase-number">Phase 06</div>
-  <h2 class="phase-title">Design</h2>
-  <p class="phase-subtitle">Making it beautiful, easy to use, and ready for teams I'd never meet to build.</p>
-
-    <div class="content-body">
-      <p>The client gave me one clear directive: FC Bayern red on a dark palette. That single constraint ended up shaping a whole visual language — dark enough to read comfortably in a dim conference hall, structured enough to survive a dense admin dashboard too. I followed Steve Krug's golden rule, "don't make me think": if you didn't have to stop and think, I knew I'd done my job.</p>
-    </div>
-
-      <div style="margin-bottom:48px; max-width:880px; margin-left:auto; margin-right:auto;">
-        <div class="subgrid-label">Logo development — from pencil to vector, and colour tests</div>
-        <div class="img-grid" style="grid-template-columns:repeat(4,1fr);">
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_1.png', 'inFi logo development, step 1: pencil sketch')">
-            <img src="https://finelli.xyz/images/infi_logo_1.png" alt="inFi logo development, step 1: pencil sketch" loading="lazy">
-          </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_2.png', 'inFi logo development, step 2: refined sketch')">
-            <img src="https://finelli.xyz/images/infi_logo_2.png" alt="inFi logo development, step 2: refined sketch" loading="lazy">
-          </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_3.png', 'inFi logo development, step 3: vector draft')">
-            <img src="https://finelli.xyz/images/infi_logo_3.png" alt="inFi logo development, step 3: vector draft" loading="lazy">
-          </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_4.png', 'inFi logo development, step 4: final colour test')">
-            <img src="https://finelli.xyz/images/infi_logo_4.png" alt="inFi logo development, step 4: final colour test" loading="lazy">
-          </div>
-        </div>
-      </div>
-
-      <div class="platform-group mobile">
-        <div class="platform-group-header">
-          <div class="platform-group-icon"><ion-icon name="phone-portrait"></ion-icon></div>
-          <div class="platform-group-heading">
-            <h4>Mobile App</h4>
-            <span>Ionic Framework · the visitor-facing experience</span>
-          </div>
-        </div>
-
-        <div class="design-block">
-          <div class="design-block-inner">
-            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('https://finelli.xyz/images/infi_map.png', 'inFi mobile app, live indoor map')">
-              <img src="https://finelli.xyz/images/infi_map.png" alt="inFi mobile app, live indoor map" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div class="design-desc">
-              <h3>Map as canvas</h3>
-              <p>I designed it dark-first, with people as the main content on screen. The navigation icons borrow straight from wayfinding systems you already know without thinking — exit signs, accessibility markers — so there's nothing new to learn.</p>
-              <ul>
-                <li>Proximity compass shows opt-in nearby users</li>
-                <li>POI markers use universal wayfinding iconography</li>
-                <li>Mutual visibility toggle always in thumb reach</li>
-              </ul>
-            </div>
-          </div>
-          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_friends.png', 'inFi mobile app, nearby friends screen')">
-              <img src="https://finelli.xyz/images/infi_friends.png" alt="inFi mobile app, nearby friends screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_messages.png', 'inFi mobile app, messages screen')">
-              <img src="https://finelli.xyz/images/infi_messages.png" alt="inFi mobile app, messages screen" loading="lazy">
-            </div>
-          </div>
-        </div>
-
-        <div class="platform-subgrid">
-          <div class="subgrid-label">More mobile screens</div>
-          <div class="img-grid" style="grid-template-columns:repeat(5,1fr);">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_notifications.png', 'inFi mobile app, notifications screen')">
-              <img src="https://finelli.xyz/images/infi_notifications.png" alt="inFi mobile app, notifications screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_settings.png', 'inFi mobile app, settings screen')">
-              <img src="https://finelli.xyz/images/infi_settings.png" alt="inFi mobile app, settings screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_show.png', 'inFi mobile app, visibility settings screen')">
-              <img src="https://finelli.xyz/images/infi_show.png" alt="inFi mobile app, visibility settings screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_find_indoor.png', 'inFi mobile app, indoor search screen')">
-              <img src="https://finelli.xyz/images/infi_find_indoor.png" alt="inFi mobile app, indoor search screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_location_alert.png', 'inFi mobile app, location alert screen')">
-              <img src="https://finelli.xyz/images/infi_location_alert.png" alt="inFi mobile app, location alert screen" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="platform-group admin">
-        <div class="platform-group-header">
-          <div class="platform-group-icon"><ion-icon name="desktop"></ion-icon></div>
-          <div class="platform-group-heading">
-            <h4>Admin Panel</h4>
-            <span>Foundation Framework · the operator-facing dashboard</span>
-          </div>
-        </div>
-
-        <div class="design-block">
-          <div class="design-block-inner reverse">
-            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('https://finelli.xyz/images/infi_admin.png', 'inFi admin panel, live floor view')">
-              <img src="https://finelli.xyz/images/infi_admin.png" alt="inFi admin panel, live floor view" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div class="design-desc">
-              <h3>Information density over decoration</h3>
-              <p>Built on Foundation Framework for a grid that could hold up under real data. I wanted an admin to read the state of the floor at a glance, so advanced features stay one click deeper — there when you need them, out of the way when you don't.</p>
-              <ul>
-                <li>Live floor plan with user/visitor/staff overlays</li>
-                <li>KPI dashboard with toggle-controlled visibility layers</li>
-                <li>Bulk messaging tool with reach estimate</li>
-              </ul>
-            </div>
-          </div>
-          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_admin_2.png', 'inFi admin panel, additional view')">
-              <img src="https://finelli.xyz/images/infi_admin_2.png" alt="inFi admin panel, additional view" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_admin_3.png', 'inFi admin panel, additional view')">
-              <img src="https://finelli.xyz/images/infi_admin_3.png" alt="inFi admin panel, additional view" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
-
-    <!-- HANDOFF -->
-    <div id="handoff" class="phase-container">
+    <div id="ideate" class="phase-container">
       <div class="phase-block">
-        <div class="phase-number">Phase 07</div>
-        <h2 class="phase-title">Handoff</h2>
-        <p class="phase-subtitle">The real gap in any project isn't between the mockup and the code — it's between the designer who made it and the ten other teams, in ten other cities, who'll build it without ever meeting her.</p>
+        <div class="phase-number">Phase 03</div>
+        <h2 class="phase-title">Ideate</h2>
+        <p class="phase-subtitle">Sketching new interaction models for a physical device with decades of established conventions.</p>
+
         <div class="content-body">
-          <p>Everything changed the moment the client told us inFi would be resold and rebuilt by other teams around the world. A deck of colors, typography and component states was fine for a team that shared a coffee machine — it was not going to survive being handed to developers I'd never talk to.</p>
-          <p>So I mapped out a proper pattern library: every component's attributes, typography, colors and states, organized by usage hierarchy. Then, since "email a PDF and hope for the best" isn't a real handoff strategy, I used a plugin that turned every artboard into an interactive HTML document — developers could click through each screen and read exactly what they needed before writing a line of code.</p>
-        </div>
-        <div class="callout insight">
-          <ion-icon name="earth"></ion-icon>
-          <div class="callout-title">Designing for teams I'd never meet</div>
-          <p>This is the part of the project that mirrors how I like to work now: documentation and specs precise enough that a distributed team can build from them without a sync call. The interactive styleguide wasn't a nice-to-have — it was the difference between "the designer is a bottleneck" and "the designer wrote it down once, correctly."</p>
-        </div>
-        <div class="callout insight">
-          <ion-icon name="bulb"></ion-icon>
-          <div class="callout-title">Design System — now live</div>
-          <p>The pattern library above was the ancestor of a proper Design System — same intent (one source of truth, way less back-and-forth with dev), much more manual execution at the time. Since then I've formalized it into an actual token-based Design System in Figma Make, shown below.</p>
+          <p>Designing a touchscreen for an existing hardware product meant working within strict constraints — form factor, existing control layout, user expectations from years of muscle memory. Rather than trying to replace the physical interface, I focused on <strong>augmenting it</strong>: the touchscreen as a precision layer on top of the hardware, not a replacement for it.</p>
+          <p>The central concept that emerged was the <strong>touch-enabled EQ graph</strong>: instead of turning knobs to adjust equalisation parameters, the engineer could directly grab and drag points on a visual frequency curve. It made an invisible signal visible and manipulable in a single gesture.</p>
         </div>
 
-        <div class="img-placeholder ratio-16-9" style="max-width:880px; margin-left:auto; margin-right:auto;">
+        <ul class="step-list">
+          <li><span class="step-num">→</span><span><strong>Touch EQ graph:</strong> Direct manipulation of frequency, gain, and Q-factor via draggable nodes on a live curve — the core innovation of the interface.</span></li>
+          <li><span class="step-num">→</span><span><strong>Channel navigation:</strong> Swipe-based channel switching to move quickly across the mix without interrupting the current workflow.</span></li>
+          <li><span class="step-num">→</span><span><strong>Preset system:</strong> Save and recall custom EQ configurations with a single tap — critical for engineers working across multiple events.</span></li>
+          <li><span class="step-num">→</span><span><strong>Visual indicators:</strong> Clear signifiers for active controls — gain level, frequency band, Q width — to reduce mental translation between gesture and result.</span></li>
+        </ul>
+
+        <div class="callout insight">
+          <ion-icon name="bulb"></ion-icon>
+          <div class="callout-title">The Controls Panel Question</div>
+          <p>Early sketching produced two distinct layout approaches for the parameter controls panel — a decision that would go directly to A/B testing rather than being resolved by assumption.</p>
+        </div>
+
+        <div class="ab-grid">
+          <div class="ab-card">
+            <div class="ab-label">Version A · Controls at top</div>
+            <p><strong>Rationale:</strong> Maximum immediate visibility of parameters on screen load. Follows conventional UI patterns for settings panels.</p>
+          </div>
+          <div class="ab-card">
+            <div class="ab-label">Version B · Controls at bottom</div>
+            <p><strong>Rationale:</strong> Optimised for thumb reach during one-handed operation. Controls placed where fingers naturally rest on a surface-mounted screen.</p>
+          </div>
+        </div>
+
+        <div class="img-placeholder ratio-16-9">
           <div class="img-placeholder-inner">
-            <div class="ph-icon"><ion-icon name="color-palette"></ion-icon></div>
-            <div class="ph-label">Design System · Figma Make</div>
-            <div class="ph-hint">Suggested: infi_design_system.png · token overview — color, type, spacing, component states · 1600 × 900px</div>
+            <div class="ph-icon"><ion-icon name="pencil"></ion-icon></div>
+            <div class="ph-label">Wireframes · EQ graph concept + layout variants A/B</div>
+            <div class="ph-hint">Suggested: x32_wireframes.png · Initial sketches of both layouts with EQ graph · 1600 × 900px</div>
           </div>
         </div>
 
         <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Final UI — Mobile App &amp; Admin Panel</span>
-      <span class="tag blue">Pattern Library &amp; Component Specs</span>
-      <span class="tag blue">Design System — Figma Make</span>
-    </div>
-  </div>
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag green">Hand-Drawn Wireframes</span>
+            <span class="tag green">Touch EQ Interaction Model</span>
+            <span class="tag green">Layout Variants A + B</span>
+            <span class="tag green">Gesture Vocabulary Document</span>
+            <span class="tag green">Feature Prioritisation Notes</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- RESULTS -->
-    <div id="results" class="phase-container">
-      <div class="phase-block" style="max-width:760px; margin: 0 auto;">
-        <div class="phase-number">Phase 08</div>
-        <h2 class="phase-title">Results &amp; Learnings</h2>
-        <p class="phase-subtitle">The numbers that told me the approach worked, and a couple of lessons I'm carrying into the next project.</p>
-
-        <div class="metrics">
-          <div class="metric">
-            <div class="metric-num">+23%</div>
-            <div class="metric-label">POI navigation success after A/B test — text labels vs icon-only cues</div>
-          </div>
-          <div class="metric">
-            <div class="metric-num" style="color:#f59e0b;">90%</div>
-            <div class="metric-label">Target task success rate for unaided navigation to a POI</div>
-          </div>
-          <div class="metric">
-            <div class="metric-num" style="color:#22c55e;">#1</div>
-            <div class="metric-label">Mutual visibility ranked top trust feature across all usability sessions</div>
-          </div>
-          <div class="metric" style="border-style:dashed; border-color:var(--muted);">
-            <div class="metric-num" style="color:var(--muted); font-size:22px;">Add a number</div>
-            <div class="metric-label">e.g. dev hours saved via the pattern library, or timeline held despite scope changes — a business-side metric, not just a UX one</div>
-          </div>
-        </div>
+    <!-- 04 PROTOTYPE -->
+    <div id="prototype" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 04</div>
+        <h2 class="phase-title">Prototype</h2>
+        <p class="phase-subtitle">From sketches to a high-fidelity Figma prototype — testing interaction logic before it touched hardware.</p>
 
         <div class="content-body">
-          <p><strong>What I'd do differently:</strong> I underestimated, early on, how differently a visitor with a phone in one hand and an admin behind a desktop screen would need to be designed for. Keeping both honestly served, without quietly building two separate products, was the tension I lived with for seven months — and I'd bring that persona split into the room a lot sooner next time.</p>
+          <p>I moved through fidelity levels deliberately. Low-fidelity paper sketches validated the basic information architecture and gesture model without the distraction of visual polish. Once the core flows were internally consistent, I built <strong>mid-fidelity wireframes in Figma</strong> to stress-test layout density — the EQ graph needed to be large enough for accurate touch manipulation without crowding the rest of the interface.</p>
+          <p>The high-fidelity prototype brought the full experience to life across three key workflows: adjusting EQ parameters in real time, managing presets, and navigating between channels. These scenarios were chosen because they represented the highest-frequency, highest-stakes tasks in a live environment.</p>
         </div>
 
-        <div class="callout leadership">
-          <ion-icon name="shield"></ion-icon>
-          <div class="callout-title">Where I held the line</div>
-          <p>It would have been much easier to ship a simple "always visible" toggle and call it done — that's exactly the app nobody wants to open in a crowded venue. Holding the line on "you only appear if they've shared too," even under late-stage pressure to simplify it away, is what made the social layer feel safe instead of creepy. That's the moment I'm most proud of on this project: not the pixels, the decision.</p>
+        <div class="callout decision">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          <div class="callout-title">Prototype-Driven Decision</div>
+          <p>During mid-fi prototyping, we realised that the EQ node handles needed to be significantly larger than standard touch targets — live performance means imprecise touches from stressed hands. The final hit areas were sized to 44×44pt minimum, with magnetic snapping to help guide imprecise gestures onto the correct node.</p>
+        </div>
+
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32_hifi_ab.png', 'High-fidelity prototype — Version A and B comparison')">
+          <img src="https://finelli.xyz/images/x32_hifi_ab.png" alt="High-fidelity prototype — Version A and B comparison" loading="lazy">
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag yellow">Paper Wireframes</span>
+            <span class="tag yellow">Mid-Fi Wireframes (Figma)</span>
+            <span class="tag yellow">Hi-Fi Prototype — Version A</span>
+            <span class="tag yellow">Hi-Fi Prototype — Version B</span>
+            <span class="tag yellow">Interaction Annotation Document</span>
+            <span class="tag yellow">Touch Target Specification</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 TEST -->
+    <div id="test" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 05</div>
+        <h2 class="phase-title">Test</h2>
+        <p class="phase-subtitle">A/B testing and hands-on usability sessions with real audio engineers — measuring what mattered.</p>
+
+        <div class="content-body">
+          <p>Testing was structured around the two layout variants and centred on the tasks that defined success in the field: EQ adjustment speed, control discoverability, and cross-channel navigation. Participants included both experienced audio engineers and less technical musicians — the full range of target users.</p>
+        </div>
+
+        <ul class="step-list">
+          <li><span class="step-num">01</span><span><strong>A/B layout test:</strong> Both versions were tested with identical task sets. User performance (time on task) and satisfaction (post-session rating) were recorded for each variant.</span></li>
+          <li><span class="step-num">02</span><span><strong>EQ manipulation accuracy:</strong> Users were asked to reach a target frequency and gain value using the touch graph. We measured time and number of corrections needed.</span></li>
+          <li><span class="step-num">03</span><span><strong>Preset recall:</strong> Engineers tested saving a custom EQ profile and recalling it mid-session. Discoverability of the save function was a common early failure point.</span></li>
+          <li><span class="step-num">04</span><span><strong>Channel navigation:</strong> Cross-channel switching was timed across both layouts to identify where friction remained.</span></li>
+        </ul>
+
+        <div class="ab-grid">
+          <div class="ab-card">
+            <div class="ab-label">Version A · Controls at top</div>
+            <p>Users adapted quickly on first load but reported <strong>fatigue</strong> during extended sessions — reaching upward repeatedly on a console-mounted screen was physically uncomfortable.</p>
+          </div>
+          <div class="ab-card winner">
+            <div class="ab-label">✓ Winner · Version B · Controls at bottom</div>
+            <p>Overwhelming preference in qualitative feedback. <strong>Ergonomically natural</strong> for both standing engineers and seated studio work. Time-on-task scores significantly lower across all tested workflows.</p>
+          </div>
+        </div>
+
+        <div class="callout problem">
+          <ion-icon name="flash"></ion-icon>
+          <div class="callout-title">Key Finding — Preset Discoverability</div>
+          <p>The save/recall function for custom presets was consistently missed in early test sessions. Users expected it adjacent to the EQ graph, not in a separate panel. We relocated it in the next iteration — and first-attempt success rate jumped significantly.</p>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag purple">Usability Test Script</span>
+            <span class="tag purple">A/B Test Results Report</span>
+            <span class="tag purple">Task Performance Data (time on task)</span>
+            <span class="tag purple">Qualitative Feedback Summary</span>
+            <span class="tag purple">Prioritised Iteration Backlog</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 DELIVER -->
+    <div id="design" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 06</div>
+        <h2 class="phase-title">Deliver</h2>
+        <p class="phase-subtitle">Final UI, design handoff documentation, and the visual decisions that carried the interface across the finish line.</p>
+
+        <div class="content-body">
+          <p>The final interface was built around Version B's ergonomic layout, refined through two further rounds of iteration following the test findings. The <strong>touch EQ graph</strong> became the centrepiece of the screen — large, precise, and directly responsive, with the parameter controls (gain, frequency, Q) anchored at the bottom within comfortable thumb reach.</p>
+          <p>Visual decisions were deliberate: a dark, high-contrast palette matched the low-light conditions of live venues. Key control states — active, engaged, clipping — used colour distinctively rather than relying on text labels. The goal was <strong>readability at a glance</strong>, not after parsing.</p>
+          <p>Handoff documentation was prepared for the engineering team with annotated Figma specs covering all interactive states, touch target dimensions, and edge cases — particularly for the EQ graph behaviour at frequency extremes and during multi-node editing.</p>
         </div>
 
         <div class="two-col">
           <div class="card">
-            <div class="card-title">Shipped Features</div>
-            <p>Live indoor map with proximity compass · Mutual visibility toggle · Messaging &amp; friend requests · POI discovery with minimal icon cues · Admin floorplan with live occupancy · Bulk messaging for admins</p>
+            <div class="card-title">EQ Graph Behaviour</div>
+            <p>Direct drag to move frequency nodes. Long-press to isolate a band. Pinch to adjust Q-width. Double-tap node to reset to default. All gestures mapped to established touch conventions — no new learning required.</p>
           </div>
           <div class="card">
-            <div class="card-title">Success Metrics Defined</div>
-            <p>Task success rate for unaided POI navigation · Average session duration · Weekly user engagement rate · Navigation error rate</p>
+            <div class="card-title">Cross-Channel Navigation</div>
+            <p>Swipe left/right to move between channels without losing current EQ view state. Channel strip thumbnails in the header provide spatial context and quick jump targets across the full mix.</p>
           </div>
+        </div>
+
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32_final_ui.png', 'Final UI — touch EQ interface Version B')">
+          <img src="https://finelli.xyz/images/x32_final_ui.png" alt="Final UI — touch EQ interface Version B" loading="lazy">
+        </div>
+
+        <div class="ad-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:-8px 0 40px;">
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_2.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_2.png" alt="X32 additional screen" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_3.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_3.png" alt="X32 additional screen" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_4.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_4.png" alt="X32 additional screen" loading="lazy">
+          </div>
+          <div class="zoomable" style="border-radius:10px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 additional screen')">
+            <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 additional screen" loading="lazy">
+          </div>
+        </div>
+
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32_handoff.png', 'Design handoff — annotated specs and components')">
+          <img src="https://finelli.xyz/images/x32_handoff.png" alt="Design handoff — annotated specs and components" loading="lazy">
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag blue">Final UI — Touch Interface (Figma)</span>
+            <span class="tag blue">Interactive Prototype (key scenarios)</span>
+            <span class="tag blue">Design Handoff Annotations</span>
+            <span class="tag blue">Touch Target Specification Sheet</span>
+            <span class="tag blue">State Documentation (all interactive elements)</span>
+            <span class="tag blue">Edge Case Reference Document</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 RESULTS -->
+    <div id="results" class="phase-container">
+      <div class="phase-block" style="max-width:760px; margin:0 auto;">
+        <div class="phase-number">Phase 07</div>
+        <h2 class="phase-title">Results &amp; Learnings</h2>
+        <p class="phase-subtitle">What shipped, what we measured, and what I'd approach differently.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-num" style="color:var(--accent-green);">85%</div>
+            <div class="metric-label">User satisfaction score post-launch (surveys + direct feedback)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" style="color:var(--accent-blue);">−30%</div>
+            <div class="metric-label">Average time on task for EQ adjustments (timed usability tests)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num" style="color:var(--accent-yellow);">70%</div>
+            <div class="metric-label">Adoption rate for the new touchscreen interface (console analytics)</div>
+          </div>
+        </div>
+
+        <div class="content-body">
+          <p><strong>What I'm most proud of:</strong> the touch EQ graph. It sounds obvious in retrospect — of course you should be able to grab a frequency curve directly — but translating that into a design precise enough for professional work, fast enough for live performance, and accessible enough for less experienced users required significant iteration. The A/B data confirmed we got there.</p>
+          <p><strong>What I'd do differently:</strong> I underestimated how much the testing environment matters for hardware-adjacent interfaces. Usability sessions in a studio chair don't fully capture the physical reality of standing at a console during a live show — hands slightly less stable, attention divided, lighting unpredictable. Earlier in-context testing, even informal, would have surfaced the touch target sizing issue sooner.</p>
         </div>
 
         <div class="callout quote">
           <ion-icon name="sparkles"></ion-icon>
           <div class="callout-title">The underlying principle</div>
-          <p>I still believe the best navigation design is invisible. If someone finds who they're looking for and can't quite explain how they did it, the design worked. Every decision here — the proximity compass, the mutual visibility model, all of it — was in service of that one idea.</p>
+          <p>The best hardware UI is invisible. If an engineer adjusts three bands in the middle of a set and can't quite explain how they did it — they just reached out and grabbed the sound — the design worked. Every decision here was in service of that one idea.</p>
         </div>
 
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Shipped Features</div>
+            <p>Touch EQ graph with direct node manipulation · Bottom-anchored parameter controls · Swipe-based channel navigation · Custom preset save &amp; recall · Visual level indicators with colour-coded states</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Success Metrics Defined</div>
+            <p>Task success rate for EQ adjustment · Time on task vs baseline · Adoption rate tracked via console usage analytics · Post-launch satisfaction via user surveys</p>
+          </div>
+        </div>
 
         <div class="cta-block" style="max-width:none;">
           <div class="cta-text">
@@ -1928,9 +1788,7 @@
             <p>I'm currently open to remote Senior Product Designer roles — let's talk.</p>
           </div>
           <div class="cta-buttons">
-            <!-- links -->
             <a href="https://finelli.xyz/about" class="cta-btn secondary">More about me</a>
-            <!-- TODO: replace # with a hosted PDF/Drive link to your CV -->
             <a href="#" class="cta-btn secondary" target="_blank" rel="noopener">Download CV</a>
             <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
           </div>
@@ -1941,6 +1799,7 @@
 
   </div>
 </div>
+<!-- /tab-detailed -->
 
 <!-- LIGHTBOX -->
 <div class="lightbox-overlay" id="lightbox" onclick="handleLightboxOverlayTap()">
@@ -1951,8 +1810,8 @@
 <!-- FOOTER -->
 <footer>
   <div>
-    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">inFi · Product Design Case Study · Designed Q1–Q2 2026</p>
-    <p style="color:var(--muted);">Product Design · UX Design · UI Design · Prototyping · User Research · Usability Testing</p>
+    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">Behringer X32 · UX/UI Case Study</p>
+    <p style="color:var(--muted);">Product Design · Field Research · Prototyping · A/B Testing · Design Handoff</p>
   </div>
   <p style="color:var(--muted); font-size:13px;">Caterina Finelli</p>
 </footer>
