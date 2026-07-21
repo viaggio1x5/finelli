@@ -53,12 +53,29 @@
     targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  let mobileMenuScrollY = 0;
   function toggleMobileMenu() {
     const overlay = document.getElementById('mobileMenu');
     const btn = document.querySelector('.nav-hamburger');
     const isOpen = overlay.classList.toggle('active');
-    document.body.style.overflow = isOpen ? 'hidden' : '';
     if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    // Lock the page by fixing <body> in place (instead of overflow:hidden),
+    // which is what actually caused the "jump": hiding overflow shifts the
+    // viewport/scrollbar and recalculates height on some mobile browsers,
+    // making the overlay appear to snap between two different heights.
+    if (isOpen) {
+      mobileMenuScrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = (-mobileMenuScrollY) + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+    } else {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      window.scrollTo(0, mobileMenuScrollY);
+    }
   }
 
   function goToEmpathize(e) {
@@ -181,6 +198,16 @@
     document.addEventListener('scroll', updateActiveAnchor, { passive: true });
     setTimeout(updateActiveAnchor, 100);
 
+    // Tapping an anchor scrolls the SUBNAV BAR horizontally (not the page)
+    // just enough to bring the tapped anchor fully into view — a one-off
+    // action on click only, not tied to page scroll, so it can't fight with
+    // the user's own scrolling.
+    phaseAnchors.forEach(anchor => {
+      anchor.addEventListener('click', () => {
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      });
+    });
+
     updateStickyOffsets();
     window.addEventListener('resize', updateStickyOffsets);
   });
@@ -264,20 +291,35 @@
   .nav-hamburger {
     display: none;
     align-items: center; justify-content: center;
-    width: 48px; height: 48px;
+    width: 40px; height: 40px;
     background: none; border: none; border-radius: 10px;
-    color: var(--text); font-size: 38px;
+    color: var(--text); font-size: 24px;
     cursor: pointer; transition: background 0.2s;
+    overflow: visible;
   }
+  /* The ionicons "menu-outline" glyph has a lot of built-in padding inside
+     its own viewBox, so it looks small even at a large font-size. Scaling
+     the rendered icon up (instead of just growing the font-size / button
+     box) makes the actual visible strokes bigger without making the tap
+     target itself any larger. */
+  .nav-hamburger ion-icon { width: 1em; height: 1em; transform: scale(1.7); }
   .nav-hamburger:hover { background: rgba(255,255,255,0.06); }
 
   .mobile-menu-overlay {
-    display: none;
+    display: flex;
     position: fixed; inset: 0; z-index: 300;
     background: var(--bg);
     flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
   }
-  .mobile-menu-overlay.active { display: flex; }
+  .mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
 
   .mobile-menu-header {
     display: flex; align-items: center; justify-content: space-between;
@@ -286,11 +328,13 @@
   }
   .mobile-menu-close {
     display: flex; align-items: center; justify-content: center;
-    width: 48px; height: 48px;
+    width: 40px; height: 40px;
     background: none; border: none; border-radius: 10px;
-    color: var(--text); font-size: 38px;
+    color: var(--text); font-size: 24px;
     cursor: pointer;
+    overflow: visible;
   }
+  .mobile-menu-close ion-icon { width: 1em; height: 1em; transform: scale(1.7); }
   .mobile-menu-close:hover { background: rgba(255,255,255,0.06); }
 
   .mobile-menu-links {
@@ -1114,7 +1158,7 @@
     .persona-grid { grid-template-columns: 1fr; }
     .two-col, .ab-grid { grid-template-columns: 1fr; }
     .metrics { grid-template-columns: 1fr 1fr; }
-    nav { padding: 14px 20px; }
+    nav { padding: 10px 20px; }
     nav .nav-links { display: none; }
     nav .nav-sep { display: none; }
     /* Replaced by the full-screen hamburger menu on mobile */
@@ -1183,14 +1227,22 @@
     /* No horizontal scrolling: the anchors simply wrap onto more than one
        row, so every phase is visible without any swipe/drag gesture. */
     .phase-anchors {
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px 4px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      justify-content: flex-start;
       padding: 10px 16px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
     }
+    .phase-anchors::-webkit-scrollbar { height: 3px; }
+    .phase-anchors::-webkit-scrollbar-track { background: transparent; }
+    .phase-anchors::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
     .anchors-list a {
       padding: 7px 12px;
       font-size: 13px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
   }
 
@@ -1836,9 +1888,9 @@
 <!-- PROJECT NAV -->
 <!-- TODO: update hrefs with the live URLs for these case studies once hosted -->
 <div class="project-nav">
-  <a href="https://finelli.xyz/infi" class="project-nav-card">
+  <a href="https://finelli.xyz/quandoo" class="project-nav-card">
     <span class="project-nav-label">← Previous project</span>
-    <span class="project-nav-title">inFi — Social Indoor Navigation</span>
+    <span class="project-nav-title">Quandoo Business Center — B2B Dashboard</span>
   </a>
   <a href="https://finelli.xyz/portfolio" class="project-nav-card project-nav-next">
     <span class="project-nav-label">Next project →</span>

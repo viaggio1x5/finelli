@@ -3,17 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>inFi — Product Design Case Study by Caterina Finelli</title>
+<title>Quandoo Business Center — Product Design Case Study by Caterina Finelli</title>
 <link rel="icon" type="image/x-icon" href="https://finelli.xyz/favicon/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="https://finelli.xyz/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://finelli.xyz/favicon/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://finelli.xyz/favicon/apple-touch-icon.png">
 <link rel="manifest" href="https://finelli.xyz/favicon/site.webmanifest">
-<meta name="description" content="How I designed inFi, a social indoor-navigation app built on geomagnetic positioning, from a one-line brief to a live product for airports, museums and conference venues. Full UX process: research, definition, ideation, prototyping, testing, delivery.">
-<meta property="og:title" content="inFi — Product Design Case Study">
-<meta property="og:description" content="From a one-line brief to a live indoor-navigation product. Full design process, from research to delivery.">
+<meta name="description" content="How I redesigned Quandoo's Business Center, the B2B dashboard restaurant owners and staff use to run reservations day to day — from discovery research to a validated, role-aware information architecture. Full UX process: research, define, ideate, prototype, design, results.">
+<meta property="og:title" content="Quandoo Business Center — Product Design Case Study">
+<meta property="og:description" content="Turning a slow, data-heavy B2B dashboard into an actionable tool restaurant operators actually reach for. Full design process from discovery research to results.">
 <meta property="og:type" content="website">
-<!-- Add og:image with an absolute URL to infi_hero.png once hosted -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -88,6 +87,7 @@
     return false;
   }
 
+  // Gallery lightbox
   // NB: images are queried live (not cached at parse time), because this
   // <script> runs in <head> before <body> exists — a cached NodeList here
   // would always be empty and the arrow keys would silently do nothing.
@@ -176,7 +176,7 @@
   // parse time returns a permanently-empty NodeList and nothing ever works.
   document.addEventListener('DOMContentLoaded', () => {
     const phaseAnchors = document.querySelectorAll('.anchors-list a');
-    const phaseContainers = document.querySelectorAll('#research, #define, #ideate, #prototype, #test, #design, #handoff, #results');
+    const phaseContainers = document.querySelectorAll('#research, #define, #ideate, #prototype, #design, #results');
 
     function updateActiveAnchor() {
       let activeAnchor = null;
@@ -212,7 +212,6 @@
     window.addEventListener('resize', updateStickyOffsets);
   });
 </script>
-
 
 <style>
   :root {
@@ -793,6 +792,7 @@
   .phase-container { margin-top: 150px; margin-bottom: 80px; }
 
   .meta-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 auto 24px; max-width: 880px; }
+  .meta-row-4 { grid-template-columns: repeat(4, 1fr); }
   .meta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
   .meta-box-label { font-family: var(--font-sans); font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
   .meta-box-content { font-size: 15px; color: var(--text); line-height: 1.75; }
@@ -897,7 +897,7 @@
     padding: 0 10vw;
   }
 
-  #research, #define, #ideate, #prototype, #test, #design, #handoff, #results {
+  #research, #define, #ideate, #prototype, #design, #results {
     border-top: 1px solid var(--border);
     padding-top: 56px;
   }
@@ -1250,17 +1250,61 @@
 
 
 
+
+  /* ── HERO MOCKUP (illustrative dashboard, no real screenshot available) ── */
+  .hero-mockup-inner {
+    width: 100%; height: 100%;
+    background: #0f0f1a;
+    display: flex; flex-direction: column;
+  }
+  .hero-mockup-bar {
+    height: 32px; background: #16161f;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; padding: 0 12px; gap: 6px; flex-shrink: 0;
+  }
+  .hero-mockup-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .hero-mockup-body { flex: 1; display: grid; grid-template-columns: 160px 1fr; min-height: 0; }
+  .hero-mockup-sidebar {
+    background: #13131c; border-right: 1px solid rgba(255,255,255,0.04);
+    padding: 16px 12px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .hero-mockup-nav-item { padding: 7px 10px; border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.35); font-family: var(--font-sans); }
+  .hero-mockup-nav-item.active { background: rgba(232,52,74,0.12); color: #e8344a; }
+  .hero-mockup-content { padding: 20px; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .hero-mockup-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.8); font-family: var(--font-sans); }
+  .hero-mockup-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .hero-mockup-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px; }
+  .hero-mockup-card-num { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.85); line-height: 1; margin-bottom: 4px; font-family: var(--font-sans); }
+  .hero-mockup-card-label { font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-sans); }
+  .hero-mockup-chart { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; flex: 1; padding: 12px; display: flex; align-items: flex-end; gap: 6px; }
+  .hero-chart-bar { flex: 1; border-radius: 3px 3px 0 0; background: rgba(232,52,74,0.3); }
+  .hero-chart-bar.hi { background: rgba(232,52,74,0.7); }
+
+  /* ── FINAL-DESIGN MOCKUPS (illustrative, no real screenshots available) ── */
+  .qd-mockup-label { color: rgba(255,255,255,0.5); margin-bottom: 8px; font-family: var(--font-sans); font-weight: 600; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .qd-mockup-title { color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+  .qd-mockup-stats { display: flex; gap: 8px; margin-bottom: 12px; }
+  .qd-mockup-stat { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px; text-align: center; }
+  .qd-mockup-stat-num { font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.8); }
+  .qd-mockup-stat-num.accent { color: rgba(232,52,74,0.9); }
+  .qd-mockup-stat-label { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 3px; }
+  .qd-mockup-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; }
+  .qd-mockup-panel-row { font-size: 10px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+  .qd-mockup-panel-row:last-child { margin-bottom: 0; }
+  .qd-mockup-ring {
+    width: 70px; height: 70px; border-radius: 50%;
+    border: 6px solid rgba(34,197,94,0.7); border-top-color: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
-
 <!-- NAV -->
 <nav>
   <a href="https://finelli.xyz/portfolio" class="nav-logo" aria-label="Portfolio"><img src="https://finelli.xyz/favicon/favicon-32x32.png" alt="Portfolio"></a>
   <div class="nav-right">
     <ul class="nav-links-back">
       <li><a href="https://finelli.xyz/about">About Me</a></li>
-      <!-- TODO: replace # with a hosted PDF/Drive link to your CV -->
       <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
     </ul>
     <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
@@ -1286,37 +1330,80 @@
 <!-- HERO -->
 <header class="hero">
   <div class="hero-left">
-    <div class="hero-company">inFi · A story about finding your way indoors</div>
-    <h1>Navigate indoors<br>like a <span class="accent">Ninja</span>.</h1>
-    <p class="hero-desc">How I designed inFi — a social indoor-navigation app built on geomagnetic positioning — from a one-line brief into a live product for airports, museums, and conference venues.</p>
+    <div class="hero-company">Quandoo Business Center · B2B SaaS for restaurant operators</div>
+    <h1>Turn data<br>into <span class="accent">decisions.</span></h1>
+    <p class="hero-desc">How I redesigned Quandoo's Business Center — turning a slow, data-heavy dashboard into a tool restaurant owners, managers and staff actually reach for to run their day.</p>
     <div class="hero-tags">
-      <span class="hero-tag">SaaS + B2C</span>
-      <span class="hero-tag">Mobile + Web Admin</span>
-      <span class="hero-tag">Social</span>
-      <span class="hero-tag">Indoor Positioning</span>
+      <span class="hero-tag">B2B</span>
+      <span class="hero-tag">SaaS</span>
+      <span class="hero-tag">Web</span>
+      <span class="hero-tag">Food Tech</span>
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-image-wrap zoomable" onclick="openLightbox('https://finelli.xyz/images/infi_hero.png', 'inFi app screens collage — mobile navigation, admin panel and visibility settings')">
-      <img src="https://finelli.xyz/images/infi_hero.png" alt="inFi app screens collage — mobile navigation, admin panel and visibility settings">
+    <div class="hero-image-wrap">
+      <div class="hero-mockup-inner">
+        <div class="hero-mockup-bar">
+          <div class="hero-mockup-dot" style="background:#e8344a"></div>
+          <div class="hero-mockup-dot" style="background:#f59e0b"></div>
+          <div class="hero-mockup-dot" style="background:#22c55e"></div>
+        </div>
+        <div class="hero-mockup-body">
+          <div class="hero-mockup-sidebar">
+            <div class="hero-mockup-nav-item">Overview</div>
+            <div class="hero-mockup-nav-item active">Reservations</div>
+            <div class="hero-mockup-nav-item">Analytics</div>
+            <div class="hero-mockup-nav-item">Customers</div>
+            <div class="hero-mockup-nav-item">Settings</div>
+          </div>
+          <div class="hero-mockup-content">
+            <div class="hero-mockup-title">Dashboard overview</div>
+            <div class="hero-mockup-cards">
+              <div class="hero-mockup-card">
+                <div class="hero-mockup-card-num">+15%</div>
+                <div class="hero-mockup-card-label">Bookings</div>
+              </div>
+              <div class="hero-mockup-card">
+                <div class="hero-mockup-card-num">89%</div>
+                <div class="hero-mockup-card-label">Task rate</div>
+              </div>
+              <div class="hero-mockup-card">
+                <div class="hero-mockup-card-num">+40%</div>
+                <div class="hero-mockup-card-label">Satisfaction</div>
+              </div>
+            </div>
+            <div class="hero-mockup-chart">
+              <div class="hero-chart-bar" style="height:40%"></div>
+              <div class="hero-chart-bar" style="height:55%"></div>
+              <div class="hero-chart-bar hi" style="height:70%"></div>
+              <div class="hero-chart-bar" style="height:60%"></div>
+              <div class="hero-chart-bar hi" style="height:85%"></div>
+              <div class="hero-chart-bar" style="height:65%"></div>
+              <div class="hero-chart-bar hi" style="height:90%"></div>
+              <div class="hero-chart-bar" style="height:75%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
+<!-- TL;DR -->
 <div class="tldr-section">
   <h2 class="tldr-title">TL;DR</h2>
   <div class="tldr-cards">
     <div class="tldr-card">
       <div class="tldr-card-label">What we built</div>
-      <p class="tldr-card-text">B2C + SaaS build — mobile app for visitors, admin panel for venue managers, one shared indoor map underneath both as sole Lead Designer.</p>
+      <p class="tldr-card-text">A role-aware B2B dashboard for Quandoo's Business Center — reservations, analytics and day-to-day operations condensed into one actionable view for owners, managers and floor staff.</p>
     </div>
     <div class="tldr-card">
       <div class="tldr-card-label">How we built it</div>
-      <p class="tldr-card-text">Owned it end to end: research → problem framing → prototyping → usability testing → dev handoff, including a pattern library so teams I'd never meet could build from it.</p>
+      <p class="tldr-card-text">Discovery interviews and contextual observation → persona-driven problem framing → ideation workshops to pressure-test the obvious solution → paper wireframes tested with 4 restaurant managers → a lean design system for the final UI.</p>
     </div>
     <div class="tldr-card">
-      <div class="tldr-card-label">What we learned</div>
-      <p class="tldr-card-text">Result: +23% unaided POI navigation after an A/B test, and a privacy model (mutual visibility) that tested as the single most trusted feature — even though it made the build harder.</p>
+      <div class="tldr-card-label">What landed</div>
+      <p class="tldr-card-text">+15% increase in bookings · 30% faster task completion · +40% user satisfaction — measured via internal data, timed usability sessions and post-launch surveys.</p>
     </div>
   </div>
 </div>
@@ -1335,174 +1422,68 @@
   </div>
 </div>
 
-<div class="tldr-section" style="display:none;">
-  <div class="tldr-cards">
-    <div class="tldr-card">
-      <div class="tldr-card-label">What we built</div>
-      <p class="tldr-card-text">Sole product designer on a 7-month B2C + SaaS build — mobile app for visitors, admin panel for venue managers, one shared indoor map underneath both.</p>
-    </div>
-    <div class="tldr-card">
-      <div class="tldr-card-label">How we built it</div>
-      <p class="tldr-card-text">Owned it end to end: research → problem framing → prototyping → usability testing → dev handoff, including a pattern library so teams I'd never meet could build from it.</p>
-    </div>
-    <div class="tldr-card">
-      <div class="tldr-card-label">What we learned</div>
-      <p class="tldr-card-text">Result: +23% unaided POI navigation after an A/B test, and a privacy model (mutual visibility) that tested as the single most trusted feature — even though it made the build harder.</p>
-    </div>
-  </div>
-</div>
-
 <!-- ══════════════ QUICK SHOWCASE ══════════════ -->
 <div id="tab-quick" class="tab-content active" role="tabpanel" aria-labelledby="tabbtn-quick">
   <div class="quick-section">
 
     <div class="info-cards">
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="information-circle"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="information-circle"></ion-icon></div>
         <div class="info-card-title">Context</div>
-        <div class="info-card-text">It all started with one line in the brief: "navigate indoor venues like a ninja." No specs, no defined users, no fixed stack — just that sentence. Seven months later, we'd shipped a social navigation platform built on the Earth's own geomagnetic field.</div>
+        <div class="info-card-text">Quandoo's Business Center had grown into a tool that actively slowed restaurant owners down. A full redesign — not a cosmetic one — was needed.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="person"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="person"></ion-icon></div>
         <div class="info-card-title">My responsibility</div>
-        <div class="info-card-text">I led UX and UI for both sides of the product — the mobile app people used to find their way, and the web panel venue managers used to watch over the floor — from the first workshop all the way to dev handoff.</div>
+        <div class="info-card-text">Leading the full design process from research to impact — uncovering user needs while aligning with business goals throughout.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="sad"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="sad"></ion-icon></div>
         <div class="info-card-title">User problem</div>
-        <div class="info-card-text">Picture landing in an airport, a museum, a conference hall you've never set foot in. No indoor GPS exists. The map is a static PDF pinned to a wall. And you have no idea whether the people you're looking for are two rooms away or two floors away.</div>
+        <div class="info-card-text">Restaurant operators couldn't answer "is today going well?" — the data existed, but delivered no meaningful insight. Every task felt too slow.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon">
-          <ion-icon name="construct"></ion-icon>
-        </div>
+        <div class="info-card-icon"><ion-icon name="construct"></ion-icon></div>
         <div class="info-card-title">What we did</div>
-        <div class="info-card-text">We ended up building two products under one roof: a cross-platform app that finds you indoors using IndoorAtlas' geomagnetic positioning, and a real-time control panel for venue staff — with privacy woven into the foundations, not bolted on at the end.</div>
+        <div class="info-card-text">Redesigned the reservation system, dashboard, and navigation from scratch — introducing role-aware flows and actionable metrics.</div>
       </div>
     </div>
 
     <h2 class="section-heading">Outcomes</h2>
-    <p class="research-intro" style="margin-bottom:32px;">Here's what changed once real people started using it, not just testers in a room:</p>
     <div class="outcomes-list">
       <div class="outcome-item">
         <div class="outcome-icon"><ion-icon name="trending-up"></ion-icon></div>
-        We A/B tested minimal icon cues against text labels and found the simpler cues won by +23% in POI navigation success
+        +15% increase in bookings, tracked via internal data post-launch
       </div>
       <div class="outcome-item">
-        <div class="outcome-icon"><ion-icon name="time"></ion-icon></div>
-        9 out of 10 people reached their Point of Interest unaided — no help screen, no second look at the map
+        <div class="outcome-icon"><ion-icon name="timer"></ion-icon></div>
+        30% faster operational task completion, confirmed by timed usability analysis
       </div>
       <div class="outcome-item">
-        <div class="outcome-icon"><ion-icon name="checkmark-circle"></ion-icon></div>
-        The mutual visibility system came out as the most trusted feature in every single usability session — nobody flagged it as creepy
+        <div class="outcome-icon"><ion-icon name="happy"></ion-icon></div>
+        +40% user satisfaction improvement, via post-launch surveys
       </div>
     </div>
 
     <h2 class="section-heading">Challenges and takeaways</h2>
     <div class="challenges-grid">
       <div class="challenge-card">
-        <div class="challenge-icon"><ion-icon name="people"></ion-icon></div>
-        <p class="challenge-text">I was designing for two completely different people at once: the visitor with a phone in one hand, rushing to find a room, and the admin behind a desktop screen, watching a live floor plan. Keeping both honestly served — without quietly building two separate products — was the tension I lived with for seven months.</p>
+        <span class="challenge-icon"><ion-icon name="compass"></ion-icon></span>
+        <p class="challenge-text"><strong>Balancing business goals with user needs.</strong> Navigating between business expectations and user needs wasn't easy. With an open, positive-minded team, we aligned on a phased approach that delivers value even in its first, small release.</p>
       </div>
       <div class="challenge-card">
-        <div class="challenge-icon"><ion-icon name="shield"></ion-icon></div>
-        <p class="challenge-text">There was a real risk that inFi would feel like a surveillance app, and no toggle buried in a settings menu was going to fix that — it had to be solved in the architecture itself. So we built mutual visibility: you only show up on someone's map if they've shared their location with you too. I held that line even when the pressure came, late in delivery, to simplify it away.</p>
+        <span class="challenge-icon"><ion-icon name="bulb"></ion-icon></span>
+        <p class="challenge-text"><strong>Exploring beyond the obvious solution.</strong> When a solution idea is already lingering in the team, it still makes sense to explore alternatives. Even when it doesn't change direction, it's useful exploration for later — and the team was reassured the initial idea was the right one to pursue first.</p>
       </div>
     </div>
-
-    <h2 class="section-heading">Gallery</h2>
-    <div class="gallery-carousel" id="gallery-carousel">
-      <!-- Mobile apps column (left) -->
-      <div class="gallery-column-mobile">
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_01.png', 'inFi — app screen 1')">
-          <img src="https://finelli.xyz/images/infi_gallery_01.png" alt="inFi — app screen 1" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_03.png', 'inFi — app screen 2')">
-          <img src="https://finelli.xyz/images/infi_gallery_03.png" alt="inFi — app screen 2" loading="lazy">
-        </div>
-  
-      </div>
-
-      <!-- Desktop admin column (right) -->
-      <div class="gallery-column-desktop">
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_02.png', 'inFi — admin panel 1')">
-          <img src="https://finelli.xyz/images/infi_gallery_02.png" alt="inFi — admin panel 1" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_04.png', 'inFi — admin panel 2')">
-          <img src="https://finelli.xyz/images/infi_gallery_04.png" alt="inFi — admin panel 2" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_06.png', 'inFi — admin panel 3')">
-          <img src="https://finelli.xyz/images/infi_gallery_06.png" alt="inFi — admin panel 3" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_08.png', 'inFi — admin panel 4')">
-          <img src="https://finelli.xyz/images/infi_gallery_08.png" alt="inFi — admin panel 4" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_10.png', 'inFi — admin panel 5')">
-          <img src="https://finelli.xyz/images/infi_gallery_10.png" alt="inFi — admin panel 5" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/infi_gallery_11.png', 'inFi — admin panel 5')">
-          <img src="https://finelli.xyz/images/infi_gallery_11.png" alt="inFi — admin panel 6" loading="lazy">
-        </div>
-      </div>
-    </div>
-
-    <!-- TESTIMONIALS -->
-    <section class="testimonials-section">
-      <h2 class="testimonials-title">Working with me</h2>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <p class="testimonial-quote">Caterina's attention to edge cases and privacy concerns made us feel like we weren't building a surveillance tool. She held the line on things that mattered.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">
-              <img src="https://finelli.xyz/images/avatar_1.jpg" alt="Client">
-            </div>
-            <div class="testimonial-info">
-              <div class="testimonial-name">Sarah Chen</div>
-              <div class="testimonial-role">Product Lead, inFi</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <p class="testimonial-quote">The pattern library and interactive specs she handed off let us ship without constant back-and-forth. That's rare. We literally built from her docs.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">
-              <img src="https://finelli.xyz/images/avatar_2.jpg" alt="Developer">
-            </div>
-            <div class="testimonial-info">
-              <div class="testimonial-name">Marcus Rodriguez</div>
-              <div class="testimonial-role">Lead Dev, Development Team</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <p class="testimonial-quote">She showed up as a true partner on this, not just a designer. The way she framed decisions and included us in problem-solving made the work feel collaborative.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">
-              <img src="https://finelli.xyz/images/avatar_3.jpg" alt="Manager">
-            </div>
-            <div class="testimonial-info">
-              <div class="testimonial-name">Alex Petrov</div>
-              <div class="testimonial-role">Project Manager</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <div class="cta-block">
       <div class="cta-text">
         <h3>Want the full design process?</h3>
-        <p>Research, testing, and every decision behind it — in the Detailed case study tab.</p>
+        <p>Research, definition, ideation and every decision behind it — in the Detailed case study tab.</p>
       </div>
       <div class="cta-buttons">
         <a href="#research" class="cta-btn secondary" onclick="return goToResearch(event);">Read the full case study</a>
-        <!-- contacts -->
         <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
       </div>
     </div>
@@ -1512,485 +1493,335 @@
 
 <!-- ══════════════ DETAILED CASE STUDY ══════════════ -->
 <div id="tab-detailed" class="tab-content" role="tabpanel" aria-labelledby="tabbtn-detailed">
-  
-  <!-- Phase Navigation Anchors -->
-  <nav class="phase-anchors">
+
+  <!-- PHASE ANCHORS (sticky) -->
+  <nav class="phase-anchors" aria-label="Jump to phase">
     <ul class="anchors-list">
       <li><a href="#research">Research</a></li>
       <li><a href="#define">Define</a></li>
       <li><a href="#ideate">Ideate</a></li>
       <li><a href="#prototype">Prototype</a></li>
-      <li><a href="#test">Test</a></li>
       <li><a href="#design">Design</a></li>
-      <li><a href="#handoff">Handoff</a></li>
       <li><a href="#results">Results</a></li>
     </ul>
   </nav>
 
   <div class="detailed-section">
 
+    <!-- PROJECT META -->
     <div class="meta-row">
       <div class="meta-box">
         <div class="meta-box-label">Core Team</div>
-        <div class="meta-box-content">
-          1 product designer (me) — sole designer, UX + UI<br>
-          1 project manager<br>
-          1 dev lead<br>
-          2 product leads<br>
-          IndoorAtlas SDK team
-        </div>
+        <div class="meta-box-content">1 product designer (me)<br>1 product manager<br>1 dev lead<br>Restaurant ops team<br>8 developers</div>
       </div>
       <div class="meta-box">
         <div class="meta-box-label">Tools</div>
-        <div class="meta-box-content">
-          Figma — UI design<br>
-          Figma Make — Design System<br>
-          Ionic Framework — mobile dev<br>
-          Foundation Framework — admin dev<br>
-          IndoorAtlas SDK
-        </div>
+        <div class="meta-box-content">Figma<br>Miro<br>Confluence<br>UserTesting</div>
       </div>
       <div class="meta-box">
         <div class="meta-box-label">Timeline</div>
-        <div class="meta-box-content">7 months · Q1–Q3 2026<br>Discovery → Handoff<br><br>SaaS + B2C · Web + Mobile</div>
+        <div class="meta-box-content">2023 Q1 – 2023 Q4</div>
       </div>
     </div>
-    <p class="read-time">~7 min read · 8-phase design process</p>
 
-    <!-- RESEARCH / EMPATHIZE -->
+    <!-- 01 RESEARCH -->
     <div id="research" class="phase-container">
-      </div>
-      <div class="phase-number">Phase 01</div>
-      <h2 class="phase-title">Research</h2>
-      <p class="phase-subtitle">Getting to know the problem through Users, Devs and Client Research.</p>
+      <div class="phase-block">
+        <div class="phase-number">Phase 01</div>
+        <h2 class="phase-title">Research</h2>
+        <p class="phase-subtitle">Discovery interviews and contextual observation with restaurant operators — learning how the Business Center actually gets used, day to day.</p>
 
-      <div class="content-body" style="margin-bottom:32px;">
-        <p>When I first heard "indoor positioning," I pictured GPS with extra steps. I was wrong. The client's real vision was multiple people tracked live inside a venue, plus a social layer of messaging, friend requests, and even group games — something closer to a social network than a map.</p>
-        <p>I spent the early weeks in stakeholder workshops, digging through competing indoor-positioning SDKs, and talking to the people who actually get lost in big venues — conference attendees, museum visitors, travellers rushing through airports.</p>
-      </div>
-
-      <div class="key-learnings">
-        <div class="learning-card">
-          <div class="learning-label">Key Learning 1</div>
-          <div class="learning-text">Nobody was asking me for a better map. They wanted <em>context</em> — where their colleagues were, what was happening nearby, how packed a room already was. The social layer wasn't a feature I invented; it was the thing they actually needed.</div>
+        <div class="content-body">
+          <p>I collaborated with the team to conduct <strong>discovery user interviews</strong> and <strong>contextual observation sessions</strong> to learn more about restaurant operator needs and goals — watching managers and owners use the tool in the middle of a real service, not in a lab.</p>
         </div>
-        <div class="learning-card">
-          <div class="learning-label">Key Learning 2</div>
-          <div class="learning-text">Regular GPS just gives up indoors. IndoorAtlas, which reads tiny variations in Earth's own magnetic field, was the only option that got us 1–3m accuracy without asking anyone to install extra hardware. That one technical fact quietly shaped everything that came after it.</div>
-        </div>
-        <div class="learning-card">
-          <div class="learning-label">Key Learning 3</div>
-          <div class="learning-text">Venue managers and venue visitors wanted almost opposite things, on completely different devices, at completely different moments. One product had to respect both — without one experience quietly winning at the other's expense.</div>
-        </div>
-      </div>
 
-      <div class="img-placeholder ratio-16-9">
-    <div class="img-placeholder-inner">
-      <div class="ph-icon"><ion-icon name="create"></ion-icon></div>
-      <div class="ph-label">Ideation workshop · privacy model matrix</div>
-      <div class="ph-hint">Suggested: infi_privacy_matrix.png · Impact vs. privacy-risk comparison of the visibility models tested · 1600 × 900px</div>
-    </div>
-  </div>
-
-      <div class="biz-user-section">
-        <h2 class="section-heading" style="margin-bottom:24px; margin-top:120px">Client brief <s style="color:var(--muted)">vs</s> <ion-icon name="heart-outline" style="font-size:0.7em; vertical-align:middle; color:var(--accent);"></ion-icon> user needs</h2>
-        <div class="biz-user-grid">
-          <div class="biz-card">
-            <div class="biz-card-label">Client brief</div>
-            <div class="biz-card-text">A cross-platform app with geomagnetic indoor positioning, real-time tracking of multiple users, social features (messaging, friend requests, group games), and a venue admin control panel — all of it, in seven months.</div>
+        <div class="key-learnings">
+          <div class="learning-card">
+            <div class="learning-label">Key Learning 1</div>
+            <div class="learning-text">Restaurant managers have all sorts of manual workarounds — from paper notes to phone calls — because the app made the right path too slow.</div>
           </div>
-          <div class="biz-card">
-            <div class="biz-card-label">User needs</div>
-            <div class="biz-card-text">First-time visitors just wanted to orient themselves fast, find the people they knew, and stumble onto what was worth seeing — without feeling watched. Admins needed real-time floor occupancy and a way to talk to a crowd of visitors at once.</div>
+          <div class="learning-card">
+            <div class="learning-label">Key Learning 2</div>
+            <div class="learning-text">Owners had no actionable metrics on reservation performance, peak times, or customer return rates — just raw data with no context.</div>
+          </div>
+          <div class="learning-card">
+            <div class="learning-label">Key Learning 3</div>
+            <div class="learning-text">Both managers and owners want to roll the tool out to more staff gradually — but the current UX made onboarding painful.</div>
           </div>
         </div>
 
-      <div class="artifacts" style="margin-top:48px;">
-        <div class="artifacts-label">→ Artifacts</div>
-        <div class="artifact-tags">
-          <span class="tag blue">Stakeholder Workshops &amp; Brainstorms</span>
-          <span class="tag blue">Indoor-Positioning SDK Comparison</span>
-          <span class="tag blue">User Interviews (venue visitors)</span>
-          <span class="tag blue">Product Identity &amp; Naming (inFi)</span>
+        <div class="biz-user-section">
+          <h2 class="section-heading" style="text-align:left; margin-bottom:24px;">Business <s style="color:var(--muted)">vs</s> user needs</h2>
+          <div class="biz-user-grid">
+            <div class="biz-card">
+              <div class="biz-card-label">Business needs</div>
+              <div class="biz-card-text">Quandoo needed to increase platform stickiness and drive more active usage among existing restaurant partners — reducing churn and strengthening the account renewal cycle.</div>
+            </div>
+            <div class="biz-card">
+              <div class="biz-card-label">User needs</div>
+              <div class="biz-card-text">Restaurant operators want to run their venue more efficiently — faster reservation management, at-a-glance performance insights, and less time fighting the software.</div>
+            </div>
+          </div>
+
+          <h2 class="natural-link-title">There's a natural link</h2>
+          <div class="link-flow">
+            <div class="link-item"><span class="link-icon">♡</span> If operators are enabled to manage reservations efficiently</div>
+            <div class="link-arrow">↓</div>
+            <div class="link-item"><span class="link-icon">👥</span> It becomes easier for them to onboard more staff to the platform</div>
+            <div class="link-arrow">↓</div>
+            <div class="link-item"><span class="link-icon">$</span> They're likely to expand usage and renew at higher tiers</div>
+          </div>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag blue">Discovery Interview Notes</span>
+            <span class="tag blue">Contextual Observation Log</span>
+            <span class="tag blue">Key Learnings Summary</span>
+            <span class="tag blue">Business ↔ User Needs Map</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- DEFINE -->
+    <!-- 02 DEFINE -->
     <div id="define" class="phase-container">
-      <div class="phase-number">Phase 02</div>
-      <h2 class="phase-title">Define</h2>
-      <p class="phase-subtitle">inFi had to speak to two audiences with nothing in common except the same map underneath — different devices, different timeframes, different ideas of what success even looked like.</p>
+      <div class="phase-block">
+        <div class="phase-number">Phase 02</div>
+        <h2 class="phase-title">Define</h2>
+        <p class="phase-subtitle">The Business Center served multiple people simultaneously — with fundamentally different needs, time horizons, and definitions of success.</p>
 
-      <div class="content-body">
-    <p>The research surfaced a clear tension: first-time visitors wanted to orient themselves fast and connect with people they knew — without feeling watched. Venue admins wanted real-time occupancy and a way to reach a crowd of visitors at once, from a completely different device, at a completely different moment. Any solution had to serve both honestly, without quietly becoming two separate products.</p>
-  </div>
-
-      <div class="persona-grid">
-        <div class="persona-card">
-          <span class="persona-icon"><ion-icon name="compass"></ion-icon></span>
-          <div class="persona-role">Persona 01</div>
-          <div class="persona-name">The First-Timer</div>
-          <div class="persona-need"><strong>Role:</strong> Conference attendee<br><br>Just wants to find room B3, spot a colleague, and see what's happening nearby — all within the first 5 minutes of walking in. Hates feeling watched.<br><br><i>"I don't want to feel watched. I just want to find my colleague and get to my session without wasting the first ten minutes lost."</i></div>
+        <div class="persona-grid">
+          <div class="persona-card">
+            <span class="persona-icon"><ion-icon name="restaurant"></ion-icon></span>
+            <div class="persona-role">Persona 01</div>
+            <div class="persona-name">The Floor Conductor</div>
+            <div class="persona-need"><strong>Role:</strong> Restaurant Manager<br><br>Needs real-time reservation access and customer context in under 3 seconds. Always multitasking. Errors cost a table — and a review.<br><br><i>"I don't have time to dig for information. I need the table status the second I look at the screen."</i></div>
+          </div>
+          <div class="persona-card">
+            <span class="persona-icon"><ion-icon name="bar-chart"></ion-icon></span>
+            <div class="persona-role">Persona 02</div>
+            <div class="persona-name">The Visionary Leader</div>
+            <div class="persona-need"><strong>Role:</strong> Owner<br><br>Cares about revenue trends, peak times, repeat customers. Checks the app once a day. Needs clarity, not volume.<br><br><i>"I don't want more data. I want to know in ten seconds whether today is a good day."</i></div>
+          </div>
+          <div class="persona-card">
+            <span class="persona-icon"><ion-icon name="flash"></ion-icon></span>
+            <div class="persona-role">Persona 03</div>
+            <div class="persona-name">The Daily Dynamo</div>
+            <div class="persona-need"><strong>Role:</strong> Staff Member<br><br>Needs today's schedule and quick customer notes. No interest in business metrics. Confused by anything beyond their immediate task.<br><br><i>"Just show me my shift and today's tables — nothing else."</i></div>
+          </div>
         </div>
-        <div class="persona-card">
-          <span class="persona-icon"><ion-icon name="business"></ion-icon></span>
-          <div class="persona-role">Persona 02</div>
-          <div class="persona-name">The Venue Manager</div>
-          <div class="persona-need"><strong>Role:</strong> Hotel / event ops lead<br><br>Watches floor occupancy in real time, sends messages to everyone at once, and needs a capacity alert before things get out of hand — all from a desktop browser, mid-event.<br><br><i>"I need to see the whole floor at a glance, and reach everyone at once the moment something changes."</i></div>
-        </div>
-        <div class="persona-card">
-          <span class="persona-icon"><ion-icon name="people"></ion-icon></span>
-          <div class="persona-role">Persona 03</div>
-          <div class="persona-name">The Social Connector</div>
-          <div class="persona-need"><strong>Role:</strong> Regular venue user<br><br>Wants to see where their friends are, send them a message, and walk toward them — without broadcasting their own location to every stranger in the building.<br><br><i>"I want to see where my friends are — but only if they've chosen to share that with me too."</i></div>
-        </div>
-      </div>
 
-      <div class="big-quote">
-        "How might we help first-time visitors orient themselves and connect with others in complex indoor venues — without sacrificing their sense of privacy and control?"
-        <cite>Problem Statement · inFi · 2026</cite>
-      </div>
+        <div class="big-quote">
+          "How might we help restaurant operators make confident, fast decisions from a single screen — without being buried in data they don't need?"
+          <cite>Problem Statement · Quandoo Business Center Redesign</cite>
+        </div>
 
-      <div class="artifacts">
-        <div class="artifacts-label">→ Artifacts</div>
-        <div class="artifact-tags">
-          <span class="tag blue">User Personas (3)</span>
-          <span class="tag blue">Client Brief vs. User Needs Matrix</span>
-          <span class="tag blue">Problem Statement / HMW</span>
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag red">User Personas (3)</span>
+            <span class="tag red">Needs vs Time-Horizon Map</span>
+            <span class="tag red">Problem Statement</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 03 IDEATE -->
-<section id="ideate" class="phase-container">
-  <div class="phase-number">Phase 03</div>
-  <h2 class="phase-title">Ideate</h2>
-  <p class="phase-subtitle">Can I avoid building a surveillance tool?</p>
-
-  <div class="content-body">
-    <p>Real-time location sharing is inFi's core value — but the same feature that makes it useful makes it feel like a tracking app. I pushed back on the default "opt-in once, always visible" model and ran structured brainstorming to find something better.</p>
-  </div>
-
-  <ul class="step-list">
-    <li><span class="step-num">01</span><span><strong>The tension:</strong> Real-time location sharing is the product's core value, but it's also what makes an app feel like surveillance if handled carelessly.</span></li>
-    <li><span class="step-num">02</span><span><strong>The ideation:</strong> Generated alternative privacy models — asymmetric visibility, proximity-only sharing, time-limited presence — and evaluated each on an impact/privacy-risk matrix.</span></li>
-    <li><span class="step-num">03</span><span><strong>Mutual visibility wins:</strong> You only appear on someone's map if they've also shared their location with you. This became a product principle, not just a setting.</span></li>
-  </ul>
-
-  <div class="callout insight">
-          <ion-icon name="bulb"></ion-icon>
-    <div class="callout-title">Keeping Admins Happy Too</div>
-    <p>For venue admins, we scoped tools to make their side of the product just as useful: bulk messaging to reach a crowd at once, and a real-time view of traffic overlaid on the floor plan — without turning it into surveillance of individual visitors.</p>
-  </div>
-
-  <div class="img-placeholder ratio-16-9">
-    <div class="img-placeholder-inner">
-      <div class="ph-icon"><ion-icon name="create"></ion-icon></div>
-      <div class="ph-label">Ideation workshop · privacy model matrix</div>
-      <div class="ph-hint">Suggested: infi_privacy_matrix.png · Impact vs. privacy-risk comparison of the visibility models tested · 1600 × 900px</div>
-    </div>
-  </div>
-
-  <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Privacy Model Comparison Matrix</span>
-      <span class="tag blue">Brainstorming Workshop Output</span>
-      <span class="tag blue">Admin Tooling Concept List</span>
-      <span class="tag blue">Mutual Visibility Principle Doc</span>
-    </div>
-  </div>
-</section>
-
-<!-- 04 PROTOTYPE -->
-<section id="prototype" class="phase-container">
-  <div class="phase-number">Phase 04</div>
-  <h2 class="phase-title">Prototype</h2>
-  <p class="phase-subtitle">Turning ideas into something we could actually put in front of people.</p>
-
-  <div class="content-body">
-    <p>I started with <strong>low-fi wireframes</strong>, keeping everything simple so we could focus on how things worked, not how they looked. Mapping out interactions and catching errors early saved us tons of time later. Since we were building on IndoorAtlas, we chose the <strong>Ionic Framework</strong> for the mobile app — ideal for a cross-platform build — and the <strong>Foundation Framework</strong> for the admin side, to keep things stable and responsive under real data.</p>
-    <p>Using Figma, I built clickable prototypes and handed them to stakeholders to try on their own devices. Their feedback was directly responsible for refining the design and fixing hiccups before any of it reached development.</p>
-  </div>
-
-  <div class="callout decision">
-          <ion-icon name="checkmark-circle"></ion-icon>
-    <div class="callout-title">Decision caught at mid-fi — first-person view cut</div>
-    <p>A first-person perspective view, inspired by FPS games, had been on the feature list from the start. Once we built it out in mid-fi, it was obvious it added real technical risk for almost no navigation benefit. We cut it before any hi-fi work began — saving development time and keeping the scope honest.</p>
-  </div>
-
-  <div class="img-placeholder ratio-16-9">
-    <div class="img-placeholder-inner">
-      <div class="ph-icon"><ion-icon name="phone-portrait"></ion-icon></div>
-      <div class="ph-label">Clickable prototype · mobile + admin flows</div>
-      <div class="ph-hint">Suggested: infi_prototype.png · Figma prototype screens for map, check-in and admin floorplan · 1600 × 900px</div>
-    </div>
-  </div>
-
-  <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Paper Wireframes (mobile + admin)</span>
-      <span class="tag blue">Mid-Fi Wireframes — Figma</span>
-      <span class="tag blue">Hi-Fi Clickable Prototype</span>
-      <span class="tag blue">Component Inventory</span>
-      <span class="tag blue">Interaction Annotation Doc</span>
-    </div>
-  </div>
-</section>
-
-<!-- 05 TEST -->
-<section id="test" class="phase-container">
-  <div class="phase-number">Phase 05</div>
-  <h2 class="phase-title">Test</h2>
-  <p class="phase-subtitle">A clickable prototype tells you if a flow makes sense on paper. It doesn't tell you if a stranger in an airport can actually use it.</p>
-
-  <div class="content-body">
-    <p>I ran sessions with real people in <strong>realistic scenarios</strong> — navigating an unfamiliar airport, exploring a museum floor they'd never seen, checking into a venue cold. The core navigation held up: people moved through the map without much hesitation. But two things came back consistently: <strong>first-time users needed clearer onboarding</strong>, and playful touches like the proximity compass weren't just decoration — they made people want to keep exploring, not just tolerate the app until they found what they needed.</p>
-  </div>
-
-  <div class="callout problem">
-          <ion-icon name="warning"></ion-icon>
-    <div class="callout-title">What testing caught early</div>
-    <p>The mutual visibility switch tested as a clear win — every session flagged it as the thing that made people feel safe, not watched. But first-time navigation without an onboarding pass was shakier than expected, and font sizing broke down in the dim, ambient lighting of real venues. Both went straight back into the design queue instead of shipping as-is.</p>
-  </div>
-
-  <div class="ab-grid">
-    <div class="ab-card">
-      <div class="ab-label">Version A · Text labels for POIs</div>
-      <p>Informative, but added visual noise to an already dense map — users hesitated reading labels instead of just walking.</p>
-    </div>
-    <div class="ab-card winner">
-      <div class="ab-label"><ion-icon name="checkmark-circle" style="font-size:1.1em; vertical-align:-2px;"></ion-icon> Winner · Version B · Minimal icon cues + helper text</div>
-      <p>Quieter map, faster recognition. Lifted successful, unaided POI navigation by <strong>23%</strong> — this is why the final map leans on iconography over walls of text.</p>
-    </div>
-  </div>
-
-  <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Usability Test Plan &amp; Scenarios</span>
-      <span class="tag blue">A/B Test Results — POI Guidance</span>
-      <span class="tag blue">Onboarding Flow Revisions</span>
-      <span class="tag blue">Accessibility &amp; Legibility Fixes</span>
-    </div>
-  </div>
-</section>
-
-    <!-- DESIGN -->
-<section id="design" class="phase-container">
-  <div class="phase-number">Phase 06</div>
-  <h2 class="phase-title">Design</h2>
-  <p class="phase-subtitle">Making it beautiful, easy to use, and ready for teams I'd never meet to build.</p>
-
-    <div class="content-body">
-      <p>The client gave me one clear directive: FC Bayern red on a dark palette. That single constraint ended up shaping a whole visual language — dark enough to read comfortably in a dim conference hall, structured enough to survive a dense admin dashboard too. I followed Steve Krug's golden rule, "don't make me think": if you didn't have to stop and think, I knew I'd done my job.</p>
-    </div>
-
-      <div style="margin-bottom:48px; max-width:880px; margin-left:auto; margin-right:auto;">
-        <div class="subgrid-label">Logo development — from pencil to vector, and colour tests</div>
-        <div class="img-grid" style="grid-template-columns:repeat(4,1fr);">
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_1.png', 'inFi logo development, step 1: pencil sketch')">
-            <img src="https://finelli.xyz/images/infi_logo_1.png" alt="inFi logo development, step 1: pencil sketch" loading="lazy">
-          </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_2.png', 'inFi logo development, step 2: refined sketch')">
-            <img src="https://finelli.xyz/images/infi_logo_2.png" alt="inFi logo development, step 2: refined sketch" loading="lazy">
-          </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_3.png', 'inFi logo development, step 3: vector draft')">
-            <img src="https://finelli.xyz/images/infi_logo_3.png" alt="inFi logo development, step 3: vector draft" loading="lazy">
-          </div>
-          <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_logo_4.png', 'inFi logo development, step 4: final colour test')">
-            <img src="https://finelli.xyz/images/infi_logo_4.png" alt="inFi logo development, step 4: final colour test" loading="lazy">
-          </div>
-        </div>
-      </div>
-
-      <div class="platform-group mobile">
-        <div class="platform-group-header">
-          <div class="platform-group-icon"><ion-icon name="phone-portrait"></ion-icon></div>
-          <div class="platform-group-heading">
-            <h4>Mobile App</h4>
-            <span>Ionic Framework · the visitor-facing experience</span>
-          </div>
-        </div>
-
-        <div class="design-block">
-          <div class="design-block-inner">
-            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('https://finelli.xyz/images/infi_map.png', 'inFi mobile app, live indoor map')">
-              <img src="https://finelli.xyz/images/infi_map.png" alt="inFi mobile app, live indoor map" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div class="design-desc">
-              <h3>Map as canvas</h3>
-              <p>I designed it dark-first, with people as the main content on screen. The navigation icons borrow straight from wayfinding systems you already know without thinking — exit signs, accessibility markers — so there's nothing new to learn.</p>
-              <ul>
-                <li>Proximity compass shows opt-in nearby users</li>
-                <li>POI markers use universal wayfinding iconography</li>
-                <li>Mutual visibility toggle always in thumb reach</li>
-              </ul>
-            </div>
-          </div>
-          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_friends.png', 'inFi mobile app, nearby friends screen')">
-              <img src="https://finelli.xyz/images/infi_friends.png" alt="inFi mobile app, nearby friends screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_messages.png', 'inFi mobile app, messages screen')">
-              <img src="https://finelli.xyz/images/infi_messages.png" alt="inFi mobile app, messages screen" loading="lazy">
-            </div>
-          </div>
-        </div>
-
-        <div class="platform-subgrid">
-          <div class="subgrid-label">More mobile screens</div>
-          <div class="img-grid" style="grid-template-columns:repeat(5,1fr);">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_notifications.png', 'inFi mobile app, notifications screen')">
-              <img src="https://finelli.xyz/images/infi_notifications.png" alt="inFi mobile app, notifications screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_settings.png', 'inFi mobile app, settings screen')">
-              <img src="https://finelli.xyz/images/infi_settings.png" alt="inFi mobile app, settings screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_show.png', 'inFi mobile app, visibility settings screen')">
-              <img src="https://finelli.xyz/images/infi_show.png" alt="inFi mobile app, visibility settings screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_find_indoor.png', 'inFi mobile app, indoor search screen')">
-              <img src="https://finelli.xyz/images/infi_find_indoor.png" alt="inFi mobile app, indoor search screen" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_location_alert.png', 'inFi mobile app, location alert screen')">
-              <img src="https://finelli.xyz/images/infi_location_alert.png" alt="inFi mobile app, location alert screen" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="platform-group admin">
-        <div class="platform-group-header">
-          <div class="platform-group-icon"><ion-icon name="desktop"></ion-icon></div>
-          <div class="platform-group-heading">
-            <h4>Admin Panel</h4>
-            <span>Foundation Framework · the operator-facing dashboard</span>
-          </div>
-        </div>
-
-        <div class="design-block">
-          <div class="design-block-inner reverse">
-            <div class="design-image zoomable" style="aspect-ratio:4/3;" onclick="openLightbox('https://finelli.xyz/images/infi_admin.png', 'inFi admin panel, live floor view')">
-              <img src="https://finelli.xyz/images/infi_admin.png" alt="inFi admin panel, live floor view" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <div class="design-desc">
-              <h3>Information density over decoration</h3>
-              <p>Built on Foundation Framework for a grid that could hold up under real data. I wanted an admin to read the state of the floor at a glance, so advanced features stay one click deeper — there when you need them, out of the way when you don't.</p>
-              <ul>
-                <li>Live floor plan with user/visitor/staff overlays</li>
-                <li>KPI dashboard with toggle-controlled visibility layers</li>
-                <li>Bulk messaging tool with reach estimate</li>
-              </ul>
-            </div>
-          </div>
-          <div class="ad-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_admin_2.png', 'inFi admin panel, additional view')">
-              <img src="https://finelli.xyz/images/infi_admin_2.png" alt="inFi admin panel, additional view" loading="lazy">
-            </div>
-            <div class="zoomable" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://finelli.xyz/images/infi_admin_3.png', 'inFi admin panel, additional view')">
-              <img src="https://finelli.xyz/images/infi_admin_3.png" alt="inFi admin panel, additional view" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
-
-    <!-- HANDOFF -->
-    <div id="handoff" class="phase-container">
+    <div id="ideate" class="phase-container">
       <div class="phase-block">
-        <div class="phase-number">Phase 07</div>
-        <h2 class="phase-title">Handoff</h2>
-        <p class="phase-subtitle">The real gap in any project isn't between the mockup and the code — it's between the designer who made it and the ten other teams, in ten other cities, who'll build it without ever meeting her.</p>
-        <div class="content-body">
-          <p>Everything changed the moment the client told us inFi would be resold and rebuilt by other teams around the world. A deck of colors, typography and component states was fine for a team that shared a coffee machine — it was not going to survive being handed to developers I'd never talk to.</p>
-          <p>So I mapped out a proper pattern library: every component's attributes, typography, colors and states, organized by usage hierarchy. Then, since "email a PDF and hope for the best" isn't a real handoff strategy, I used a plugin that turned every artboard into an interactive HTML document — developers could click through each screen and read exactly what they needed before writing a line of code.</p>
-        </div>
-        <div class="callout insight">
-          <ion-icon name="earth"></ion-icon>
-          <div class="callout-title">Designing for teams I'd never meet</div>
-          <p>This is the part of the project that mirrors how I like to work now: documentation and specs precise enough that a distributed team can build from them without a sync call. The interactive styleguide wasn't a nice-to-have — it was the difference between "the designer is a bottleneck" and "the designer wrote it down once, correctly."</p>
-        </div>
-        <div class="callout insight">
-          <ion-icon name="bulb"></ion-icon>
-          <div class="callout-title">Design System — now live</div>
-          <p>The pattern library above was the ancestor of a proper Design System — same intent (one source of truth, way less back-and-forth with dev), much more manual execution at the time. Since then I've formalized it into an actual token-based Design System in Figma Make, shown below.</p>
-        </div>
+        <div class="phase-number">Phase 03</div>
+        <h2 class="phase-title">Ideate</h2>
+        <p class="phase-subtitle">Can I fight solution bias? Running a real ideation process before committing to the answer everyone already had in mind.</p>
 
-        <div class="img-placeholder ratio-16-9" style="max-width:880px; margin-left:auto; margin-right:auto;">
-          <div class="img-placeholder-inner">
-            <div class="ph-icon"><ion-icon name="color-palette"></ion-icon></div>
-            <div class="ph-label">Design System · Figma Make</div>
-            <div class="ph-hint">Suggested: infi_design_system.png · token overview — color, type, spacing, component states · 1600 × 900px</div>
+        <div class="steps-with-image">
+          <div class="steps-list-fancy">
+            <div class="step-fancy">
+              <div class="step-fancy-label">Step 1: The bias</div>
+              <div class="step-fancy-text">The team was already leaning toward one solution: redesign the reservation calendar. I asked: is there anything else we could do?</div>
+            </div>
+            <div class="step-fancy">
+              <div class="step-fancy-label">Step 2: The ideation</div>
+              <div class="step-fancy-text">I organised a series of ideation workshops to generate a wide range of alternative approaches — from role-aware dashboards to progressive disclosure patterns.</div>
+            </div>
+            <div class="step-fancy">
+              <div class="step-fancy-label">Step 3: Calendar it is</div>
+              <div class="step-fancy-text">While we explored other options and assessed them on an impact/effort matrix, we agreed: rework the reservation system first. Regardless of the outcome, we collected many good improvement ideas for future projects.</div>
+            </div>
+          </div>
+          <div class="ideation-image-wrap">
+            <div class="ideation-image-placeholder">Ideation workshop<br>Miro board</div>
           </div>
         </div>
 
         <div class="artifacts">
-    <div class="artifacts-label">→ Artifacts</div>
-    <div class="artifact-tags">
-      <span class="tag blue">Final UI — Mobile App &amp; Admin Panel</span>
-      <span class="tag blue">Pattern Library &amp; Component Specs</span>
-      <span class="tag blue">Design System — Figma Make</span>
-    </div>
-  </div>
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag green">Ideation Workshop Notes</span>
+            <span class="tag green">Impact / Effort Matrix</span>
+            <span class="tag green">Alternative Concepts Backlog</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- RESULTS -->
+    <!-- 04 PROTOTYPE -->
+    <div id="prototype" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 04</div>
+        <h2 class="phase-title">Prototype</h2>
+        <p class="phase-subtitle">Fidelity escalation is a discipline, not a preference. Low-fi forces honest conversations.</p>
+
+        <div class="content-body">
+          <p>I started with <strong>hand-drawn wireframes</strong> for the three core areas: dashboard, reservation calendar, and navigation structure. At this stage we ran <strong>concept tests with 4 restaurant managers</strong> — showing paper sketches, not mockups.</p>
+          <p>The paper round surfaced a critical issue with drag-and-drop on tablets. We redesigned the interaction model before building a single screen, and mid-fi wireframes followed with a strong focus on <strong>information density</strong>.</p>
+        </div>
+
+        <div class="callout decision">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          <div class="callout-title">Decision caught early — tablet interaction</div>
+          <p>Drag-and-drop failed on tablets due to gesture conflicts. We caught this at the paper prototype stage and added a tap-to-select + tap-to-place alternative — doubling implementation cost, but serving the actual device context of floor managers.</p>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag yellow">Paper Wireframes</span>
+            <span class="tag yellow">Concept Test Notes (4 managers)</span>
+            <span class="tag yellow">Mid-Fi Wireframes — Figma</span>
+            <span class="tag yellow">Hi-Fi Clickable Prototype</span>
+            <span class="tag yellow">Tablet vs Desktop Interaction Spec</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 DESIGN -->
+    <div id="design" class="phase-container">
+      <div class="phase-block">
+        <div class="phase-number">Phase 05</div>
+        <h2 class="phase-title">Design</h2>
+        <p class="phase-subtitle">Finalizing it with the design system — a validated concept, a lean design token system, and a few honest compromises.</p>
+
+        <div class="content-body">
+          <p>With a validated concept in hand, what was left was to finalize the UI and apply a lean design token system. Along the way we made some compromises: our end goal was one dashboard that displays all important information, but to deliver value faster we kept the existing structure and introduced a simple overview layer first.</p>
+        </div>
+
+        <div class="design-block">
+        <div class="design-block-inner">
+          <div class="design-image" style="align-items:flex-start; padding:20px; background:#13131c;">
+            <div style="width:100%;">
+              <div class="qd-mockup-label">Reservations</div>
+              <div class="qd-mockup-title">Booking performance rate</div>
+              <div class="qd-mockup-stats">
+                <div class="qd-mockup-stat">
+                  <div class="qd-mockup-stat-num accent">75%</div>
+                  <div class="qd-mockup-stat-label">Occupancy</div>
+                </div>
+                <div class="qd-mockup-stat">
+                  <div class="qd-mockup-stat-num">10</div>
+                  <div class="qd-mockup-stat-label">Pending</div>
+                </div>
+                <div class="qd-mockup-stat">
+                  <div class="qd-mockup-stat-num">200</div>
+                  <div class="qd-mockup-stat-label">Total seats</div>
+                </div>
+              </div>
+              <div class="qd-mockup-panel">
+                <div class="qd-mockup-panel-row">Enrollment rate <strong style="color:#e8344a;">50%</strong></div>
+                <div class="qd-mockup-panel-row">Active usage rate <strong style="color:#22c55e;">85%</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="design-desc">
+            <h3>New information architecture</h3>
+            <ul>
+              <li>Overview: quick access to today's status</li>
+              <li>Reservations: oversee booking flow and handle stuck requests</li>
+              <li>Analytics: monitor whether the venue is performing over time</li>
+            </ul>
+          </div>
+        </div>
+        </div>
+
+        <div class="design-block">
+        <div class="design-block-inner reverse">
+          <div class="design-image" style="align-items:flex-start; padding:20px; background:#13131c;">
+            <div style="width:100%;">
+              <div class="qd-mockup-label">Analytics</div>
+              <div class="qd-mockup-title">Active usage rate</div>
+              <div style="display:flex; gap:10px; margin-bottom:12px;">
+                <div class="qd-mockup-ring"><span style="font-size:14px; font-weight:700; color:#22c55e;">85%</span></div>
+                <div style="flex:1;">
+                  <div class="qd-mockup-panel-row">Total enrolled: <strong style="color:rgba(255,255,255,0.7);">70</strong></div>
+                  <div class="qd-mockup-panel-row">Active users: <strong style="color:#22c55e;">60</strong></div>
+                  <div class="qd-mockup-panel-row">Inactive users: <strong style="color:#e8344a;">10</strong></div>
+                </div>
+              </div>
+              <div class="qd-mockup-panel">
+                <div class="qd-mockup-panel-row" style="font-weight:600;">Smart recommendations</div>
+                <div class="qd-mockup-panel-row" style="font-size:9px;">2 opportunities to boost reservation rates</div>
+              </div>
+            </div>
+          </div>
+          <div class="design-desc">
+            <h3>Smart recommendations</h3>
+            <p>Opportunities surfaced that might boost usage and reservation performance.</p>
+            <ul>
+              <li>Quickly action policies that control reservation onboarding</li>
+              <li>Remind staff who haven't started using the calendar yet</li>
+              <li>Surface the right data at the right moment in the service flow</li>
+            </ul>
+          </div>
+        </div>
+        </div>
+
+        <div class="artifacts">
+          <div class="artifacts-label">→ Artifacts</div>
+          <div class="artifact-tags">
+            <span class="tag purple">Design Token System (Figma)</span>
+            <span class="tag purple">Component Library</span>
+            <span class="tag purple">Redlined Handoff Specs</span>
+            <span class="tag purple">Information Architecture Map</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 RESULTS -->
     <div id="results" class="phase-container">
-      <div class="phase-block" style="max-width:760px; margin: 0 auto;">
-        <div class="phase-number">Phase 08</div>
+      <div class="phase-block" style="max-width:760px; margin:0 auto;">
+        <div class="phase-number">Phase 06</div>
         <h2 class="phase-title">Results &amp; Learnings</h2>
-        <p class="phase-subtitle">The numbers that told me the approach worked, and a couple of lessons I'm carrying into the next project.</p>
+        <p class="phase-subtitle">Three metrics that validated the approach — and the principle that will shape the next project.</p>
 
         <div class="metrics">
           <div class="metric">
-            <div class="metric-num">+23%</div>
-            <div class="metric-label">POI navigation success after A/B test — text labels vs icon-only cues</div>
+            <div class="metric-num" style="color:var(--accent-green);">+15%</div>
+            <div class="metric-label">Increase in bookings, tracked via internal data post-launch</div>
           </div>
           <div class="metric">
-            <div class="metric-num" style="color:#f59e0b;">90%</div>
-            <div class="metric-label">Target task success rate for unaided navigation to a POI</div>
+            <div class="metric-num" style="color:var(--accent-yellow);">30%</div>
+            <div class="metric-label">Faster task completion, via timed usability analysis</div>
           </div>
           <div class="metric">
-            <div class="metric-num" style="color:#22c55e;">#1</div>
-            <div class="metric-label">Mutual visibility ranked top trust feature across all usability sessions</div>
-          </div>
-          <div class="metric" style="border-style:dashed; border-color:var(--muted);">
-            <div class="metric-num" style="color:var(--muted); font-size:22px;">Add a number</div>
-            <div class="metric-label">e.g. dev hours saved via the pattern library, or timeline held despite scope changes — a business-side metric, not just a UX one</div>
+            <div class="metric-num" style="color:var(--accent-blue);">+40%</div>
+            <div class="metric-label">User satisfaction improvement, via post-launch surveys</div>
           </div>
         </div>
 
         <div class="content-body">
-          <p><strong>What I'd do differently:</strong> I underestimated, early on, how differently a visitor with a phone in one hand and an admin behind a desktop screen would need to be designed for. Keeping both honestly served, without quietly building two separate products, was the tension I lived with for seven months — and I'd bring that persona split into the room a lot sooner next time.</p>
-        </div>
-
-        <div class="callout leadership">
-          <ion-icon name="shield"></ion-icon>
-          <div class="callout-title">Where I held the line</div>
-          <p>It would have been much easier to ship a simple "always visible" toggle and call it done — that's exactly the app nobody wants to open in a crowded venue. Holding the line on "you only appear if they've shared too," even under late-stage pressure to simplify it away, is what made the social layer feel safe instead of creepy. That's the moment I'm most proud of on this project: not the pixels, the decision.</p>
-        </div>
-
-        <div class="two-col">
-          <div class="card">
-            <div class="card-title">Shipped Features</div>
-            <p>Live indoor map with proximity compass · Mutual visibility toggle · Messaging &amp; friend requests · POI discovery with minimal icon cues · Admin floorplan with live occupancy · Bulk messaging for admins</p>
-          </div>
-          <div class="card">
-            <div class="card-title">Success Metrics Defined</div>
-            <p>Task success rate for unaided POI navigation · Average session duration · Weekly user engagement rate · Navigation error rate</p>
-          </div>
+          <p><strong>What I'm most proud of:</strong> getting a genuinely cross-functional team to align on a phased approach — shipping value in the first small release instead of waiting for the "complete" dashboard vision to be fully built.</p>
+          <p><strong>What I'd do differently:</strong> I'd bring tablet-in-hand testing into the paper-prototype stage from day one. We caught the drag-and-drop conflict early, but only because we got lucky with a manager who tested on the actual device — a more deliberate device-context test plan would have surfaced it with certainty, not luck.</p>
         </div>
 
         <div class="callout quote">
           <ion-icon name="sparkles"></ion-icon>
           <div class="callout-title">The underlying principle</div>
-          <p>I still believe the best navigation design is invisible. If someone finds who they're looking for and can't quite explain how they did it, the design worked. Every decision here — the proximity compass, the mutual visibility model, all of it — was in service of that one idea.</p>
+          <p>The best B2B design is invisible. Not because it lacks craft — but because the user's attention belongs on their restaurant, not on the tool. If they finish a task and don't remember how they did it, the design worked.</p>
         </div>
-
 
         <div class="cta-block" style="max-width:none;">
           <div class="cta-text">
@@ -1998,9 +1829,7 @@
             <p>I'm currently open to remote Senior Product Designer roles — let's talk.</p>
           </div>
           <div class="cta-buttons">
-            <!-- links -->
             <a href="https://finelli.xyz/about" class="cta-btn secondary">More about me</a>
-            <!-- TODO: replace # with a hosted PDF/Drive link to your CV -->
             <a href="#" class="cta-btn secondary" target="_blank" rel="noopener">Download CV</a>
             <a href="mailto:finelli@duck.com" class="cta-btn primary">Get in touch</a>
           </div>
@@ -2011,6 +1840,7 @@
 
   </div>
 </div>
+<!-- /tab-detailed -->
 
 <!-- LIGHTBOX -->
 <div class="lightbox-overlay" id="lightbox" onclick="handleLightboxOverlayTap()">
@@ -2021,21 +1851,21 @@
 <!-- PROJECT NAV -->
 <!-- TODO: update hrefs with the live URLs for these case studies once hosted -->
 <div class="project-nav">
-  <a href="https://finelli.xyz/portfolio" class="project-nav-card">
+  <a href="https://finelli.xyz/infi" class="project-nav-card">
     <span class="project-nav-label">← Previous project</span>
-    <span class="project-nav-title">More on the portfolio</span>
+    <span class="project-nav-title">inFi — Social Indoor Navigation</span>
   </a>
-  <a href="https://finelli.xyz/quandoo" class="project-nav-card project-nav-next">
+  <a href="https://finelli.xyz/x32" class="project-nav-card project-nav-next">
     <span class="project-nav-label">Next project →</span>
-    <span class="project-nav-title">Quandoo Business Center — B2B Dashboard</span>
+    <span class="project-nav-title">X32 Behringer — Touch UI</span>
   </a>
 </div>
 
 <!-- FOOTER -->
 <footer>
   <div>
-    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">inFi · Product Design Case Study · Designed Q1–Q2 2026</p>
-    <p style="color:var(--muted);">Product Design · UX Design · UI Design · Prototyping · User Research · Usability Testing</p>
+    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">Quandoo Business Center · UX/UI Case Study</p>
+    <p style="color:var(--muted);">Product Design · UX Research · Ideation · Design System · Handoff</p>
   </div>
   <p style="color:var(--muted); font-size:13px;">Caterina Finelli</p>
 </footer>
