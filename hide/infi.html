@@ -23,18 +23,52 @@
 <script>
   // Keep the tab bar and phase subnav flush against the fixed top nav, with
   // no gap, at any viewport size and after switching tabs.
-  function updateStickyOffsets() {
+  function getStackMetrics() {
     const navEl = document.querySelector('nav');
     const tabSectionEl = document.querySelector('.tab-section');
     const phaseAnchorsEl = document.querySelector('.phase-anchors');
-    if (!navEl || !tabSectionEl) return;
-    const navH = navEl.offsetHeight;
-    const tabH = tabSectionEl.offsetHeight;
+    const navH = navEl ? navEl.offsetHeight : 0;
+    const tabH = tabSectionEl ? tabSectionEl.offsetHeight : 0;
     const anchorsH = (phaseAnchorsEl && phaseAnchorsEl.offsetParent !== null) ? phaseAnchorsEl.offsetHeight : 0;
-    document.documentElement.style.setProperty('--nav-h', navH + 'px');
-    document.documentElement.style.setProperty('--tabsec-h', tabH + 'px');
-    document.documentElement.style.setProperty('--stack-h', (navH + tabH + anchorsH) + 'px');
+    return { navH: navH, tabH: tabH, anchorsH: anchorsH, total: navH + tabH + anchorsH };
   }
+
+  function updateStickyOffsets() {
+    const m = getStackMetrics();
+    document.documentElement.style.setProperty('--nav-h', m.navH + 'px');
+    document.documentElement.style.setProperty('--tabsec-h', m.tabH + 'px');
+    document.documentElement.style.setProperty('--stack-h', m.total + 'px');
+  }
+
+  // Manually computed scroll instead of relying on native anchor-jump +
+  // scroll-margin-top or Element.scrollIntoView(options) — support for the
+  // options object (block/inline alignment, smooth behavior together with a
+  // nested scrollable ancestor) is inconsistent on mobile Safari, where it
+  // can silently no-op. window.scrollTo/Element.scrollTo with plain numbers
+  // work everywhere.
+  function scrollToPhase(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    updateStickyOffsets();
+    const offset = getStackMetrics().total;
+    const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  }
+
+  // Bring the tapped/active pill into view inside the horizontally-scrolling
+  // phase-anchors bar (mobile only — on desktop it never overflows).
+  function scrollAnchorBarTo(anchor) {
+    const bar = anchor.closest('.phase-anchors');
+    if (!bar) return;
+    if (bar.scrollWidth <= bar.clientWidth + 1) return;
+    const barRect = bar.getBoundingClientRect();
+    const aRect = anchor.getBoundingClientRect();
+    const targetLeft = bar.scrollLeft + (aRect.left - barRect.left) - (bar.clientWidth / 2) + (aRect.width / 2);
+    bar.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+  }
+</script>
+
+<script>
 
   function switchTab(name, el) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -66,7 +100,7 @@
     if (e) e.preventDefault();
     switchTab('detailed', document.getElementById('tabbtn-detailed'));
     setTimeout(() => {
-      document.getElementById('research').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToPhase('research');
     }, 60);
     return false;
   }
@@ -162,25 +196,24 @@
     const phaseContainers = document.querySelectorAll('#research, #define, #ideate, #prototype, #test, #design, #handoff, #results');
 
     function updateActiveAnchor() {
-      let activeAnchor = null;
+      // Standard scroll-spy: the active phase is the LAST one whose top has
+      // crossed above the threshold line — not "the one currently sitting
+      // between 0 and half-viewport", which drops to no-match for most of
+      // the time spent reading inside a tall phase section.
+      const threshold = window.innerHeight * 0.35;
+      let activeId = null;
       phaseContainers.forEach(container => {
-        const rect = container.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
-          activeAnchor = container.id;
+        if (container.getBoundingClientRect().top <= threshold) {
+          activeId = container.id;
         }
       });
 
       phaseAnchors.forEach(anchor => {
+        const isMatch = !!activeId && anchor.getAttribute('href') === '#' + activeId;
         const wasActive = anchor.classList.contains('active');
-        anchor.classList.remove('active');
-        if (activeAnchor && anchor.getAttribute('href') === '#' + activeAnchor) {
-          anchor.classList.add('active');
-          // Keep the active pill in view inside the horizontally-scrolling
-          // anchors bar (mobile), without ever moving the page itself —
-          // 'nearest'/'nearest' only scrolls the scrollable ancestor.
-          if (!wasActive) {
-            anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-          }
+        anchor.classList.toggle('active', isMatch);
+        if (isMatch && !wasActive) {
+          scrollAnchorBarTo(anchor);
         }
       });
     }
@@ -188,13 +221,15 @@
     document.addEventListener('scroll', updateActiveAnchor, { passive: true });
     setTimeout(updateActiveAnchor, 100);
 
-    // On direct tap, bring the tapped anchor into view immediately too —
-    // don't wait for the scroll-spy to catch up with the page scroll.
+    // Take over the vertical scroll ourselves (manual scrollToPhase) instead
+    // of the native href jump, and scroll the pill bar horizontally too —
+    // both happen on the same tap instead of waiting on the scroll-spy.
     phaseAnchors.forEach(anchor => {
-      anchor.addEventListener('click', () => {
-        setTimeout(() => {
-          anchor.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-        }, 50);
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = anchor.getAttribute('href').slice(1);
+        scrollToPhase(id);
+        scrollAnchorBarTo(anchor);
       });
     });
 
@@ -1539,7 +1574,6 @@
 
     <!-- RESEARCH / EMPATHIZE -->
     <div id="research" class="phase-container">
-      </div>
       <div class="phase-number">Phase 01</div>
       <h2 class="phase-title">Research</h2>
       <p class="phase-subtitle">Getting to know the problem through Users, Devs and Client Research.</p>
@@ -1594,6 +1628,7 @@
           <span class="tag blue">Product Identity &amp; Naming (inFi)</span>
         </div>
       </div>
+    </div>
     </div>
 
     <!-- DEFINE -->
