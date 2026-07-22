@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>X32 Behringer — Product Design Case Study by Caterina Finelli</title>
-<link rel="icon" type="image/x-icon" href="favicon_portfolio/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon_portfolio/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon_portfolio/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="favicon_portfolio/apple-touch-icon.png">
-<link rel="manifest" href="favicon_portfolio/site.webmanifest">
-<meta name="description" content="How I designed the touchscreen interface for the Behringer X32 — a reference-class mixing console — from field research with audio engineers to a validated A/B-tested UI. Full UX process: empathize, define, ideate, prototype, test, deliver.">
-<meta property="og:title" content="X32 Behringer — Product Design Case Study">
-<meta property="og:description" content="Adding a touchscreen to one of the world's most powerful mixing consoles. Full design process from field research to handoff.">
+<title>X32 Behringer — Touchscreen UI Case Study by Caterina Finelli</title>
+<link rel="icon" type="image/x-icon" href="https://www.finelli.xyz/favicon_portfolio/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="https://www.finelli.xyz/favicon_portfolio/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://www.finelli.xyz/favicon_portfolio/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://www.finelli.xyz/favicon_portfolio/apple-touch-icon.png">
+<link rel="manifest" href="https://www.finelli.xyz/favicon_portfolio/site.webmanifest">
+<meta name="description" content="How I designed the Android tablet app that replaces six overloaded rotating knobs on the Behringer X32 — a reference-class mixing console — from field research with audio engineers to a validated, A/B-tested touch UI. Full UX process: empathize, define, ideate, prototype, test, deliver.">
+<meta property="og:title" content="X32 Behringer — Touchscreen UI Case Study">
+<meta property="og:description" content="Replacing six overworked rotating knobs with an Android tablet app on one of the world's most powerful mixing consoles. Full design process from field research to handoff.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -388,35 +388,43 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     align-items: center;
-    gap: 80px;
-    padding: 120px 10vw 80px;
+    padding: 0 10vw;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
   }
 
-  .hero::before {
-    content: '';
-    position: absolute; top: 0; right: 0; width: 60%; height: 100%;
-    background: radial-gradient(ellipse at 80% 30%, rgba(74,124,255,0.07) 0%, transparent 60%);
-    pointer-events: none;
+  .hero-bg {
+    position: absolute !important; inset: 0; z-index: -1;
   }
+  .hero-bg img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, rgba(8,8,12,0.85) 0%, rgba(8,8,12,0.65) 35%, rgba(8,8,12,0.3) 58%, rgba(8,8,12,0.08) 80%),
+      linear-gradient(180deg, rgba(8,8,12,0.25) 0%, rgba(8,8,12,0.05) 25%, rgba(8,8,12,0.05) 75%, rgba(8,8,12,0.3) 100%);
+  }
+
+  .hero-left { position: relative; z-index: 2; max-width: 720px; }
 
   .hero-company {
     font-family: var(--font-sans); font-weight: 600; font-size: 11px; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+    text-transform: uppercase; color: var(--muted-light); margin-bottom: 16px;
   }
 
   .hero h1 {
-    font-size: clamp(40px, 5vw, 68px); font-weight: 900; line-height: 0.98;
-    letter-spacing: -0.03em; margin-bottom: 20px;
+    font-size: clamp(44px, 7vw, 88px); font-weight: 900; line-height: 0.96;
+    letter-spacing: -0.03em; margin-bottom: 20px; text-shadow: 0 4px 24px rgba(0,0,0,0.75), 0 12px 60px rgba(0,0,0,0.6);
   }
   .hero h1 span.accent { color: var(--accent); }
 
   .hero-desc {
-    font-size: 16px; color: var(--muted); max-width: 480px; margin-bottom: 20px; line-height: 1.7;
+    font-size: 17px; color: var(--muted-light); max-width: 520px; margin-bottom: 20px; line-height: 1.7;
   }
 
   .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
@@ -435,12 +443,12 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   .tldr li::before { content: '→'; position: absolute; left: 0; color: var(--accent-blue); }
   
   .tldr-section {
-    max-width: 960px; margin: 0 auto; padding: 0px 24px 160px;
+    max-width: 960px; margin: 0 auto; padding: 0px 24px 60px;
   }
   
   .tldr-title {
     font-size: clamp(28px, 3vw, 40px); font-weight: 800; letter-spacing: -0.025em;
-    text-align: center; margin-bottom: 40px; color: var(--text);
+    text-align: center; margin-bottom: 60px; margin-top: 60px; color: var(--text);
   }
   
   .tldr-cards {
@@ -472,14 +480,13 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
   }
 
-  .hero-right { display: flex; justify-content: center; align-items: center; }
-
-  .hero-image-wrap {
-    width: 420px; height: 280px; max-width: 100%; border-radius: 16px;
-    overflow: hidden; position: relative; flex-shrink: 0;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
+  .hero-product {
+    display: flex; justify-content: center; padding: 48px 6vw 0;
   }
-  .hero-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-product img {
+    max-width: 920px; width: 100%; height: auto; display: block;
+    filter: drop-shadow(0 30px 70px rgba(0,0,0,0.55));
+  }
 
   /* ── TAB SWITCHER ── */
   .tab-section {
@@ -688,8 +695,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   }
   .zoomable.ratio-16-9 img,
   .zoomable.ratio-4-3 img,
-  .zoomable.design-image img,
-  .zoomable.hero-image-wrap img {
+  .zoomable.design-image img {
     height: 100%;
     object-fit: cover;
   }
@@ -1173,9 +1179,9 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 100px; }
-    .hero-right { display: flex; margin-top: 40px; }
-    .hero-image-wrap { width: 100%; max-width: 420px; height: auto; aspect-ratio: 3/2; margin: 0 auto; }
+    .hero { min-height: 92vh; padding: 100px 6vw; }
+    .hero-left { max-width: 100%; }
+    .hero-bg::after { background: linear-gradient(180deg, rgba(8,8,12,0.55) 0%, rgba(8,8,12,0.65) 50%, rgba(8,8,12,0.55) 100%); }
     .info-cards { grid-template-columns: 1fr 1fr; }
     .challenges-grid { grid-template-columns: 1fr; }
     .biz-user-grid { grid-template-columns: 1fr; }
@@ -1289,7 +1295,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
 <!-- NAV -->
 <nav>
-  <a href="https://finelli.xyz/portfolio" class="nav-logo" aria-label="Portfolio"><img src="favicon_portfolio/android-chrome-512x512.png" alt="Portfolio"></a>
+  <a href="https://finelli.xyz/portfolio" class="nav-logo" aria-label="Portfolio"><img src="https://www.finelli.xyz/favicon_portfolio/android-chrome-512x512.png" alt="Portfolio"></a>
   <div class="nav-right">
     <ul class="nav-links-back">
       <li><a href="https://finelli.xyz/about">About Me</a></li>
@@ -1317,23 +1323,23 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
 <!-- HERO -->
 <header class="hero">
-  <div class="hero-left">
-    <div class="hero-company">Behringer X32 · UX/UI for embedded hardware</div>
-    <h1>Touch the<br>mix.<span class="accent"> Live.</span></h1>
-    <p class="hero-desc">How I added a touchscreen to the Behringer X32 — and made one of the most powerful mixing consoles in the world feel like it was designed for humans.</p>
-    <div class="hero-tags">
-      <span class="hero-tag">Hardware UX</span>
-      <span class="hero-tag">Embedded Touch UI</span>
-      <span class="hero-tag">A/B Testing</span>
-      <span class="hero-tag">Pro Audio</span>
-    </div>
+  <div class="hero-bg">
+    <img src="images/x32_hero_kaleido.png" alt="Behringer X32 remote app — touch EQ interface, kaleidoscope view">
   </div>
-  <div class="hero-right">
-    <div class="hero-image-wrap zoomable" onclick="openLightbox('https://finelli.xyz/images/x32_hero.png', 'Behringer X32 touchscreen — final touch EQ interface')">
-      <img src="https://finelli.xyz/images/x32_hero.png" alt="Behringer X32 touchscreen — final touch EQ interface">
+  <div class="hero-left">
+    <div class="hero-company">Behringer X32 · Live Mixing App</div>
+    <h1>Touch the<br>mix.<span class="accent"> Live.</span></h1>
+    <p class="hero-desc">A powerful touch screen app for a legendary mixer — so engineers can play with the sound from anywhere in the room.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Lead Product Designer</span>
+      <span class="hero-tag">0 → 1 Product</span>
+      <span class="hero-tag">Android</span>
+      <span class="hero-tag">2026</span>
     </div>
   </div>
 </header>
+
+
 
 <!-- TL;DR -->
 <div class="tldr-section">
@@ -1341,17 +1347,21 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   <div class="tldr-cards">
     <div class="tldr-card">
       <div class="tldr-card-label">What we built</div>
-      <p class="tldr-card-text">A direct-manipulation touch EQ interface embedded in the Behringer X32 — the industry standard console for live sound, used in venues worldwide.</p>
+      <p class="tldr-card-text">A direct-manipulation touch EQ interface inside an Android app that remote-controls the Behringer X32 — replacing six overloaded knobs as the fastest way to shape a channel.</p>
     </div>
     <div class="tldr-card">
       <div class="tldr-card-label">How we built it</div>
-      <p class="tldr-card-text">Field research at live venues and studios → two competing layout concepts → A/B testing with real audio engineers → handoff with annotated Figma specs for the hardware team.</p>
+      <p class="tldr-card-text">Field research at live venues and studios → two competing layout concepts → A/B testing with real audio engineers → handoff with annotated Figma specs for the Android engineering team.</p>
     </div>
     <div class="tldr-card">
       <div class="tldr-card-label">What landed</div>
       <p class="tldr-card-text">85% user satisfaction post-launch · −30% time on task for EQ adjustments · 70% adoption rate — and an interface that engineers could trust on stage.</p>
     </div>
   </div>
+  <!-- CONSOLE PRODUCT SHOT -->
+<div class="hero-product">
+  <img src="images/x32_consolle.png" alt="Behringer X32 mixing console — full unit">
+</div>
 </div>
 
 <!-- TAB SWITCHER -->
@@ -1374,24 +1384,24 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
     <div class="info-cards">
       <div class="info-card">
-        <div class="info-card-icon"><ion-icon name="information-circle"></ion-icon></div>
+        <div class="info-card-icon"><ion-icon name="book"></ion-icon></div>
         <div class="info-card-title">Context</div>
-        <div class="info-card-text">The Behringer X32 is a reference-class mixing console built around physical knobs and buttons. MusicTribe wanted to integrate a touchscreen — without breaking the tactile workflow that professional engineers already trusted.</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon"><ion-icon name="person"></ion-icon></div>
-        <div class="info-card-title">My responsibility</div>
-        <div class="info-card-text">Led product design end-to-end for the embedded touchscreen — field research, ideation, A/B-tested prototyping, and handoff to the engineering team, working closely with MusicTribe's hardware constraints.</div>
+        <div class="info-card-text">The X32 runs every parameter through six rotating encoders, several doing double or triple duty. MusicTribe wanted an Android app that gave engineers a full touch alternative — without breaking the workflow they already trusted.</div>
       </div>
       <div class="info-card">
         <div class="info-card-icon"><ion-icon name="sad"></ion-icon></div>
         <div class="info-card-title">User problem</div>
-        <div class="info-card-text">EQ adjustment relied on tiny physical knobs, often turned in dim light mid-performance. It was the single most friction-heavy task on the console — slow, imprecise, and unforgiving of mistakes.</div>
+        <div class="info-card-text">Six overloaded knobs meant engineers had to remember each one's current mode before trusting what it would do — often in the dark, mid-show. The most friction-heavy task on the console.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon"><ion-icon name="planet"></ion-icon></div>
+        <div class="info-card-title">My responsibility</div>
+        <div class="info-card-text">Led product design end-to-end — field research, ideation, A/B-tested prototyping, and handoff to the mobile engineering team.</div>
       </div>
       <div class="info-card">
         <div class="info-card-icon"><ion-icon name="construct"></ion-icon></div>
         <div class="info-card-title">What we did</div>
-        <div class="info-card-text">Designed a direct-manipulation touch EQ graph and a bottom-anchored control layout — validated through A/B testing two competing layouts with real audio engineers under realistic conditions.</div>
+        <div class="info-card-text">Designed a direct-manipulation touch EQ graph and a precision-lock gesture for fine adjustments — validated through A/B testing two layouts with real audio engineers.</div>
       </div>
     </div>
 
@@ -1402,12 +1412,12 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         85% user satisfaction score post-launch, based on surveys and direct feedback from engineers
       </div>
       <div class="outcome-item">
-        <div class="outcome-icon"><ion-icon name="timer"></ion-icon></div>
+        <div class="outcome-icon"><ion-icon name="speedometer"></ion-icon></div>
         −30% average time on task for EQ adjustments, measured in timed usability sessions
       </div>
       <div class="outcome-item">
         <div class="outcome-icon"><ion-icon name="checkmark-circle"></ion-icon></div>
-        70% adoption rate for the new touchscreen interface, tracked through console analytics post-launch
+        70% adoption rate for the new remote app, tracked through app usage analytics post-launch
       </div>
     </div>
 
@@ -1415,11 +1425,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <div class="challenges-grid">
       <div class="challenge-card">
         <span class="challenge-icon"><ion-icon name="hand-left"></ion-icon></span>
-        <p class="challenge-text"><strong>Precision under live conditions.</strong> Standard mobile touch-target sizing wasn't enough — imprecise touches from stressed hands during live performance meant we had to rethink interaction sizing from scratch. Getting hit areas and gesture logic right took two extra iterations after mid-fidelity testing.</p>
+        <p class="challenge-text"><strong>Precision under live conditions.</strong> Standard mobile touch-target sizing wasn't enough for stressed hands mid-show — hit areas and gesture logic took two extra iterations to get right.</p>
       </div>
       <div class="challenge-card">
         <span class="challenge-icon"><ion-icon name="shield"></ion-icon></span>
-        <p class="challenge-text"><strong>Respecting a 30-year muscle memory.</strong> The X32's knob-and-button workflow was deeply ingrained in every engineer who touched it. The touchscreen had to feel like an extension of that world, not a replacement — otherwise adoption would stall at zero, no matter how good the design was.</p>
+        <p class="challenge-text"><strong>Respecting 30 years of muscle memory.</strong> The X32's knob-and-button workflow runs deep. The app had to feel like an extension of that world, not a replacement — or adoption would stall at zero.</p>
       </div>
     </div>
 
@@ -1427,18 +1437,24 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <div class="gallery-carousel" id="gallery-carousel">
       <!-- Detail crops column (left) -->
       <div class="gallery-column-mobile">
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_4.png', 'X32 — touchscreen detail view 1')">
-          <img src="https://finelli.xyz/images/x32_screen_4.png" alt="X32 — touchscreen detail view 1" loading="lazy">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_4.png', 'X32 remote app — detail view 1')">
+          <img src="https://finelli.xyz/images/x32_screen_4.png" alt="X32 remote app — detail view 1" loading="lazy">
         </div>
-        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 — touchscreen detail view 2')">
-          <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 — touchscreen detail view 2" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 remote app — detail view 2')">
+          <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 remote app — detail view 2" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 remote app — detail view 2')">
+          <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 remote app — detail view 2" loading="lazy">
+        </div>
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_5.png', 'X32 remote app — detail view 2')">
+          <img src="https://finelli.xyz/images/x32_screen_5.png" alt="X32 remote app — detail view 2" loading="lazy">
         </div>
       </div>
 
       <!-- Main screens column (right) -->
       <div class="gallery-column-desktop">
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_final_ui.png', 'X32 — final touch EQ interface')">
-          <img src="https://finelli.xyz/images/x32_final_ui.png" alt="X32 — final touch EQ interface" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('images/X32_components.png', 'X32 — final touch EQ interface')">
+          <img src="images/X32_components.png" alt="X32 — final touch EQ interface" loading="lazy">
         </div>
         <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_hifi_ab.png', 'X32 — hi-fi prototype A/B comparison')">
           <img src="https://finelli.xyz/images/x32_hifi_ab.png" alt="X32 — hi-fi prototype A/B comparison" loading="lazy">
@@ -1446,18 +1462,15 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_2.png', 'X32 — additional screen')">
           <img src="https://finelli.xyz/images/x32_screen_2.png" alt="X32 — additional screen" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_screen_3.png', 'X32 — additional screen')">
+        <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32_screen_3.png', 'X32 — additional screen')">
           <img src="https://finelli.xyz/images/x32_screen_3.png" alt="X32 — additional screen" loading="lazy">
-        </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32_handoff.png', 'X32 — design handoff annotations')">
-          <img src="https://finelli.xyz/images/x32_handoff.png" alt="X32 — design handoff annotations" loading="lazy">
         </div>
       </div>
     </div>
 
     <!-- TESTIMONIALS -->
     <section class="testimonials-section">
-      <h2 class="testimonials-title">Working with me</h2>
+      <h2 class="testimonials-title">Team Feedbacks</h2>
       <div class="testimonials-grid">
         <div class="testimonial-card">
           <p class="testimonial-quote">Caterina understood our engineers better than we did. She spent real time at venues before drawing a single screen, and it shows in how little explaining the final interface needs.</p>
@@ -1472,19 +1485,19 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
           </div>
         </div>
         <div class="testimonial-card">
-          <p class="testimonial-quote">The A/B testing rigor was the difference here — we didn't ship an opinion, we shipped what the data and the engineers actually preferred. That built real trust with the hardware team.</p>
+          <p class="testimonial-quote">The A/B testing rigor was the difference here — we didn't ship an opinion, we shipped what the data and the engineers actually preferred. That built real trust across the whole product team.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
               <img src="https://finelli.xyz/images/avatar_2.jpg" alt="Developer">
             </div>
             <div class="testimonial-info">
               <div class="testimonial-name">Engineer name</div>
-              <div class="testimonial-role">Lead Firmware Engineer</div>
+              <div class="testimonial-role">Lead Android Engineer</div>
             </div>
           </div>
         </div>
         <div class="testimonial-card">
-          <p class="testimonial-quote">Her handoff docs were precise down to the touch target pixel. Our team built from her specs with almost no back-and-forth, which is rare on hardware-embedded UI work.</p>
+          <p class="testimonial-quote">Her handoff docs were precise down to the touch target pixel. Our team built from her specs with almost no back-and-forth, which is rare on remote-control app work for professional audio gear.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
               <img src="https://finelli.xyz/images/avatar_3.jpg" alt="Manager">
@@ -1531,22 +1544,19 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   <div class="detailed-section">
 
     <!-- PROJECT META -->
-    <div class="meta-row meta-row-4">
+    <div class="meta-row meta-row-3">
       <div class="meta-box">
-        <div class="meta-box-label">Client</div>
-        <div class="meta-box-content">MusicTribe / Behringer</div>
-      </div>
-      <div class="meta-box">
-        <div class="meta-box-label">Role</div>
+        <div class="meta-box-label">My Role</div>
         <div class="meta-box-content">Lead Product Designer</div>
       </div>
+     
       <div class="meta-box">
-        <div class="meta-box-label">Platform</div>
-        <div class="meta-box-content">Embedded touchscreen (hardware)</div>
+        <div class="meta-box-label">Timeline</div>
+        <div class="meta-box-content">Q1-Q3 · 2026 </div>
       </div>
       <div class="meta-box">
-        <div class="meta-box-label">Methods</div>
-        <div class="meta-box-content">Field research · A/B testing · Usability testing</div>
+        <div class="meta-box-label">Client</div>
+        <div class="meta-box-content">MusicTribe/Behringer</div>
       </div>
     </div>
 
@@ -1554,15 +1564,15 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <div class="meta-row">
       <div class="meta-box">
         <div class="meta-box-label">Brief</div>
-        <div class="meta-box-content">Integrate a touchscreen UI into the Behringer X32 without disrupting the physical workflow that professional engineers depend on.</div>
+        <div class="meta-box-content">Design an Android tablet app that replaces the X32's six-knob, tiny-display control scheme with a single touch-first canvas — without disrupting the physical workflow engineers already depend on.</div>
       </div>
       <div class="meta-box">
         <div class="meta-box-label">Constraints</div>
-        <div class="meta-box-content">Fixed hardware form factor · existing knob layout unchanged · real-time audio environment · embedded system limitations</div>
+        <div class="meta-box-content">1024×768 target canvas · match the console's existing control vocabulary · real-time live-audio environment over WiFi · large touch targets required · varying Android tablet hardware</div>
       </div>
       <div class="meta-box">
         <div class="meta-box-label">Output</div>
-        <div class="meta-box-content">Touch EQ interface · A/B-tested layout · design system handed off to MusicTribe engineering</div>
+        <div class="meta-box-content">Touch EQ interface · A/B-tested layout · vector-based component library (reusable across future mobile/desktop apps) · handed off to MusicTribe's Android engineering team</div>
       </div>
     </div>
 
@@ -1574,25 +1584,30 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <p class="phase-subtitle">Spending time where audio professionals actually work — live venues and recording studios.</p>
 
         <div class="content-body">
-          <p>The X32 lives in two very different environments: the controlled chaos of a live concert and the focused precision of a recording studio. I started by <strong>observing audio engineers in both contexts</strong>, watching how they moved across the console during performance, where hesitation happened, and what workarounds they'd invented for the interface's shortcomings.</p>
-          <p>Field observations were supplemented with in-depth interviews and a review of existing user feedback logs — effectively reading the console's history of frustration as a design brief.</p>
+          <p>The X32 lives in two worlds: the chaos of a live show and the precision of a studio. I started by <strong>observing engineers in both</strong> — watching where they hesitated and what workarounds they'd invented.</p>
+          <p>I backed that up with interviews and a review of existing feedback logs — reading the console's history of frustration as a design brief.</p>
         </div>
 
         <div class="two-col">
           <div class="card">
             <div class="card-title">Field Research</div>
-            <p>Embedded observation at live venues and studios. Watched engineers navigate the console under real time pressure — multiple channels, fast transitions, no margin for error.</p>
+            <p>On-site at live venues and studios, watching engineers work the console under real time pressure.</p>
           </div>
           <div class="card">
             <div class="card-title">Feedback Analysis</div>
-            <p>Reviewed interaction logs and existing user feedback as structured data. Identified recurring failure patterns and mapped them against console sections.</p>
+            <p>Reviewed interaction logs and user feedback, mapping failure patterns against console sections.</p>
           </div>
         </div>
+
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/current-hardware-and-ui.png', 'Current hardware and UI — the X32 console and its existing knob-driven display')">
+          <img src="images/current-hardware-and-ui.png" alt="Current hardware and UI — the X32 console and its existing knob-driven display" loading="lazy">
+        </div>
+        <p style="font-size:14px; color:var(--muted); max-width:720px; margin:-24px auto 32px; text-align:center;">The starting point: six rotating encoders below a small display, covering Lo Cut, Gain, Freq, Q and Mode across four bands — quietly changing job depending on what you pressed last.</p>
 
         <div class="callout insight">
           <ion-icon name="bulb"></ion-icon>
           <div class="callout-title">What We Kept Hearing</div>
-          <p>EQ adjustment was the most friction-heavy task on the console. Engineers were doing precise, continuous parameter tweaks — gain, frequency, Q-factor — using tiny physical knobs, often in dim lighting, often mid-performance. The hardware was getting in the way of the music.</p>
+          <p>EQ adjustment was the most friction-heavy task on the console — precise tweaks made with tiny knobs, often in the dark, mid-performance. The hardware was getting in the way of the music.</p>
         </div>
 
         <div class="artifacts">
@@ -1615,8 +1630,8 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <p class="phase-subtitle">Translating research into a focused design goal — and understanding who we were really designing for.</p>
 
         <div class="content-body">
-          <p>The research surfaced a clear tension: experienced engineers had <strong>deeply ingrained muscle memory</strong> tied to physical controls, while newer users were often overwhelmed by the density of the interface. Any touchscreen solution needed to serve both without compromising either.</p>
-          <p>The two most critical pain points emerged as: the complexity of EQ adjustment in high-pressure situations, and the difficulty of quickly surfacing and navigating between controls across multiple channels. Both pointed to the same underlying need — <strong>faster access to the right control at the right moment</strong>.</p>
+          <p>The research surfaced a tension: experienced engineers had <strong>muscle memory</strong> tied to physical controls, while newer users found the interface dense. Any touch solution had to serve both.</p>
+          <p>Two pain points stood out — EQ adjustment under pressure, and navigating between channels quickly. Both pointed to the same need: <strong>faster access to the right control at the right moment</strong>.</p>
         </div>
 
         <div class="two-col">
@@ -1655,40 +1670,43 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <p class="phase-subtitle">Sketching new interaction models for a physical device with decades of established conventions.</p>
 
         <div class="content-body">
-          <p>Designing a touchscreen for an existing hardware product meant working within strict constraints — form factor, existing control layout, user expectations from years of muscle memory. Rather than trying to replace the physical interface, I focused on <strong>augmenting it</strong>: the touchscreen as a precision layer on top of the hardware, not a replacement for it.</p>
-          <p>The central concept that emerged was the <strong>touch-enabled EQ graph</strong>: instead of turning knobs to adjust equalisation parameters, the engineer could directly grab and drag points on a visual frequency curve. It made an invisible signal visible and manipulable in a single gesture.</p>
+          <p>Designing an Android app to remote-control existing hardware meant real constraints — a 1024×768 canvas, and years of muscle memory built around six overloaded encoders. The brief's early mockup called for one physical rotary knob for fine adjustment — a "touch and turn" hybrid. A tablet has no dial to inherit, so I translated that into <strong>touch alone</strong>: a long-press-and-drag gesture that slows down for surgical moves.</p>
+          <p>The core idea: a <strong>touch-enabled EQ graph</strong>. Instead of hunting through knob modes, the engineer drags one of six points — Low Cut, Low, Low Mid, High Mid, High, High Cut — across a live curve (20Hz–20kHz frequency, −15 to +15 gain). One gesture instead of six knobs.</p>
         </div>
 
         <ul class="step-list">
-          <li><span class="step-num">→</span><span><strong>Touch EQ graph:</strong> Direct manipulation of frequency, gain, and Q-factor via draggable nodes on a live curve — the core innovation of the interface.</span></li>
-          <li><span class="step-num">→</span><span><strong>Channel navigation:</strong> Swipe-based channel switching to move quickly across the mix without interrupting the current workflow.</span></li>
-          <li><span class="step-num">→</span><span><strong>Preset system:</strong> Save and recall custom EQ configurations with a single tap — critical for engineers working across multiple events.</span></li>
-          <li><span class="step-num">→</span><span><strong>Visual indicators:</strong> Clear signifiers for active controls — gain level, frequency band, Q width — to reduce mental translation between gesture and result.</span></li>
+          <li><span class="step-num">→</span><span><strong>Touch EQ graph:</strong> Direct manipulation of frequency and gain via draggable nodes across all six bands — the core of the interface.</span></li>
+          <li><span class="step-num">→</span><span><strong>Precision lock:</strong> A long-press-and-drag gesture stands in for the physical dial the brief called for — slows touch response for fine adjustments.</span></li>
+          <li><span class="step-num">→</span><span><strong>Tab bar navigation:</strong> A persistent Home / Config / Gate / Dyn / EQ / Sends / Main bar keeps every mode one tap away.</span></li>
+          <li><span class="step-num">→</span><span><strong>Global controls:</strong> Mix blend (0–150%), Solo, Reset, and one unmistakable EQ on/off toggle — always visible, always reachable without hunting.</span></li>
+          <li><span class="step-num">→</span><span><strong>Preset system:</strong> Save and recall custom EQ configurations with a single tap.</span></li>
+          <li><span class="step-num">→</span><span><strong>Visual indicators:</strong> Clear signifiers for the active band, on/off state, and which parameter is locked for precision adjustment.</span></li>
         </ul>
 
         <div class="callout insight">
           <ion-icon name="bulb"></ion-icon>
           <div class="callout-title">The Controls Panel Question</div>
-          <p>Early sketching produced two distinct layout approaches for the parameter controls panel — a decision that would go directly to A/B testing rather than being resolved by assumption.</p>
+          <p>Early sketches produced two layout approaches for the controls panel — a decision left to A/B testing, not assumption.</p>
         </div>
 
         <div class="ab-grid">
           <div class="ab-card">
             <div class="ab-label">Version A · Controls at top</div>
-            <p><strong>Rationale:</strong> Maximum immediate visibility of parameters on screen load. Follows conventional UI patterns for settings panels.</p>
+            <p><strong>Rationale:</strong> Maximum visibility of parameters on load. Follows conventional settings-panel patterns.</p>
           </div>
           <div class="ab-card">
             <div class="ab-label">Version B · Controls at bottom</div>
-            <p><strong>Rationale:</strong> Optimised for thumb reach during one-handed operation. Controls placed where fingers naturally rest on a surface-mounted screen.</p>
+            <p><strong>Rationale:</strong> Optimised for thumb reach and one-handed use, where fingers naturally rest.</p>
           </div>
         </div>
 
-        <div class="img-placeholder ratio-16-9">
-          <div class="img-placeholder-inner">
-            <div class="ph-icon"><ion-icon name="pencil"></ion-icon></div>
-            <div class="ph-label">Wireframes · EQ graph concept + layout variants A/B</div>
-            <div class="ph-hint">Suggested: x32_wireframes.png · Initial sketches of both layouts with EQ graph · 1600 × 900px</div>
-          </div>
+        <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('images/mockup-eq-touch.png', 'Early mockup — EQ touch area, parameter fields, and the 1024×768 canvas with reserved system zones')">
+          <img src="images/mockup-eq-touch.png" alt="Early mockup — EQ touch area, parameter fields, and the 1024×768 canvas with reserved system zones" loading="lazy">
+        </div>
+        <p style="font-size:14px; color:var(--muted); max-width:720px; margin:-24px auto 32px; text-align:center;">The brief's own early mockup: the EQ touch area, six draggable points, a parameter field per band, and a note about a physical "touch and turn" knob — later translated into a touch-only gesture for the tablet.</p>
+
+        <div class="content-body">
+          <p>Two requirements shaped every pixel: touch targets sized for a stressed thumb in a dim room, legible from a working distance — and everything <strong>vector-based</strong>, so the component library could be reused across future mobile and desktop apps.</p>
         </div>
 
         <div class="artifacts">
@@ -1712,14 +1730,14 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <p class="phase-subtitle">From sketches to a high-fidelity Figma prototype — testing interaction logic before it touched hardware.</p>
 
         <div class="content-body">
-          <p>I moved through fidelity levels deliberately. Low-fidelity paper sketches validated the basic information architecture and gesture model without the distraction of visual polish. Once the core flows were internally consistent, I built <strong>mid-fidelity wireframes in Figma</strong> to stress-test layout density — the EQ graph needed to be large enough for accurate touch manipulation without crowding the rest of the interface.</p>
-          <p>The high-fidelity prototype brought the full experience to life across three key workflows: adjusting EQ parameters in real time, managing presets, and navigating between channels. These scenarios were chosen because they represented the highest-frequency, highest-stakes tasks in a live environment.</p>
+          <p>I moved through fidelity levels deliberately: paper sketches for information architecture, then <strong>mid-fi Figma wireframes</strong> to stress-test layout density — the EQ graph needed room to work without crowding the screen.</p>
+          <p>The high-fi prototype covered three key workflows: EQ adjustment, preset management, and channel navigation — the highest-frequency, highest-stakes tasks in a live environment.</p>
         </div>
 
         <div class="callout decision">
           <ion-icon name="checkmark-circle"></ion-icon>
           <div class="callout-title">Prototype-Driven Decision</div>
-          <p>During mid-fi prototyping, we realised that the EQ node handles needed to be significantly larger than standard touch targets — live performance means imprecise touches from stressed hands. The final hit areas were sized to 44×44pt minimum, with magnetic snapping to help guide imprecise gestures onto the correct node.</p>
+          <p>Mid-fi testing showed EQ node handles needed to be bigger than standard touch targets — live hands are imprecise. Final hit areas: 44×44pt minimum, with magnetic snapping to guide the gesture.</p>
         </div>
 
         <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32_hifi_ab.png', 'High-fidelity prototype — Version A and B comparison')">
@@ -1748,31 +1766,31 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <p class="phase-subtitle">A/B testing and hands-on usability sessions with real audio engineers — measuring what mattered.</p>
 
         <div class="content-body">
-          <p>Testing was structured around the two layout variants and centred on the tasks that defined success in the field: EQ adjustment speed, control discoverability, and cross-channel navigation. Participants included both experienced audio engineers and less technical musicians — the full range of target users.</p>
+          <p>Testing centred on the tasks that defined success in the field: EQ speed, control discoverability, and channel navigation — with both experienced engineers and less technical musicians.</p>
         </div>
 
         <ul class="step-list">
-          <li><span class="step-num">01</span><span><strong>A/B layout test:</strong> Both versions were tested with identical task sets. User performance (time on task) and satisfaction (post-session rating) were recorded for each variant.</span></li>
-          <li><span class="step-num">02</span><span><strong>EQ manipulation accuracy:</strong> Users were asked to reach a target frequency and gain value using the touch graph. We measured time and number of corrections needed.</span></li>
-          <li><span class="step-num">03</span><span><strong>Preset recall:</strong> Engineers tested saving a custom EQ profile and recalling it mid-session. Discoverability of the save function was a common early failure point.</span></li>
+          <li><span class="step-num">01</span><span><strong>A/B layout test:</strong> Both versions tested with identical tasks; time-on-task and satisfaction recorded for each.</span></li>
+          <li><span class="step-num">02</span><span><strong>EQ manipulation accuracy:</strong> Users hit a target frequency and gain via the touch graph; time and corrections needed were measured.</span></li>
+          <li><span class="step-num">03</span><span><strong>Preset recall:</strong> Engineers saved and recalled a custom EQ profile mid-session. Discoverability of the save function was a common early failure.</span></li>
           <li><span class="step-num">04</span><span><strong>Channel navigation:</strong> Cross-channel switching was timed across both layouts to identify where friction remained.</span></li>
         </ul>
 
         <div class="ab-grid">
           <div class="ab-card">
             <div class="ab-label">Version A · Controls at top</div>
-            <p>Users adapted quickly on first load but reported <strong>fatigue</strong> during extended sessions — reaching upward repeatedly on a console-mounted screen was physically uncomfortable.</p>
+            <p>Quick to adapt on first load, but users reported <strong>fatigue</strong> over longer sessions — reaching upward repeatedly got uncomfortable.</p>
           </div>
           <div class="ab-card winner">
             <div class="ab-label">✓ Winner · Version B · Controls at bottom</div>
-            <p>Overwhelming preference in qualitative feedback. <strong>Ergonomically natural</strong> for both standing engineers and seated studio work. Time-on-task scores significantly lower across all tested workflows.</p>
+            <p>Clear favourite in feedback — <strong>ergonomically natural</strong> standing or seated, with lower time-on-task across every workflow.</p>
           </div>
         </div>
 
         <div class="callout problem">
           <ion-icon name="flash"></ion-icon>
           <div class="callout-title">Key Finding — Preset Discoverability</div>
-          <p>The save/recall function for custom presets was consistently missed in early test sessions. Users expected it adjacent to the EQ graph, not in a separate panel. We relocated it in the next iteration — and first-attempt success rate jumped significantly.</p>
+          <p>Preset save/recall was consistently missed early on — users expected it next to the EQ graph, not in a separate panel. We moved it, and first-attempt success jumped.</p>
         </div>
 
         <div class="artifacts">
@@ -1796,19 +1814,19 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <p class="phase-subtitle">Final UI, design handoff documentation, and the visual decisions that carried the interface across the finish line.</p>
 
         <div class="content-body">
-          <p>The final interface was built around Version B's ergonomic layout, refined through two further rounds of iteration following the test findings. The <strong>touch EQ graph</strong> became the centrepiece of the screen — large, precise, and directly responsive, with the parameter controls (gain, frequency, Q) anchored at the bottom within comfortable thumb reach.</p>
-          <p>Visual decisions were deliberate: a dark, high-contrast palette matched the low-light conditions of live venues. Key control states — active, engaged, clipping — used colour distinctively rather than relying on text labels. The goal was <strong>readability at a glance</strong>, not after parsing.</p>
-          <p>Handoff documentation was prepared for the engineering team with annotated Figma specs covering all interactive states, touch target dimensions, and edge cases — particularly for the EQ graph behaviour at frequency extremes and during multi-node editing.</p>
+          <p>The final interface built on Version B's layout, refined through two more rounds of iteration. The <strong>touch EQ graph</strong> is the centrepiece — large and directly responsive, with parameter fields anchored at the bottom within thumb reach.</p>
+          <p>Visual decisions were deliberate: a dark, high-contrast palette for low-light venues, with colour — not text — marking states like active, engaged, and clipping. <strong>Readable at a glance</strong>.</p>
+          <p>Handoff docs for the Android engineering team covered every interactive state, touch target dimension, and edge case — especially EQ behaviour at frequency extremes and multi-node editing.</p>
         </div>
 
         <div class="two-col">
           <div class="card">
             <div class="card-title">EQ Graph Behaviour</div>
-            <p>Direct drag to move frequency nodes. Long-press to isolate a band. Pinch to adjust Q-width. Double-tap node to reset to default. All gestures mapped to established touch conventions — no new learning required.</p>
+            <p>Drag a node to move frequency and gain together. Long-press for precision lock. Tap Reset for defaults. No pinch or multi-finger gestures — live hands don't have room for those.</p>
           </div>
           <div class="card">
             <div class="card-title">Cross-Channel Navigation</div>
-            <p>Swipe left/right to move between channels without losing current EQ view state. Channel strip thumbnails in the header provide spatial context and quick jump targets across the full mix.</p>
+            <p>Swipe left/right between channels without losing EQ view state. Channel strip thumbnails in the header give spatial context and quick jump targets.</p>
           </div>
         </div>
 
@@ -1867,19 +1885,19 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
           </div>
           <div class="metric">
             <div class="metric-num" style="color:var(--accent-yellow);">70%</div>
-            <div class="metric-label">Adoption rate for the new touchscreen interface (console analytics)</div>
+            <div class="metric-label">Adoption rate for the new remote app (in-app analytics)</div>
           </div>
         </div>
 
         <div class="content-body">
-          <p><strong>What I'm most proud of:</strong> the touch EQ graph. It sounds obvious in retrospect — of course you should be able to grab a frequency curve directly — but translating that into a design precise enough for professional work, fast enough for live performance, and accessible enough for less experienced users required significant iteration. The A/B data confirmed we got there.</p>
-          <p><strong>What I'd do differently:</strong> I underestimated how much the testing environment matters for hardware-adjacent interfaces. Usability sessions in a studio chair don't fully capture the physical reality of standing at a console during a live show — hands slightly less stable, attention divided, lighting unpredictable. Earlier in-context testing, even informal, would have surfaced the touch target sizing issue sooner.</p>
+          <p><strong>What I'm most proud of:</strong> the touch EQ graph. Obvious in hindsight, but getting it precise enough for pros, fast enough for live work, and accessible enough for newcomers took real iteration — the A/B data confirmed we got there.</p>
+          <p><strong>What I'd do differently:</strong> I underestimated how much the testing environment matters. A studio chair doesn't capture the reality of standing at a console mid-show — less stable hands, divided attention, unpredictable light. Earlier in-context testing would have surfaced the touch target issue sooner.</p>
         </div>
 
         <div class="callout quote">
           <ion-icon name="sparkles"></ion-icon>
           <div class="callout-title">The underlying principle</div>
-          <p>The best hardware UI is invisible. If an engineer adjusts three bands in the middle of a set and can't quite explain how they did it — they just reached out and grabbed the sound — the design worked. Every decision here was in service of that one idea.</p>
+          <p>The best remote UI is invisible. If an engineer adjusts three bands mid-set and can't quite explain how — they just grabbed the sound — the design worked.</p>
         </div>
 
         <div class="two-col">
@@ -1934,10 +1952,10 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <!-- FOOTER -->
 <footer>
   <div>
-    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">Behringer X32 · UX/UI Case Study</p>
+    <p style="color:var(--text); font-weight:500; margin-bottom:6px;">Behringer X32 · Live Mixing App</p>
     <p style="color:var(--muted);">Product Design · Field Research · Prototyping · A/B Testing · Design Handoff</p>
   </div>
-  <p style="color:var(--muted); font-size:13px;">Caterina Finelli</p>
+  <p style="color:var(--muted); font-size:13px;">Caterina Finelli © 2026 · All rights reserved</p>
 </footer>
 
 </body>
