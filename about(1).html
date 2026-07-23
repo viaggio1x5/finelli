@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>About Me — Caterina Finelli</title>
+<meta name="description" content="Learn more about Caterina Finelli and get in touch."/>
+<link rel="canonical" href="https://finelli.xyz/about"/>
+<link rel="icon" type="image/x-icon" href="favicon_about/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_about/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_about/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_about/apple-touch-icon.png">
+<link rel="manifest" href="hfavicon_about/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/ionicons@7.2.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.2.0/dist/ionicons/ionicons.js"></script>
+
+
+<!-- Default Statcounter code for finelli.xyz
+https://finelli.xyz/ -->
+<script type="text/javascript">
+var sc_project=13152765; 
+var sc_invisible=1; 
+var sc_security="cc0acd7a"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13152765/0/cc0acd7a/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+
+
+
+<style>
+  :root {
+    --bg: #0e0f12;
+    --surface: #16181d;
+    --surface2: #1e2028;
+    --surface3: #262935;
+    --border: #2a2d38;
+    --text: #e8eaf0;
+    --muted: #7a7f94;
+    --muted-dim: #7a7f94;
+    --muted-light: #c7cbdb;
+    --accent: #e8344a;
+    --accent-blue: #4a7cff;
+    --accent-green: #22c55e;
+    --accent-yellow: #f59e0b;
+    --accent-purple: #a78bfa;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+  }
+
+  /* ─── STARS BACKGROUND ───────────────────────────────────────────────────── */
+  .star {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .star.twinkle {
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ─── NAVIGATION ─────────────────────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(17,17,17,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(46,46,46,0.6);
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 24px; }
+  .nav-links-back { display: flex; gap: 26px; list-style: none; }
+
+  .nav-logo, .nav-links-back a {
+    font-size: 13px; color: var(--text); text-decoration: none;
+    letter-spacing: 0.02em; font-weight: 600; transition: all 0.2s;
+    padding: 6px 10px;
+  }
+  .nav-logo:hover, .nav-links-back a:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
+  .nav-logo { display: flex; align-items: center; padding: 6px; }
+  .nav-logo img { width: 28px; height: 28px; display: block; }
+
+  .nav-hamburger {
+    display: none;
+    align-items: center; justify-content: center;
+    width: 48px; height: 48px;
+    background: none; border: none; border-radius: 10px;
+    color: var(--text); font-size: 40px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .nav-hamburger ion-icon { width: 1em; height: 1em; }
+  .nav-hamburger:hover { background: rgba(255,255,255,0.06); }
+
+  /* ── MOBILE HAMBURGER + FULL-SCREEN MENU ── */
+  .mobile-menu-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 300;
+    background: var(--bg);
+    flex-direction: column;
+  }
+  .mobile-menu-overlay.active { display: flex; }
+
+  .mobile-menu-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(46,46,46,0.6);
+  }
+  .mobile-menu-close {
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px;
+    background: none; border: none; border-radius: 10px;
+    color: var(--text); font-size: 40px;
+    cursor: pointer;
+  }
+  .mobile-menu-close ion-icon { width: 1em; height: 1em; }
+  .mobile-menu-close:hover { background: rgba(255,255,255,0.06); }
+
+  .mobile-menu-links {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px; list-style: none;
+  }
+  .mobile-menu-links a {
+    font-size: 28px; font-weight: 700; color: var(--text); text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .mobile-menu-links a:active { color: var(--accent); }
+
+  /* ─── LAYOUT ─────────────────────────────────────────────────────────────── */
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 120px clamp(20px, 5vw, 60px) 80px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    animation: fadeIn 0.8s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .subtitle {
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 42px;
+    font-weight: 500;
+  }
+
+  /* ─── SECTION DIVIDER ─────────────────────────────────────────────────────── */
+  .section {
+    margin-top: 60px;
+    padding-top: 60px;
+  }
+
+  .section:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(232,52,74,0.2);
+  }
+
+  /* ─── BIO ─────────────────────────────────────────────────────────────────── */
+  .bio-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+  @media (max-width: 768px) {
+    .bio-section { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .bio-text {
+    line-height: 1.7;
+    color: var(--muted-light);
+    font-size: 15px;
+  }
+  .bio-text p { margin-bottom: 20px; }
+  .bio-text p:last-child { margin-bottom: 0; }
+  .bio-text strong { color: var(--text); font-weight: 600; }
+
+  .bio-highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .highlight-card {
+    padding: 24px;
+    border: 1px solid rgba(46,46,46,0.6);
+    border-radius: 12px;
+    background: rgba(22,24,29,0.4);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .highlight-card:hover {
+    border-color: rgba(232,52,74,0.3);
+    background: rgba(232,52,74,0.06);
+    transform: translateY(-2px);
+  }
+  .highlight-title {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .highlight-title ion-icon {
+    font-size: 18px;
+  }
+  .highlight-text {
+    font-size: 14px;
+    color: var(--muted-light);
+    line-height: 1.6;
+  }
+
+  /* ─── VIDEO ───────────────────────────────────────────────────────────────── */
+  .video-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(232,52,74,0.2);
+    box-shadow: 0 0 60px rgba(232,52,74,0.08), 0 20px 60px rgba(0,0,0,0.5);
+    background: #000;
+    aspect-ratio: 9/16;
+  }
+
+  .video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .video-caption {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .video-section-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .video-text {
+    text-align: center;
+    max-width: 600px;
+  }
+
+  .video-text h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .video-text p {
+    font-size: 15px;
+    color: var(--muted-light);
+    line-height: 1.7;
+  }
+
+  /* ─── EXPERIENCE ─────────────────────────────────────────────────────────── */
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .experience-item {
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(46,46,46,0.6);
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 1.5fr;
+    gap: 20px;
+    align-items: center;
+  }
+  .experience-item:last-child { border-bottom: none; }
+
+  @media (max-width: 768px) {
+    .experience-item {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 16px 0;
+    }
+  }
+
+  .exp-company {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .exp-role {
+    font-size: 14px;
+    color: var(--muted-light);
+  }
+  .exp-location {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .exp-period {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    .exp-period { text-align: left; }
+  }
+
+  .exp-desc {
+    grid-column: 1 / -1;
+    font-size: 13.5px;
+    color: var(--muted-light);
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  /* ─── REVIEWS ─────────────────────────────────────────────────────────────── */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .review-card {
+    padding: 24px;
+    border: 1px solid rgba(46,46,46,0.6);
+    border-radius: 12px;
+    background: rgba(22,24,29,0.4);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.3s ease;
+  }
+  .review-card:hover {
+    border-color: rgba(232,52,74,0.3);
+    background: rgba(232,52,74,0.06);
+    transform: translateY(-2px);
+  }
+
+  .review-quote {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted-light);
+    font-style: italic;
+  }
+
+  .review-author {
+    padding-top: 12px;
+    border-top: 1px solid rgba(46,46,46,0.6);
+  }
+
+  .review-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .review-role {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .reviews-cta {
+    text-align: center;
+  }
+
+  .reviews-cta a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  .reviews-cta a:hover { color: var(--accent-blue); }
+
+  /* ─── CONTACT ─────────────────────────────────────────────────────────────── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .contact-item {
+    padding: 20px 24px;
+    border: 1px solid rgba(46,46,46,0.6);
+    border-radius: 12px;
+    background: rgba(22,24,29,0.4);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .contact-item:hover {
+    border-color: rgba(232,52,74,0.3);
+    background: rgba(232,52,74,0.06);
+    transform: translateY(-2px);
+  }
+
+  .contact-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .contact-value {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 18px;
+  }
+  .social-link:hover {
+    background: rgba(232,52,74,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* ─── FOOTER ─────────────────────────────────────────────────────────────── */
+  .footer {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(46,46,46,0.6);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .footer > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .footer p {
+    font-size: 13px;
+  }
+
+  .footer p:first-child {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .footer p:last-child {
+    color: var(--muted);
+  }
+
+  .footer > p {
+    color: var(--muted);
+    font-size: 13px;
+    align-self: center;
+  }
+
+  @media (max-width: 768px) {
+    .footer {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .footer > p {
+      align-self: start;
+    }
+  }
+
+  /* ─── PROFILE IMAGE ───────────────────────────────────────────────────────── */
+  .profile-image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 80px;
+  }
+
+  .profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(232,52,74,0.2);
+    transition: all 0.3s ease;
+    transform: scale(1.2);
+  }
+
+  /* --- .profile-image:hover {
+    border-color: rgba(232,52,74,0.5);
+    transform: scale(1.4);
+  } */
+
+  @media (max-width: 768px) {
+    .profile-image {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links-back { display: none; }
+    .nav-hamburger { display: flex; }
+    .container { padding: 90px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<script>
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star twinkle';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animation = `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`;
+    star.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(star);
+  }
+
+  function toggleMobileMenu() {
+    const overlay = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    const isOpen = overlay.classList.toggle('active');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  function closeMobileMenu() {
+    const overlay = document.getElementById('mobileMenu');
+    const btn = document.querySelector('.nav-hamburger');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.mobile-menu-links a').forEach((link) => {
+      link.addEventListener('click', () => {
+        // Close the overlay first so the smooth scroll to the anchor is visible
+        closeMobileMenu();
+      });
+    });
+  });
+</script>
+
+<nav>
+  <a href="https://finelli.xyz/" class="nav-logo" aria-label="Home"><img src="favicon_home/android-chrome-512x512.png" alt="Home"></a>
+  <div class="nav-right">
+    <ul class="nav-links-back">
+      <li><a href="#work-experience">Resume</a></li>
+      <li><a href="#lets-connect">Connect</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE FULL-SCREEN MENU -->
+<div class="mobile-menu-overlay" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <a href="https://finelli.xyz" class="nav-logo" aria-label="Portfolio"><img src="favicon_home/android-chrome-512x512.png" alt="Home"></a>
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()" aria-label="Close menu">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </div>
+  <ul class="mobile-menu-links">
+    <li><a href="#work-experience">Resume</a></li>
+    <li><a href="#lets-connect">Connect</a></li>
+  </ul>
+</div>
+
+<div class="container">
+  <h1 style="text-align: center; margin-bottom: 8px;">Hey, I'm Caterina</h1>
+  <p class="subtitle" style="text-align: center;">Senior Product Designer</p>
+
+
+  <!-- VIDEO -->
+  <div class="section">
+    <div class="video-section-grid">
+      <div class="video-wrapper">
+        <div class="video-container">
+          <iframe
+            src="https://www.youtube.com/embed/-42tQQlrVMU"
+            title="60-second cover letter — Caterina Finelli"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <span class="video-caption"></span>
+      </div>
+      <div class="video-text">
+        <h2>My 60-second cover letter</h2>
+        <p>Sometimes the best way to understand how someone thinks and communicates is to hear them speak. Here's a quick intro to who I am, what I do, and why I care about it — in under a minute.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHO I AM -->
+  <div class="section">
+    <div class="section-label">Who I am</div>
+    <div class="bio-highlights">
+      <div class="highlight-card">
+        <div class="highlight-title"><ion-icon name="flash-sharp"></ion-icon> Expertise</div>
+        <div class="highlight-text">Product design, UX/UI, Design systems, User research, Prototyping</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-title"><ion-icon name="layers-sharp"></ion-icon> Industries</div>
+        <div class="highlight-text">Fintech, Mobility, Digital Health, SaaS, Consumer Apps</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-title"><ion-icon name="mic"></ion-icon> Also</div>
+        <div class="highlight-text">Podcast host, Design advocate, Remote-first collaborator</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-title"><ion-icon name="sparkles"></ion-icon> Currently</div>
+        <div class="highlight-text">Designing accessible, voice-first product experiences for remote-first teams while growing my podcast community</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-title"><ion-icon name="construct-sharp"></ion-icon> Tools</div>
+        <div class="highlight-text">Figma (Expert), Webflow (Expert), Miro (Advanced), Hotjar (Advanced), Claude (Advanced), Cursor (Advanced), Bolt(Advanced).</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-title"><ion-icon name="globe-sharp"></ion-icon> Languages</div>
+        <div class="highlight-text">Italian (Native), English (C2), Spanish (C2), German (A1)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section" id="work-experience">
+    <div class="profile-image-container">
+      <img src="https://www.finelli.xyz/images/me.webp" alt="Caterina Finelli" class="profile-image">
+    </div>
+    <div class="section-label">Work Experience</div>
+    <div class="experience-list">
+      <div class="experience-item">
+        <div class="exp-company">Freelance</div>
+        <div class="exp-role">Senior Product Designer</div>
+        <div class="exp-location">Remote</div>
+        <div class="exp-period">2022 — Now</div>
+        <div class="exp-desc">Voice UX, audio AI, mobile app, and MVP design for remote-first companies including VocalEase, Aupeo, and Liloqui — with a focus on accessible product experiences.</div>
+      </div>
+      <div class="experience-item">
+        <div class="exp-company">Super Tab</div>
+        <div class="exp-role">Senior Product Designer</div>
+        <div class="exp-location">Remote Europe</div>
+        <div class="exp-period">2018 — 2020</div>
+        <div class="exp-desc">Lifted customer satisfaction 25% in six months through targeted UI improvements and reduced development rework 40% by tightening design–engineering alignment. Built the design system for consistent cross-platform branding.</div>
+      </div>
+      <div class="experience-item">
+        <div class="exp-company">Pocket Web</div>
+        <div class="exp-role">Senior Product Designer</div>
+        <div class="exp-location">Berlin, DE</div>
+        <div class="exp-period">2016 — 2018</div>
+        <div class="exp-desc">Built interactive prototypes for in-depth usability testing, lifting task success rate 15% and improving user confidence in key workflows.</div>
+      </div>
+      <div class="experience-item">
+        <div class="exp-company">Quandoo.com</div>
+        <div class="exp-role">Product Designer</div>
+        <div class="exp-location">Berlin, DE</div>
+        <div class="exp-period">2013 — 2016</div>
+        <div class="exp-desc">Launched 4+ cross-platform products (Android, iOS, web) reaching 10,000+ users in year one; cut QA cycles 20% through proactive design documentation and design–engineering syncs.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVIEWS -->
+  <div class="section">
+    <div class="profile-image-container">
+      <img src="https://www.finelli.xyz/images/work.webp" alt="Caterina Finelli" class="profile-image">
+    </div>
+    <div class="section-label">Working with me</div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-quote">Caterina is an absolute joy to work with! She receives and provides feedback with openness and grace, she is dedicated to providing our customers with the best UX possible, and most importantly, she has challenged me to become a better product manager.</div>
+        <div class="review-author">
+          <div class="review-name">Kimberly Moore</div>
+          <div class="review-role">Experienced Product Leader</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-quote">There isn't enough space here to share all the wonderful things I have to say about working with Caterina. She can hop into any design project and get things done. She is quick to get up to speed on what is needed and execute on that need. She works with a large international team and gets along well with anyone.</div>
+        <div class="review-author">
+          <div class="review-name">Jessica Greenwalt</div>
+          <div class="review-role">CEO at Nice Industries</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-quote">Caterina is a pleasure to work with. She collaborates well with our Engineering and Product teams and has made herself a reliable team member by making sure everything is followed through and things don't slip through the cracks. Her transparent communication and positive and fun energy make her a great colleague.</div>
+        <div class="review-author">
+          <div class="review-name">Kaylie Boogaerts</div>
+          <div class="review-role">Director of People at Checkly</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-quote">I worked with Caterina for almost a year and I can say she is a very reliable designer. When things need to be done she's there. When things get hard she's there. I think she's a really valuable asset in a Design team, and I hope I'll be able to work with her again in the future.</div>
+        <div class="review-author">
+          <div class="review-name">Vittorio Monaco</div>
+          <div class="review-role">Staff Engineer at Databricks</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-quote">Caterina is definitely a Team player, extremely fast and accurate in the delivery of appealing and profitable design solutions.</div>
+        <div class="review-author">
+          <div class="review-name">Matthias Hüthmair</div>
+          <div class="review-role">Founder & Co-CEO at Bettercoach.io</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-quote">Caterina has a great sense for details, and that's a must-have for a Product Designer! We worked together on several projects.</div>
+        <div class="review-author">
+          <div class="review-name">Antoine Grebert</div>
+          <div class="review-role">CPO at Patronus</div>
+        </div>
+      </div>
+    </div>
+    <div class="reviews-cta">
+      <a href="https://www.linkedin.com/in/cfinelli/" target="_blank" rel="noopener noreferrer">
+        Read all 16 recommendations on LinkedIn ↗
+      </a>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="section" id="lets-connect">
+    <div class="profile-image-container">
+      <img src="https://www.finelli.xyz/images/connect.webp" alt="Caterina Finelli" class="profile-image">
+    </div>
+    <div class="section-label">Let's Connect</div>
+    <p style="color: var(--muted); margin-bottom: 32px; font-size: 14px;">Feel free to reach out for collaborations, speaking opportunities, or just to chat about design and storytelling.</p>
+    <div class="contact-grid">
+      <a href="mailto:finelli@duck.com" class="contact-item">
+        <span class="contact-label">Email</span>
+        <div class="contact-value">finelli@duck.com</div>
+      </a>
+      <a href="https://www.linkedin.com/in/cfinelli/" class="contact-item" target="_blank" rel="noopener noreferrer">
+        <span class="contact-label">LinkedIn</span>
+        <div class="contact-value">cfinelli</div>
+      </a>
+      <a href="https://cheviaggio.xyz" class="contact-item" target="_blank" rel="noopener noreferrer">
+        <span class="contact-label">Podcast</span>
+        <div class="contact-value">Viaggio a 1.5x</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <p>Caterina Finelli · Senior Product Designer</p>
+      <p>Designed & crafted with <ion-icon name="heart-sharp"></ion-icon> and a bit of magic.</p>
+    </div>
+    <p>© 2026 · All rights reserved</p>
+  </div>
+</div>
+
+</body>
+</html>
