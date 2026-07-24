@@ -751,9 +751,21 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
   }
 
-  .testimonial-card {
+  .testimonial-card-blue {
     padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
     border-radius: 16px; border-left: 3px solid var(--accent-blue);
+    display: flex; flex-direction: column;
+  }
+
+  .testimonial-card-green {
+    padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; border-left: 3px solid var(--accent-green);
+    display: flex; flex-direction: column;
+  }
+
+  .testimonial-card-yellow {
+    padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; border-left: 3px solid var(--accent-yellow);
     display: flex; flex-direction: column;
   }
 
@@ -1347,7 +1359,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   <div class="tldr-cards">
     <div class="tldr-card">
       <div class="tldr-card-label">What we built</div>
-      <p class="tldr-card-text">A direct-manipulation touch EQ interface inside an Android app that remote-controls the Behringer X32 — replacing six overloaded knobs as the fastest way to shape a channel.</p>
+      <p class="tldr-card-text">A direct-manipulation touch EQ interface app to remote-control the Behringer X32. It replaced six overloaded knobs as the fastest way to shape a channel.</p>
     </div>
     <div class="tldr-card">
       <div class="tldr-card-label">How we built it</div>
@@ -1355,7 +1367,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     </div>
     <div class="tldr-card">
       <div class="tldr-card-label">What landed</div>
-      <p class="tldr-card-text">85% user satisfaction post-launch · −30% time on task for EQ adjustments · 70% adoption rate — and an interface that engineers could trust on stage.</p>
+      <p class="tldr-card-text">85% user satisfaction post-launch · −30% time on task for EQ adjustments · 70% adoption rate · White label patent to scale across global brands.</p>
     </div>
   </div>
   <!-- CONSOLE PRODUCT SHOT -->
@@ -1384,39 +1396,39 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
     <div class="info-cards">
       <div class="info-card">
-        <div class="info-card-icon"><ion-icon name="book"></ion-icon></div>
+        <div class="info-card-icon"><ion-icon name="book-sharp"></ion-icon></div>
         <div class="info-card-title">Context</div>
-        <div class="info-card-text">The X32 runs every parameter through six rotating encoders, several doing double or triple duty. MusicTribe wanted an Android app that gave engineers a full touch alternative — without breaking the workflow they already trusted.</div>
+        <div class="info-card-text">The X32 runs every parameter through six rotating encoders, several doing double or triple duty. MusicTribe wanted an Android app that gave engineers a full touch alternative without breaking the workflow they already trusted.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon"><ion-icon name="sad"></ion-icon></div>
+        <div class="info-card-icon"><ion-icon name="sad-sharp"></ion-icon></div>
         <div class="info-card-title">User problem</div>
-        <div class="info-card-text">Six overloaded knobs meant engineers had to remember each one's current mode before trusting what it would do — often in the dark, mid-show. The most friction-heavy task on the console.</div>
+        <div class="info-card-text">Six overloaded knobs meant engineers had to remember each one's current mode before trusting what it would do, often in the dark, mid-show. This was the most friction-heavy task on the console.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon"><ion-icon name="planet"></ion-icon></div>
+        <div class="info-card-icon"><ion-icon name="planet-sharp"></ion-icon></div>
         <div class="info-card-title">My responsibility</div>
-        <div class="info-card-text">Led product design end-to-end — field research, ideation, A/B-tested prototyping, and handoff to the mobile engineering team.</div>
+        <div class="info-card-text">Led product design end-to-end — field research, ideation, A/B-tested prototyping, and handoff to the mobile Android engineering team.</div>
       </div>
       <div class="info-card">
-        <div class="info-card-icon"><ion-icon name="construct"></ion-icon></div>
+        <div class="info-card-icon"><ion-icon name="construct-sharp"></ion-icon></div>
         <div class="info-card-title">What we did</div>
-        <div class="info-card-text">Designed a direct-manipulation touch EQ graph and a precision-lock gesture for fine adjustments — validated through A/B testing two layouts with real audio engineers.</div>
+        <div class="info-card-text">Designed a direct-manipulation touch EQ graph and a precision-lock gesture for fine adjustments; validated through A/B testing two layouts with real audio engineers.</div>
       </div>
     </div>
 
     <h2 class="section-heading">Outcomes</h2>
     <div class="outcomes-list">
       <div class="outcome-item">
-        <div class="outcome-icon"><ion-icon name="trending-up"></ion-icon></div>
+        <div class="outcome-icon"><ion-icon name="trending-up-sharp"></ion-icon></div>
         85% user satisfaction score post-launch, based on surveys and direct feedback from engineers
       </div>
       <div class="outcome-item">
-        <div class="outcome-icon"><ion-icon name="speedometer"></ion-icon></div>
+        <div class="outcome-icon"><ion-icon name="speedometer-sharp"></ion-icon></div>
         −30% average time on task for EQ adjustments, measured in timed usability sessions
       </div>
       <div class="outcome-item">
-        <div class="outcome-icon"><ion-icon name="checkmark-circle"></ion-icon></div>
+        <div class="outcome-icon"><ion-icon name="checkmark-circle-sharp"></ion-icon></div>
         70% adoption rate for the new remote app, tracked through app usage analytics post-launch
       </div>
     </div>
@@ -1424,12 +1436,12 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <h2 class="section-heading">Challenges and takeaways</h2>
     <div class="challenges-grid">
       <div class="challenge-card">
-        <span class="challenge-icon"><ion-icon name="hand-left"></ion-icon></span>
-        <p class="challenge-text"><strong>Precision under live conditions.</strong> Standard mobile touch-target sizing wasn't enough for stressed hands mid-show — hit areas and gesture logic took two extra iterations to get right.</p>
+        <span class="challenge-icon"><ion-icon name="hand-left-sharp"></ion-icon></span>
+        <p class="challenge-text"><strong>Precision under live conditions.</strong> Standard mobile touch-target sizing wasn't enough for stressed hands mid-show. Hit areas and gesture logic took two extra iterations to get right.</p>
       </div>
       <div class="challenge-card">
-        <span class="challenge-icon"><ion-icon name="shield"></ion-icon></span>
-        <p class="challenge-text"><strong>Respecting 30 years of muscle memory.</strong> The X32's knob-and-button workflow runs deep. The app had to feel like an extension of that world, not a replacement — or adoption would stall at zero.</p>
+        <span class="challenge-icon"><ion-icon name="shield-sharp"></ion-icon></span>
+        <p class="challenge-text"><strong>Respecting 30 years of muscle memory.</strong> The X32's knob-and-button workflow runs deep. The app had to feel like an extension of that world, not a replacement, otherwise adoption would stall at zero.</p>
       </div>
     </div>
 
@@ -1440,11 +1452,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="gallery-item gallery-mobile" onclick="openLightbox('https://finelli.xyz/images/x32/x32_screen_4.avif', 'X32 remote app — detail view 1')">
           <img src="https://finelli.xyz/images/x32/x32_screen_4.avif" alt="X32 remote app — detail view 1" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_screen_5.avif', 'X32 remote app — detail view 2')">
-          <img src="https://finelli.xyz/images/x32/x32_screen_5.avif" alt="X32 remote app — detail view 2" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_screen.avif', 'X32 remote app — detail view 2')">
+          <img src="https://finelli.xyz/images/x32/x32_screen.avif" alt="X32 remote app — detail view 2" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_screen_5.avif', 'X32 remote app — detail view 2')">
-          <img src="https://finelli.xyz/images/x32/x32_screen_5.avif" alt="X32 remote app — detail view 2" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_handoff_5.avif', 'X32 remote app — detail view 2')">
+          <img src="https://finelli.xyz/images/x32/x32_handoff_5.avif" alt="X32 remote app — detail view 2" loading="lazy">
         </div>
         <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_screen_5.avif', 'X32 remote app — detail view 2')">
           <img src="https://finelli.xyz/images/x32/x32_screen_5.avif" alt="X32 remote app — detail view 2" loading="lazy">
@@ -1456,8 +1468,8 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/X32_components.avif', 'X32 — final touch EQ interface')">
           <img src="https://finelli.xyz/images/x32/X32_components.avif" alt="X32 — final touch EQ interface" loading="lazy">
         </div>
-        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_hifi_ab.avif', 'X32 — hi-fi prototype A/B comparison')">
-          <img src="https://finelli.xyz/images/x32/x32_hifi_ab.avif" alt="X32 — hi-fi prototype A/B comparison" loading="lazy">
+        <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_handoff_4.avif', 'X32 — hi-fi prototype A/B comparison')">
+          <img src="https://finelli.xyz/images/x32/x32_handoff_4.avif" alt="X32 — hi-fi prototype A/B comparison" loading="lazy">
         </div>
         <div class="gallery-item gallery-desktop" onclick="openLightbox('https://finelli.xyz/images/x32/x32_screen_2.avif', 'X32 — additional screen')">
           <img src="https://finelli.xyz/images/x32/x32_screen_2.avif" alt="X32 — additional screen" loading="lazy">
@@ -1472,38 +1484,38 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <section class="testimonials-section">
       <h2 class="testimonials-title">Team Feedbacks</h2>
       <div class="testimonials-grid">
-        <div class="testimonial-card">
+        <div class="testimonial-card-yellow">
           <p class="testimonial-quote">Caterina understood our engineers better than we did. She spent real time at venues before drawing a single screen, and it shows in how little explaining the final interface needs.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="https://finelli.xyz/images/avatar_1.jpg" alt="Client">
+              <img src="https://finelli.xyz/images/avatar_3.png" alt="Client">
             </div>
             <div class="testimonial-info">
-              <div class="testimonial-name">Client name</div>
+              <div class="testimonial-name">Andrea Schmidt</div>
               <div class="testimonial-role">Product Lead, MusicTribe</div>
             </div>
           </div>
         </div>
-        <div class="testimonial-card">
+        <div class="testimonial-card-green">
           <p class="testimonial-quote">The A/B testing rigor was the difference here — we didn't ship an opinion, we shipped what the data and the engineers actually preferred. That built real trust across the whole product team.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="https://finelli.xyz/images/avatar_2.jpg" alt="Developer">
+              <img src="https://finelli.xyz/images/avatar_2.png" alt="Developer">
             </div>
             <div class="testimonial-info">
-              <div class="testimonial-name">Engineer name</div>
+              <div class="testimonial-name">Tobi Mahnekoff</div>
               <div class="testimonial-role">Lead Android Engineer</div>
             </div>
           </div>
         </div>
-        <div class="testimonial-card">
+        <div class="testimonial-card-blue">
           <p class="testimonial-quote">Her handoff docs were precise down to the touch target pixel. Our team built from her specs with almost no back-and-forth, which is rare on remote-control app work for professional audio gear.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
-              <img src="https://finelli.xyz/images/avatar_3.jpg" alt="Manager">
+              <img src="https://finelli.xyz/images/avatar_1.png" alt="Manager">
             </div>
             <div class="testimonial-info">
-              <div class="testimonial-name">Manager name</div>
+              <div class="testimonial-name">Stephan Großer</div>
               <div class="testimonial-role">Project Manager</div>
             </div>
           </div>
@@ -1552,7 +1564,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
      
       <div class="meta-box">
         <div class="meta-box-label">Timeline</div>
-        <div class="meta-box-content">Q1-Q3 · 2026 </div>
+        <div class="meta-box-content">Q1-Q2 · 2026 </div>
       </div>
       <div class="meta-box">
         <div class="meta-box-label">Client</div>
@@ -1564,15 +1576,15 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <div class="meta-row">
       <div class="meta-box">
         <div class="meta-box-label">Brief</div>
-        <div class="meta-box-content">Design an Android tablet app that replaces the X32's six-knob, tiny-display control scheme with a single touch-first canvas — without disrupting the physical workflow engineers already depend on.</div>
+        <div class="meta-box-content">Design an Android tablet app that replaces the X32's six-knob, tiny-display control scheme with a single touch-first canvas, without disrupting the physical workflow engineers already depend on.</div>
       </div>
       <div class="meta-box">
         <div class="meta-box-label">Constraints</div>
-        <div class="meta-box-content">1024×768 target canvas · match the console's existing control vocabulary · real-time live-audio environment over WiFi · large touch targets required · varying Android tablet hardware</div>
+        <div class="meta-box-content">1024×768 target canvas · match the console's existing control lexicon · real-time live-audio environment over WiFi · large touch targets required · varying Android tablet hardware</div>
       </div>
       <div class="meta-box">
         <div class="meta-box-label">Output</div>
-        <div class="meta-box-content">Touch EQ interface · A/B-tested layout · vector-based component library (reusable across future mobile/desktop apps) · handed off to MusicTribe's Android engineering team</div>
+        <div class="meta-box-content">Touch EQ interface · A/B-tested layout · vector-based component library (reusable across future mobile/desktop apps) · handed off to MusicTribe's Android engineering team.</div>
       </div>
     </div>
 
@@ -1581,11 +1593,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
       <div class="phase-block">
         <div class="phase-number">Phase 01</div>
         <h2 class="phase-title">Empathize</h2>
-        <p class="phase-subtitle">Spending time where audio professionals actually work — live venues and recording studios.</p>
+        <p class="phase-subtitle">Spending time where audio professionals actually work:<br> live venues and recording studios.</p>
 
         <div class="content-body">
           <p>The X32 lives in two worlds: the chaos of a live show and the precision of a studio. I started by <strong>observing engineers in both</strong> — watching where they hesitated and what workarounds they'd invented.</p>
-          <p>I backed that up with interviews and a review of existing feedback logs — reading the console's history of frustration as a design brief.</p>
+          <p>I backed that up with interviews and a review of existing feedback logs, reading the console's "history of frustration" as a design brief.</p>
         </div>
 
         <div class="two-col">
@@ -1607,7 +1619,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="callout insight">
           <ion-icon name="bulb"></ion-icon>
           <div class="callout-title">What We Kept Hearing</div>
-          <p>EQ adjustment was the most friction-heavy task on the console — precise tweaks made with tiny knobs, often in the dark, mid-performance. The hardware was getting in the way of the music.</p>
+          <p>EQ adjustment was the most friction-heavy task on the console: precise tweaks made with tiny knobs, often in the dark, mid-performance. The hardware was getting in the way of the music.</p>
         </div>
 <div class="img-placeholder zoomable ratio-16-9" onclick="openLightbox('https://finelli.xyz/images/x32/x32_empathize.png', 'Current hardware and UI — the X32 console and its existing knob-driven display')">
           <img src="https://finelli.xyz/images/x32/x32_empathize.png" alt="Current hardware and UI — the X32 console and its existing knob-driven display" loading="lazy">
@@ -1629,20 +1641,20 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
       <div class="phase-block">
         <div class="phase-number">Phase 02</div>
         <h2 class="phase-title">Define</h2>
-        <p class="phase-subtitle">Translating research into a focused design goal — and understanding who we were really designing for.</p>
+        <p class="phase-subtitle">Translating research into a focused design goal, and understanding who we were really designing for.</p>
 
         <div class="content-body">
-          <p>The research surfaced a tension: experienced engineers had <strong>muscle memory</strong> tied to physical controls, while newer users found the interface dense. Any touch solution had to serve both.</p>
-          <p>Two pain points stood out — EQ adjustment under pressure, and navigating between channels quickly. Both pointed to the same need: <strong>faster access to the right control at the right moment</strong>.</p>
+          <p>The research surfaced a tension, infact experienced engineers had <strong>muscle memory</strong> tied to physical controls, while newer users found the interface dense. Any touch solution had to serve both.</p>
+          <p>Two pain points stood out: EQ adjustment under pressure, and navigating between channels quickly. Both pointed to the same need - <strong>faster access to the right control at the right moment</strong>.</p>
         </div>
 
         <div class="two-col">
           <div class="card">
-            <div class="card-title">Marco · Live Sound Engineer</div>
+            <div class="card-title">Josh · Live Sound Engineer</div>
             <p>"During a show I don't have time to hunt for a control. If I can't find it in two seconds, I move on and something in the mix suffers."</p>
           </div>
           <div class="card">
-            <div class="card-title">Sara · Studio Musician</div>
+            <div class="card-title">Aloo K · Studio Musician</div>
             <p>"I know what I want to hear, but I can never remember which knob does what. I want to touch the sound directly, not translate it through hardware."</p>
           </div>
         </div>
@@ -1657,7 +1669,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="artifacts">
           <div class="artifacts-label">→ Artifacts</div>
           <div class="artifact-tags">
-            <span class="tag blue">User Personas (2)</span>
+            <span class="tag blue">User Personas</span>
             <span class="tag blue">Pain Point Prioritisation Matrix</span>
             <span class="tag blue">Core Design Goal Statement</span>
             <span class="tag blue">Jobs-to-be-Done Map</span>
@@ -1674,15 +1686,15 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <p class="phase-subtitle">Sketching new interaction models for a physical device with decades of established conventions.</p>
 
         <div class="content-body">
-          <p>Designing an Android app to remote-control existing hardware meant real constraints — a 1024×768 canvas, and years of muscle memory built around six overloaded encoders. The brief's early mockup called for one physical rotary knob for fine adjustment — a "touch and turn" hybrid. A tablet has no dial to inherit, so I translated that into <strong>touch alone</strong>: a long-press-and-drag gesture that slows down for surgical moves.</p>
-          <p>The core idea: a <strong>touch-enabled EQ graph</strong>. Instead of hunting through knob modes, the engineer drags one of six points — Low Cut, Low, Low Mid, High Mid, High, High Cut — across a live curve (20Hz–20kHz frequency, −15 to +15 gain). One gesture instead of six knobs.</p>
+          <p>Designing an Android app to remote-control existing hardware meant real constraints: a 1024×768 canvas, and years of muscle memory built around six overloaded encoders. The brief's early mockup called for one physical rotary knob for fine adjustment, a "touch and turn" hybrid. A tablet has no dial to inherit, so I translated that into <strong>touch alone</strong> - a long-press-and-drag gesture that slows down for surgical moves.</p>
+          <p>The core idea is a <strong>touch-enabled EQ graph</strong>. Instead of hunting through knob modes, the engineer drags one of six points — Low Cut, Low, Low Mid, High Mid, High, High Cut — across a live curve (20Hz–20kHz frequency, −15 to +15 gain). One gesture instead of six knobs.</p>
         </div>
 
         <ul class="step-list">
-          <li><span class="step-num">→</span><span><strong>Touch EQ graph:</strong> Direct manipulation of frequency and gain via draggable nodes across all six bands — the core of the interface.</span></li>
-          <li><span class="step-num">→</span><span><strong>Precision lock:</strong> A long-press-and-drag gesture stands in for the physical dial the brief called for — slows touch response for fine adjustments.</span></li>
+          <li><span class="step-num">→</span><span><strong>Touch EQ graph:</strong> Direct manipulation of frequency and gain via draggable nodes across all six bands, the core of the interface.</span></li>
+          <li><span class="step-num">→</span><span><strong>Precision lock:</strong> A long-press-and-drag gesture stands in for the physical dial the brief called for, so slows touch response for fine adjustments.</span></li>
           <li><span class="step-num">→</span><span><strong>Tab bar navigation:</strong> A persistent Home / Config / Gate / Dyn / EQ / Sends / Main bar keeps every mode one tap away.</span></li>
-          <li><span class="step-num">→</span><span><strong>Global controls:</strong> Mix blend (0–150%), Solo, Reset, and one unmistakable EQ on/off toggle — always visible, always reachable without hunting.</span></li>
+          <li><span class="step-num">→</span><span><strong>Global controls:</strong> Mix blend (0–150%), Solo, Reset, and one unmistakable EQ on/off toggle are always visible, always reachable without hunting.</span></li>
           <li><span class="step-num">→</span><span><strong>Preset system:</strong> Save and recall custom EQ configurations with a single tap.</span></li>
           <li><span class="step-num">→</span><span><strong>Visual indicators:</strong> Clear signifiers for the active band, on/off state, and which parameter is locked for precision adjustment.</span></li>
         </ul>
@@ -1690,7 +1702,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="callout insight">
           <ion-icon name="bulb"></ion-icon>
           <div class="callout-title">The Controls Panel Question</div>
-          <p>Early sketches produced two layout approaches for the controls panel — a decision left to A/B testing, not assumption.</p>
+          <p>Early sketches produced two layout approaches for the controls panel. This decision was left to A/B testing, not assumption.</p>
         </div>
 
         <div class="ab-grid">
@@ -1742,11 +1754,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
       <div class="phase-block">
         <div class="phase-number">Phase 04</div>
         <h2 class="phase-title">Prototype</h2>
-        <p class="phase-subtitle">From sketches to a high-fidelity Figma prototype — testing interaction logic before it touched hardware.</p>
+        <p class="phase-subtitle">From sketches to a high-fidelity Figma prototype, testing interaction logic before it touched hardware.</p>
 
         <div class="content-body">
-          <p>I moved through fidelity levels deliberately: paper sketches for information architecture, then <strong>mid-fi Figma wireframes</strong> to stress-test layout density — the EQ graph needed room to work without crowding the screen.</p>
-          <p>The high-fi prototype covered three key workflows: EQ adjustment, preset management, and channel navigation — the highest-frequency, highest-stakes tasks in a live environment.</p>
+          <p>I moved through fidelity levels deliberately: paper sketches for information architecture, then <strong>mid-fi Figma wireframes</strong> to stress-test layout density, beacuse the EQ graph needed room to work without crowding the screen.</p>
+          <p>The high-fi prototype covered three key workflows: EQ adjustment, preset management, and channel navigation. Research revealed these were the highest-frequency, highest-stakes tasks in a live environment.</p>
         </div>
 
         <div class="callout decision">
@@ -1775,10 +1787,8 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="artifacts">
           <div class="artifacts-label">→ Artifacts</div>
           <div class="artifact-tags">
-            <span class="tag blue">Paper Wireframes</span>
-            <span class="tag blue">Mid-Fi Wireframes (Figma)</span>
-            <span class="tag blue">Hi-Fi Prototype — Version A</span>
-            <span class="tag blue">Hi-Fi Prototype — Version B</span>
+            <span class="tag blue">Low-Fi, Mid-Fi Wireframes</span>
+            <span class="tag blue">Hi-Fi Prototype — Version A and B</span>
             <span class="tag blue">Interaction Annotation Document</span>
             <span class="tag blue">Touch Target Specification</span>
           </div>
@@ -1791,14 +1801,14 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
       <div class="phase-block">
         <div class="phase-number">Phase 05</div>
         <h2 class="phase-title">Test</h2>
-        <p class="phase-subtitle">A/B testing and hands-on usability sessions with real audio engineers — measuring what mattered.</p>
+        <p class="phase-subtitle">A/B testing and hands-on usability sessions with real audio engineers, measuring what mattered.</p>
 
         <div class="content-body">
-          <p>Testing centred on the tasks that defined success in the field: EQ speed, control discoverability, and channel navigation — with both experienced engineers and less technical musicians.</p>
+          <p>Testing centred on the tasks that defined success in the field: EQ speed, control discoverability, and channel navigation. I have run them with both experienced engineers and less technical musicians.</p>
         </div>
 
         <ul class="step-list">
-          <li><span class="step-num">01</span><span><strong>A/B layout test:</strong> Both versions tested with identical tasks; time-on-task and satisfaction recorded for each.</span></li>
+          <li><span class="step-num">01</span><span><strong>A/B layout test:</strong> Both versions tested with identical tasks; time-on-task and error-rate recorded for each.</span></li>
           <li><span class="step-num">02</span><span><strong>EQ manipulation accuracy:</strong> Users hit a target frequency and gain via the touch graph; time and corrections needed were measured.</span></li>
           <li><span class="step-num">03</span><span><strong>Preset recall:</strong> Engineers saved and recalled a custom EQ profile mid-session. Discoverability of the save function was a common early failure.</span></li>
           <li><span class="step-num">04</span><span><strong>Channel navigation:</strong> Cross-channel switching was timed across both layouts to identify where friction remained.</span></li>
@@ -1807,11 +1817,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="ab-grid">
           <div class="ab-card">
             <div class="ab-label">Version A · Controls at top</div>
-            <p>Quick to adapt on first load, but users reported <strong>fatigue</strong> over longer sessions — reaching upward repeatedly got uncomfortable.</p>
+            <p>Quick to adapt on first load, but users reported <strong>fatigue</strong> over longer sessions, because reaching upward repeatedly got uncomfortable.</p>
           </div>
           <div class="ab-card winner">
             <div class="ab-label">✓ Winner · Version B · Controls at bottom</div>
-            <p>Clear favourite in feedback — <strong>ergonomically natural</strong> standing or seated, with lower time-on-task across every workflow.</p>
+            <p>Clear favourite in feedback, because <strong>ergonomically natural</strong> standing or seated, with lower time-on-task across every workflow.</p>
           </div>
         </div>
 
@@ -1823,7 +1833,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="callout problem">
           <ion-icon name="flash"></ion-icon>
           <div class="callout-title">Key Finding — Preset Discoverability</div>
-          <p>Preset save/recall was consistently missed early on — users expected it next to the EQ graph, not in a separate panel. We moved it, and first-attempt success jumped.</p>
+          <p>Preset save/recall was consistently missed early on: users expected it next to the EQ graph, not in a separate panel. We moved it, and first-attempt success jumped.</p>
         </div>
 
         <div class="artifacts">
@@ -1831,9 +1841,8 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
           <div class="artifact-tags">
             <span class="tag blue">Usability Test Script</span>
             <span class="tag blue">A/B Test Results Report</span>
-            <span class="tag blue">Task Performance Data (time on task)</span>
+            <span class="tag blue">Task Performance Data (time on task, error rate)</span>
             <span class="tag blue">Qualitative Feedback Summary</span>
-            <span class="tag blue">Prioritised Iteration Backlog</span>
           </div>
         </div>
       </div>
@@ -1848,14 +1857,14 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
         <div class="content-body">
           <p>The final interface built on Version B's layout, refined through two more rounds of iteration. The <strong>touch EQ graph</strong> is the centrepiece — large and directly responsive, with parameter fields anchored at the bottom within thumb reach.</p>
-          <p>Visual decisions were deliberate: a dark, high-contrast palette for low-light venues, with colour — not text — marking states like active, engaged, and clipping. <strong>Readable at a glance</strong>.</p>
-          <p>Handoff docs for the Android engineering team covered every interactive state, touch target dimension, and edge case — especially EQ behaviour at frequency extremes and multi-node editing.</p>
+          <p>Visual decisions were deliberate: a dark, high-contrast palette for low-light venues, with colour instead of text marking states like active, engaged, and clipping. <strong>Readable at a glance</strong>.</p>
+          <p>Handoff docs for the Android engineering team covered every interactive state, touch target dimension, and edge case, especially EQ behaviour at frequency extremes and multi-node editing.</p>
         </div>
 
         <div class="two-col">
           <div class="card">
             <div class="card-title">EQ Graph Behaviour</div>
-            <p>Drag a node to move frequency and gain together. Long-press for precision lock. Tap Reset for defaults. No pinch or multi-finger gestures — live hands don't have room for those.</p>
+            <p>Drag a node to move frequency and gain together. Long-press for precision lock. Tap Reset for defaults. No pinch or multi-finger gestures, because live hands don't have room for those.</p>
           </div>
           <div class="card">
             <div class="card-title">Cross-Channel Navigation</div>
@@ -1900,9 +1909,9 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
         <div class="artifacts">
           <div class="artifacts-label">→ Artifacts</div>
           <div class="artifact-tags">
-            <span class="tag blue">Final UI — Touch Interface (Figma)</span>
+            <span class="tag blue">Final UI — Touch Interface</span>
             <span class="tag blue">Interactive Prototype (key scenarios)</span>
-            <span class="tag blue">Design Handoff Annotations</span>
+            <span class="tag blue">Design Handoff Documentation</span>
             <span class="tag blue">Touch Target Specification Sheet</span>
             <span class="tag blue">State Documentation (all interactive elements)</span>
             <span class="tag blue">Edge Case Reference Document</span>
@@ -1924,22 +1933,22 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
             <div class="metric-label">User satisfaction score post-launch (surveys + direct feedback)</div>
           </div>
           <div class="metric">
-            <div class="metric-num" style="color:var(--accent-blue);">−30%</div>
+            <div class="metric-num" style="color:var(--accent-yellow);">−30%</div>
             <div class="metric-label">Average time on task for EQ adjustments (timed usability tests)</div>
           </div>
           <div class="metric">
-            <div class="metric-num" style="color:var(--accent-yellow);">70%</div>
+            <div class="metric-num" style="color:var(--accent-blue);">70%</div>
             <div class="metric-label">Adoption rate for the new remote app (in-app analytics)</div>
           </div>
           <div class="metric">
-            <div class="metric-num" style="color:var(--accent-yellow);">70%</div>
-            <div class="metric-label">Adoption rate for the new remote app (in-app analytics)</div>
+            <div class="metric-num" style="color:var(--accent-purple);">-41%</div>
+            <div class="metric-label">Error rate (in-app analytics)</div>
           </div>
         </div>
 
         <div class="content-body">
-          <p><strong>What I'm most proud of:</strong> the touch EQ graph. Obvious in hindsight, but getting it precise enough for pros, fast enough for live work, and accessible enough for newcomers took real iteration — the A/B data confirmed we got there.</p>
-          <p><strong>What I'd do differently:</strong> I underestimated how much the testing environment matters. A studio chair doesn't capture the reality of standing at a console mid-show — less stable hands, divided attention, unpredictable light. Earlier in-context testing would have surfaced the touch target issue sooner.</p>
+          <p ><strong style="color:var(--accent-green);">What I'm most proud of:</strong> the touch EQ graph. Obvious in hindsight, but getting it precise enough for pros, fast enough for live work, and accessible enough for newcomers took real iteration. I am glad the A/B data confirmed we got there.</p>
+          <p><strong style="color:var(--accent-yellow);">What I'd do differently:</strong> I underestimated how much the testing environment matters. A studio chair doesn't capture the reality of standing at a console mid-show, where user experience means less stable hands, divided attention, unpredictable light. Earlier in-context testing would have surfaced the touch target issue sooner.</p>
         </div>
 
         <div class="callout quote">
