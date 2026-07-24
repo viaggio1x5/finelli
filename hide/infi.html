@@ -757,9 +757,21 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
   }
 
-  .testimonial-card {
+  .testimonial-card-blue {
     padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
     border-radius: 16px; border-left: 3px solid var(--accent-blue);
+    display: flex; flex-direction: column;
+  }
+
+  .testimonial-card-green {
+    padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; border-left: 3px solid var(--accent-green);
+    display: flex; flex-direction: column;
+  }
+
+  .testimonial-card-yellow {
+    padding: 32px 28px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; border-left: 3px solid var(--accent-yellow);
     display: flex; flex-direction: column;
   }
 
@@ -1515,7 +1527,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <section class="testimonials-section">
       <h2 class="testimonials-title">Working with me</h2>
       <div class="testimonials-grid">
-        <div class="testimonial-card">
+        <div class="testimonial-card-blue">
           <p class="testimonial-quote">Caterina's attention to edge cases and privacy concerns made us feel like we weren't building a surveillance tool. She held the line on things that mattered.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
@@ -1527,7 +1539,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
             </div>
           </div>
         </div>
-        <div class="testimonial-card">
+        <div class="testimonial-card-green">
           <p class="testimonial-quote">The pattern library and interactive specs she handed off let us ship without constant back-and-forth. That's rare. We literally built from her docs.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
@@ -1539,7 +1551,7 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
             </div>
           </div>
         </div>
-        <div class="testimonial-card">
+        <div class="testimonial-card-yellow">
           <p class="testimonial-quote">She showed up as a true partner on this, not just a designer. The way she framed decisions and included us in problem-solving made the work feel collaborative.</p>
           <div class="testimonial-author">
             <div class="testimonial-avatar">
@@ -1781,8 +1793,8 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     <p>A first-person perspective view, inspired by FPS games, had been on the feature list from the start. Once we built it out in mid-fi, it was obvious it added real technical risk for almost no navigation benefit. We cut it before any hi-fi work began — saving development time and keeping the scope honest.</p>
   </div>
 
-  <!-- TODO: swap in the real files once exported — currently placeholder paths for the SaaS admin wireframes -->
-  <div class="subgrid-label">SaaS admin wireframes — mid-fi</div>
+  <!-- INFI ADMIN SAAS WIREFRAMES -->
+  <div class="subgrid-label">SaaS admin wireframes — low-fi</div>
   <div class="img-grid" style="grid-template-columns:repeat(3,1fr); max-width:none;">
     <div class="zoomable ratio-16-9" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://www.finelli.xyz/images/infi/infi_saas_admin_wireframe_1.avif', 'SaaS admin wireframe — live floor plan')">
       <img src="https://www.finelli.xyz/images/infi/infi_saas_admin_wireframe_1.avif" alt="SaaS admin wireframe — live floor plan" loading="lazy" decoding="async">
@@ -1792,6 +1804,22 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     </div>
     <div class="zoomable ratio-16-9" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://www.finelli.xyz/images/infi/infi_saas_admin_wireframe_3.avif', 'SaaS admin wireframe — staff members list')">
       <img src="https://www.finelli.xyz/images/infi/infi_saas_admin_wireframe_3.avif" alt="SaaS admin wireframe — staff members list" loading="lazy" decoding="async">
+    </div>
+  </div>
+  <!-- INFI APP WIREFRAMES -->
+  <div class="subgrid-label">B2C App wireframes — low-fi</div>
+  <div class="img-grid" style="grid-template-columns:repeat(2,1fr); max-width:none;">
+    <div class="zoomable ratio-16-9" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://www.finelli.xyz/images/infi/infi_app_wireframe_1.avif', 'B2C App wireframe — live floor plan')">
+      <img src="https://www.finelli.xyz/images/infi/infi_app_wireframe_1.avif" alt="SaaS admin wireframe — live floor plan" loading="lazy" decoding="async">
+    </div>
+    <div class="zoomable ratio-16-9" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://www.finelli.xyz/images/infi/infi_app_wireframe_2.avif', 'SaaS admin wireframe — venue settings')">
+      <img src="https://www.finelli.xyz/images/infi/infi_app_wireframe_2.avif" alt="SaaS admin wireframe — venue settings" loading="lazy" decoding="async">
+    </div>
+    <div class="zoomable ratio-16-9" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://www.finelli.xyz/images/infi/infi_app_wireframe_3.avif', 'SaaS admin wireframe — staff members list')">
+      <img src="https://www.finelli.xyz/images/infi/infi_app_wireframe_3.avif" alt="SaaS admin wireframe — staff members list" loading="lazy" decoding="async">
+    </div>
+     <div class="zoomable ratio-16-9" style="border-radius:12px; border:1px solid var(--border);" onclick="openLightbox('https://www.finelli.xyz/images/infi/infi_app_wireframe_4.avif', 'SaaS admin wireframe — staff members list')">
+      <img src="https://www.finelli.xyz/images/infi/infi_app_wireframe_4.avif" alt="SaaS admin wireframe — staff members list" loading="lazy" decoding="async">
     </div>
   </div>
 
