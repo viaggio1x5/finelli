@@ -1222,6 +1222,11 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     /* Ad-hoc image grids pile vertically instead of squeezing */
     .ad-grid, .img-grid { grid-template-columns: 1fr !important; }
 
+    /* Platform group cards (Phase 06) carry their own 36px padding on top
+       of the page's own edge padding — cut it down so the text column
+       matches every other section instead of reading noticeably narrower. */
+    .platform-group { padding: 20px 16px 24px; }
+
     /* Gallery "mobile" column: stacked one below the other, like everything else */
     .gallery-column-mobile { flex-direction: column; }
 
@@ -1316,8 +1321,6 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   <div class="nav-right">
     <ul class="nav-links-back">
       <li><a href="https://finelli.xyz/about">About Me</a></li>
-      <!-- TODO: replace # with a hosted PDF/Drive link to your CV -->
-      <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
     </ul>
     <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
       <ion-icon name="menu"></ion-icon>
@@ -1335,7 +1338,6 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   </div>
   <ul class="mobile-menu-links">
     <li><a href="https://finelli.xyz/about">About Me</a></li>
-    <li><a href="#" target="_blank" rel="noopener">Resume</a></li>
   </ul>
 </div>
 
@@ -1981,7 +1983,6 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
               <img src="https://www.finelli.xyz/images/infi/infi_friends_list.avif" alt="inFi mobile app, friends list screen" loading="lazy">
             </div>
           </div>
-        </div>
         </div>
       </div>
 
