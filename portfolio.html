@@ -332,6 +332,9 @@ const PROJECTS=[
    desc:'How I designed inFi — a social indoor-navigation app built on geomagnetic positioning — from a one-line brief into a live product for airports, museums, and conference venues.',
    tags:['SaaS + B2C','Mobile + Web Admin','Social','Indoor Positioning'],
    cover:'images/portfolio/infi.avif',
+   // Same shots as the "Gallery" block in infi.html (Quick showcase tab),
+   // reordered linearly for the lightbox: mobile app first, then admin panel.
+   gallery:['images/infi/infi_app_final_1.avif','images/infi/infi_app_final_2.avif','images/infi/infi_app_final_3.avif','images/infi/infi_app_final_4.avif','images/infi/infi_admin_final.avif','images/infi/infi_admin_final-1.avif','images/infi/infi_admin_final-2.avif','images/infi/infi_admin_final-3.avif','images/infi/infi_admin_final-4.avif','images/infi/infi_admin_final-5.avif','images/infi/infi_admin_final-6.avif','images/infi/infi_admin_final-7.avif'],
    url:'https://finelli.xyz/infi', passwordUrl:'https://finelli.xyz/infi-password', gated:true,
    emoji:'✦', la:16, lo:-35, col:DOT_COLOR, panel:'infi'},
 
@@ -339,6 +342,10 @@ const PROJECTS=[
    desc:'How I added a touchscreen to the Behringer X32 — and made one of the most powerful mixing consoles in the world feel like it was designed for humans.',
    tags:['Hardware UX','Embedded Touch UI','A/B Testing','Pro Audio'],
    cover:'images/portfolio/x32.avif',
+   // Same shots as the "Gallery" block in x32.html (Quick showcase tab).
+   // NOTE: that block also points at images/x32/x32_screen_5.avif, which does
+   // not exist in the repo — left out here on purpose, see notes.
+   gallery:['images/x32/x32_screen.avif','images/x32/x32_screen_2.avif','images/x32/x32_screen_3.avif','images/x32/x32_screen_4.avif','images/x32/X32_components.avif','images/x32/x32_handoff_4.avif','images/x32/x32_handoff_5.avif'],
    url:'https://finelli.xyz/x32', passwordUrl:'https://finelli.xyz/x32-password', gated:true,
    emoji:'◈', la:-18, lo:70, col:DOT_COLOR, panel:'x32'},
 
@@ -419,8 +426,8 @@ function buildHeroHTML(p){
 // openProjectGallery(), so browsing is always scoped to that one project's
 // own images (cover + gallery) — never other projects' covers:
 // - clicking a project's hero cover image
-// - the "View →" CTA on each project (except inFi/X32, which have no
-//   gallery array and just reopen their own cover)
+// - the "View →" CTA on each ungated project (inFi/X32 show a password
+//   gate instead, so their cover image is the only entry point)
 let currentGalleryImages=null; // set by openProjectGallery(); .zoomable scan below is a defensive fallback only, since nothing currently carries that class
 
 function getGalleryImages(){
@@ -444,13 +451,15 @@ function openLightbox(src,alt,images){
 
 // Opens the dedicated gallery for one project — used by both its cover
 // image and its "View →" CTA, so either entry point browses only that
-// project's own images. Falls back to just the cover (e.g. inFi/X32,
-// which have no gallery array) so the click still opens something.
+// project's own images.
+// Order is always: cover FIRST, then the gallery shots. De-duped, so a
+// cover that also appears in the gallery array is not shown twice.
+// A project with no gallery array just opens its cover on its own.
 function openProjectGallery(panelKey){
   const p=PROJECTS.find(x=>x.panel===panelKey);
   if(!p)return;
-  const srcs=(p.gallery&&p.gallery.length)?p.gallery:(p.cover?[p.cover]:null);
-  if(!srcs)return;
+  const srcs=[...new Set([p.cover,...(p.gallery||[])].filter(Boolean))];
+  if(!srcs.length)return;
   const images=srcs.map(src=>({src,alt:p.n}));
   openLightbox(images[0].src,images[0].alt,images);
 }
