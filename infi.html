@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
 <title>inFi — Product Design Case Study by Caterina Finelli</title>
 <link rel="icon" type="image/x-icon" href="favicon_portfolio/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon_portfolio/favicon-32x32.png">
@@ -102,6 +103,17 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     targetContent.classList.add('active');
     el.classList.add('active');
     el.setAttribute('aria-selected', 'true');
+    // Chrome bug workaround: an <img loading="lazy"> that lives inside a
+    // `display:none` ancestor has no layout, so Chrome can't compute its
+    // distance from the viewport — and it doesn't reliably re-check once
+    // the ancestor flips to `display:block`, so most of those images just
+    // never fire their network request (Firefox re-evaluates them fine on
+    // the same transition, which is why this only shows up in Chrome).
+    // This tab panel was display:none until the line above, so force every
+    // lazy image inside it to load now that it's actually visible.
+    targetContent.querySelectorAll('img[loading="lazy"]').forEach(img => {
+      img.loading = 'eager';
+    });
     // Recalculate the sticky offsets now, synchronously, since the newly
     // shown tab (and its phase subnav, for "detailed") just changed height.
     updateStickyOffsets();
