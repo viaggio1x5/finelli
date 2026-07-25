@@ -347,7 +347,7 @@ const PROJECTS=[
    desc:'Have you ever dreamed of composing music with the sounds around you? I did. Inspired by this vision, I designed Live Rec, an app for the Apple Watch.',
    meta:[['Client','Freelance'],['Device','Apple Watch'],['Users','B2C'],['Market','Music']],
    cover:'images/liverec/liverec.avif',
-   gallery:['images/liverec/liverec_01.avif','images/liverec/liverec_02.avif','images/liverec/liverec_03.avif','images/liverec/liverec_04.avif','images/liverec/liverec_05.avif','images/liverec/liverec_06.avif','images/liverec/liverec_07.avif','images/liverec/liverec_08.avif'],
+   gallery:['images/liverec/liverec_04.avif','images/liverec/liverec_01.avif'],
    gated:false,
    emoji:'♪', la:45, lo:20, col:DOT_COLOR, panel:'live-rec'},
 
@@ -403,7 +403,7 @@ const PROJECTS=[
 function buildHeroHTML(p){
   return (
     '<div class="project-hero">'+
-      (p.cover?`<div class="project-cover zoomable" onclick="openLightbox('${p.cover}','${p.n} cover')"><img src="${p.cover}" alt="${p.n} cover" loading="lazy"></div>`:'')+
+      (p.cover?`<div class="project-cover" onclick="openProjectGallery('${p.panel}')"><img src="${p.cover}" alt="${p.n} cover" loading="lazy"></div>`:'')+
       '<div class="project-tag" style="color:'+PANEL_ACCENT+'">'+p.tag+'</div>'+
       '<h2 class="project-title">'+p.n+'</h2>'+
       (p.subtitle?'<p class="project-subtitle">'+p.subtitle+'</p>':'')+
@@ -415,10 +415,13 @@ function buildHeroHTML(p){
 
 // ── LIGHTBOX — same behavior as the case-study pages: click a hero image to
 // open it fullscreen, then move with arrow keys or a swipe; Escape or
-// tapping the background closes it. Two sources feed it:
-// - clicking a hero cover image browses every project's hero image (page-wide .zoomable scan)
-// - the "View →" CTA on each project (except inFi/X32) instead opens just that project's own gallery
-let currentGalleryImages=null; // null = fall back to the page-wide .zoomable scan
+// tapping the background closes it. Both entry points below call
+// openProjectGallery(), so browsing is always scoped to that one project's
+// own images (cover + gallery) — never other projects' covers:
+// - clicking a project's hero cover image
+// - the "View →" CTA on each project (except inFi/X32, which have no
+//   gallery array and just reopen their own cover)
+let currentGalleryImages=null; // set by openProjectGallery(); .zoomable scan below is a defensive fallback only, since nothing currently carries that class
 
 function getGalleryImages(){
   if(currentGalleryImages)return currentGalleryImages;
@@ -439,11 +442,16 @@ function openLightbox(src,alt,images){
   currentLightboxIndex=getGalleryImages().findIndex(item=>item.src===src);
 }
 
-// Opens the dedicated gallery for one project (used by its "View →" CTA).
+// Opens the dedicated gallery for one project — used by both its cover
+// image and its "View →" CTA, so either entry point browses only that
+// project's own images. Falls back to just the cover (e.g. inFi/X32,
+// which have no gallery array) so the click still opens something.
 function openProjectGallery(panelKey){
   const p=PROJECTS.find(x=>x.panel===panelKey);
-  if(!p||!p.gallery||!p.gallery.length)return;
-  const images=p.gallery.map(src=>({src,alt:p.n}));
+  if(!p)return;
+  const srcs=(p.gallery&&p.gallery.length)?p.gallery:(p.cover?[p.cover]:null);
+  if(!srcs)return;
+  const images=srcs.map(src=>({src,alt:p.n}));
   openLightbox(images[0].src,images[0].alt,images);
 }
 
