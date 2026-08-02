@@ -1,0 +1,35 @@
+/sitemap_2026.xml
+  Content-Type: application/xml; charset=utf-8
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+
+# ── Private case studies (recruiters only) ────────────────────────────
+# Belt and braces alongside the <meta name="robots"> in the pages themselves:
+# the header applies even if the HTML is never parsed, and it also covers the
+# *.pages.dev preview deployments, which are publicly crawlable.
+# Both the extensionless and the .html form are listed because Cloudflare
+# Pages serves each page at both URLs.
+/infi
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+
+/infi.html
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+
+/x32
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+
+/x32.html
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+
+/infi-password
+  X-Robots-Tag: noindex, nofollow
+
+/infi-password.html
+  X-Robots-Tag: noindex, nofollow
+
+/x32-password
+  X-Robots-Tag: noindex, nofollow
+
+/x32-password.html
+  X-Robots-Tag: noindex, nofollow
