@@ -225,7 +225,7 @@ html,body{
 }
 .project-cta:hover{filter:brightness(1.1);}
 .project-cta:active{transform:scale(.97);}
-/* ── OPEN INFO PANEL (all projects except inFi) ── */
+/* ── OPEN INFO PANEL (all projects except inFi / X32) ── */
 .project-meta{display:flex;flex-direction:column;gap:.15rem;padding-top:1rem;margin-top:.2rem;border-top:1px solid var(--border);}
 .project-meta-row{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;font-size:.8rem;}
 .project-meta-row+.project-meta-row{border-top:1px solid rgba(255,255,255,.05);}
@@ -318,7 +318,7 @@ html,body{
 <script>
 // ── PROJECTS — sourced from the Webflow CMS export. 'Quandoo for iOS' was
 // left out: it's still marked Draft (unpublished) in the CSV.
-// gated:true → hero info + password gate (only inFi has a live page here).
+// gated:true → hero info + password gate (only inFi and X32 have live pages).
 // gated:false → hero info + full meta shown directly, no password.
 // Every dot on the globe (marker glow + tooltip) uses this same bright purple.
 const DOT_COLOR='#b026ff';
@@ -338,10 +338,16 @@ const PROJECTS=[
    url:'https://finelli.xyz/infi', passwordUrl:'https://finelli.xyz/infi-password', gated:true,
    emoji:'✦', la:16, lo:-35, col:DOT_COLOR, panel:'infi'},
 
-  // The 'X32 Behringer' entry was removed from this list. It is a speculative
-  // concept exercise, not commissioned work, so it is no longer surfaced from
-  // the portfolio. The standalone x32.html page still exists (noindex, shared
-  // by direct link only) — nothing links to it from here on purpose.
+  {n:'X32 Behringer', tag:'Tablet App', subtitle:'Revolutionizing Live Sound',
+   desc:'How I added a touchscreen to the Behringer X32 — and made one of the most powerful mixing consoles in the world feel like it was designed for humans.',
+   tags:['Hardware UX','Embedded Touch UI','A/B Testing','Pro Audio'],
+   cover:'images/portfolio/x32.avif',
+   // Same shots as the "Gallery" block in x32.html (Quick showcase tab).
+   // NOTE: that block also points at images/x32/x32_screen_5.avif, which does
+   // not exist in the repo — left out here on purpose, see notes.
+   gallery:['images/x32/x32_screen.avif','images/x32/x32_screen_2.avif','images/x32/x32_screen_3.avif','images/x32/x32_screen_4.avif','images/x32/X32_components.avif','images/x32/x32_handoff_4.avif','images/x32/x32_handoff_5.avif'],
+   url:'https://finelli.xyz/x32', passwordUrl:'https://finelli.xyz/x32-password', gated:true,
+   emoji:'◈', la:-18, lo:70, col:DOT_COLOR, panel:'x32'},
 
   // All project galleries below use real screenshots.
   {n:'Live REC', tag:'Apple Watch', subtitle:'Music Composition for Wearables',
@@ -395,7 +401,7 @@ const PROJECTS=[
 
 // ── PROJECT PANELS — built from PROJECTS: hero (cover + tag + title +
 // subtitle + description) shared by all, then either a password gate
-// (inFi) or the full meta info directly (everyone else).
+// (inFi / X32) or the full meta info directly (everyone else).
 // TODO: swap 'password' for a real per-project password (or a shared one) before going live.
 // TODO: point passwordUrl at each project's actual password-entry page —
 // currently defaulting to the project URL itself (e.g. a Webflow page with
@@ -420,8 +426,8 @@ function buildHeroHTML(p){
 // openProjectGallery(), so browsing is always scoped to that one project's
 // own images (cover + gallery) — never other projects' covers:
 // - clicking a project's hero cover image
-// - the "View →" CTA on each ungated project (inFi shows a password
-//   gate instead, so its cover image is the only entry point)
+// - the "View →" CTA on each ungated project (inFi/X32 show a password
+//   gate instead, so their cover image is the only entry point)
 let currentGalleryImages=null; // set by openProjectGallery(); .zoomable scan below is a defensive fallback only, since nothing currently carries that class
 
 function getGalleryImages(){
