@@ -173,7 +173,7 @@ html,body{
   padding:6px 14px;border-radius:12px;
   background:rgba(232,52,74,.08);border:1px solid rgba(232,52,74,.25);color:var(--text);
 }
-/* ── PROJECT HERO + CTA ── */
+/* ── PROJECT HERO + PASSWORD-PAGE CTA ── */
 .project-hero{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.15rem;}
 .project-cover{
   position:relative;cursor:pointer;overflow:hidden;
@@ -216,6 +216,7 @@ html,body{
 .project-subtitle{font-size:.8rem;font-style:italic;color:var(--muted);margin-top:-.35rem;}
 .project-desc{font-size:.86rem;line-height:1.65;color:#c8cfdf;}
 .project-action{display:flex;flex-direction:column;gap:.6rem;padding-top:1rem;margin-top:.2rem;border-top:1px solid var(--border);}
+.gate-label{font-size:.68rem;font-weight:600;letter-spacing:.03em;color:var(--muted);}
 .project-cta{
   display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
   background:var(--accent);color:#fff;border:2px solid rgba(255,255,255,.15);border-radius:8px;
@@ -224,7 +225,7 @@ html,body{
 }
 .project-cta:hover{filter:brightness(1.1);}
 .project-cta:active{transform:scale(.97);}
-/* ── OPEN INFO PANEL (all projects except inFi / X32, which show Read Case Study) ── */
+/* ── OPEN INFO PANEL (all projects except inFi / X32) ── */
 .project-meta{display:flex;flex-direction:column;gap:.15rem;padding-top:1rem;margin-top:.2rem;border-top:1px solid var(--border);}
 .project-meta-row{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;font-size:.8rem;}
 .project-meta-row+.project-meta-row{border-top:1px solid rgba(255,255,255,.05);}
@@ -304,7 +305,7 @@ html,body{
     <button id="pclose"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
   </div>
   <div id="plist"></div>
-  <!-- Project panels (hero info + CTA) are generated dynamically
+  <!-- Project panels (hero info + password gate) are generated dynamically
        below from the PROJECTS array — one per dot, no markup to keep in sync. -->
 </div>
 
@@ -317,8 +318,8 @@ html,body{
 <script>
 // ── PROJECTS — sourced from the Webflow CMS export. 'Quandoo for iOS' was
 // left out: it's still marked Draft (unpublished) in the CSV.
-// caseStudy:true → hero info + "Read Case Study →" CTA to the live page (inFi and X32).
-// caseStudy:false → hero info + full meta + "View →" gallery CTA.
+// gated:true → hero info + password gate (only inFi and X32 have live pages).
+// gated:false → hero info + full meta shown directly, no password.
 // Every dot on the globe (marker glow + tooltip) uses this same bright purple.
 const DOT_COLOR='#b026ff';
 // Every opened panel's flag icon + accent color is fixed to inFi's own,
@@ -334,7 +335,7 @@ const PROJECTS=[
    // Same shots as the "Gallery" block in infi.html (Quick showcase tab),
    // reordered linearly for the lightbox: mobile app first, then admin panel.
    gallery:['images/infi/infi_app_final_1.avif','images/infi/infi_app_final_2.avif','images/infi/infi_app_final_3.avif','images/infi/infi_app_final_4.avif','images/infi/infi_admin_final.avif','images/infi/infi_admin_final-1.avif','images/infi/infi_admin_final-2.avif','images/infi/infi_admin_final-3.avif','images/infi/infi_admin_final-4.avif','images/infi/infi_admin_final-5.avif','images/infi/infi_admin_final-6.avif','images/infi/infi_admin_final-7.avif'],
-   url:'https://finelli.xyz/infi', caseStudy:true,
+   url:'https://finelli.xyz/infi', passwordUrl:'https://finelli.xyz/infi-password', gated:true,
    emoji:'✦', la:16, lo:-35, col:DOT_COLOR, panel:'infi'},
 
   {n:'X32 Behringer', tag:'Tablet App', subtitle:'Revolutionizing Live Sound',
@@ -345,7 +346,7 @@ const PROJECTS=[
    // NOTE: that block also points at images/x32/x32_screen_5.avif, which does
    // not exist in the repo — left out here on purpose, see notes.
    gallery:['images/x32/x32_screen.avif','images/x32/x32_screen_2.avif','images/x32/x32_screen_3.avif','images/x32/x32_screen_4.avif','images/x32/X32_components.avif','images/x32/x32_handoff_4.avif','images/x32/x32_handoff_5.avif'],
-   url:'https://finelli.xyz/x32', caseStudy:true,
+   url:'https://finelli.xyz/x32', passwordUrl:'https://finelli.xyz/x32-password', gated:true,
    emoji:'◈', la:-18, lo:70, col:DOT_COLOR, panel:'x32'},
 
   // All project galleries below use real screenshots.
@@ -354,7 +355,7 @@ const PROJECTS=[
    meta:[['Client','Freelance'],['Device','Apple Watch'],['Users','B2C'],['Market','Music']],
    cover:'images/liverec/liverec.avif',
    gallery:['images/liverec/liverec_04.avif','images/liverec/liverec_01.avif'],
-   caseStudy:false,
+   gated:false,
    emoji:'♪', la:45, lo:20, col:DOT_COLOR, panel:'live-rec'},
 
   {n:'Picea Energy Monitor', tag:'Tablet + Web', subtitle:'Renewable energy for everyone',
@@ -362,7 +363,7 @@ const PROJECTS=[
    meta:[['Client','PocketWeb'],['Device','Tablet + Web'],['Users','SaaS + B2C'],['Market','Residential Energy']],
    cover:'images/portfolio/picea.avif',
    gallery:['images/picea/picea_01.avif','images/picea/picea_02.avif','images/picea/picea_03.avif','images/picea/picea_04.avif','images/picea/picea_05.avif','images/picea/picea_06.avif'],
-   caseStudy:false,
+   gated:false,
    emoji:'☀', la:-35, lo:-95, col:DOT_COLOR, panel:'picea'},
 
   {n:'Quandoo Business Center', tag:'Web App', subtitle:'Empowering Restaurant Owners',
@@ -370,7 +371,7 @@ const PROJECTS=[
    meta:[['Client','Quandoo'],['Device','Web App'],['Users','B2B'],['Market','Food']],
    cover:'images/portfolio/quandoo_bc.avif',
    gallery:['images/quandoo_bc/quandoo_bc_01.avif','images/quandoo_bc/quandoo_bc_02.avif','images/quandoo_bc/quandoo_bc_03.avif','images/quandoo_bc/quandoo_bc_04.avif','images/quandoo_bc/quandoo_bc_05.avif'],
-   caseStudy:false,
+   gated:false,
    emoji:'▣', la:60, lo:150, col:DOT_COLOR, panel:'quandoo-b2b'},
 
   {n:'Quandoo Merchant App', tag:'Tablet App', subtitle:'Elevating Dining Experiences in real time',
@@ -378,7 +379,7 @@ const PROJECTS=[
    meta:[['Client','Quandoo'],['Device','Tablet App'],['Users','B2B'],['Market','Food']],
    cover:'images/portfolio/quandoo_mapp.avif',
    gallery:['images/quando_mapp/quando_mapp_01.avif','images/quando_mapp/quando_mapp_02.avif','images/quando_mapp/quando_mapp_03.avif','images/quando_mapp/quando_mapp_04.avif','images/quando_mapp/quando_mapp_05.avif','images/quando_mapp/quando_mapp_06.avif','images/quando_mapp/quando_mapp_07.avif'],
-   caseStudy:false,
+   gated:false,
    emoji:'◧', la:-55, lo:-30, col:DOT_COLOR, panel:'quandoo-b2b-android-app'},
 
   {n:'Quandoo for Android', tag:'Android App', subtitle:'Book a table in an heartbeat',
@@ -386,7 +387,7 @@ const PROJECTS=[
    meta:[['Client','Quandoo'],['Device','Android App'],['Users','B2C'],['Market','Food']],
    cover:'images/portfolio/quandoo_android.avif',
    gallery:['images/quandoo_android/quandoo_android_01.avif'],
-   caseStudy:false,
+   gated:false,
    emoji:'▲', la:5, lo:130, col:DOT_COLOR, panel:'quandoo-b2c-android-app'},
 
   {n:'Quandoo.com', tag:'Responsive Web App', subtitle:'Your Table, Seamlessly Booked',
@@ -394,13 +395,17 @@ const PROJECTS=[
    meta:[['Client','Quandoo'],['Device','Responsive Web App'],['Users','B2C'],['Market','Food'],['Discipline','Product Design']],
    cover:'images/portfolio/quandoo_portal.avif',
    gallery:['images/quandoo_portal/quandoo_portal_01.avif','images/quandoo_portal/quandoo_portal_02.avif','images/quandoo_portal/quandoo_portal_03.avif','images/quandoo_portal/quandoo_portal_04.avif','images/quandoo_portal/quandoo_portal_05.avif','images/quandoo_portal/quandoo_portal_06.avif'],
-   caseStudy:false,
+   gated:false,
    emoji:'◍', la:-10, lo:-150, col:DOT_COLOR, panel:'quandoo-website'}
 ];
 
 // ── PROJECT PANELS — built from PROJECTS: hero (cover + tag + title +
-// subtitle + description) shared by all, then either a "Read Case Study →" CTA
-// (inFi / X32) or the meta rows + "View →" gallery CTA (other projects).
+// subtitle + description) shared by all, then either a password gate
+// (inFi / X32) or the full meta info directly (everyone else).
+// TODO: swap 'password' for a real per-project password (or a shared one) before going live.
+// TODO: point passwordUrl at each project's actual password-entry page —
+// currently defaulting to the project URL itself (e.g. a Webflow page with
+// native password protection prompts right there when you land on it).
 
 function buildHeroHTML(p){
   return (
@@ -421,8 +426,8 @@ function buildHeroHTML(p){
 // openProjectGallery(), so browsing is always scoped to that one project's
 // own images (cover + gallery) — never other projects' covers:
 // - clicking a project's hero cover image
-// - the "View →" CTA on each non-case-study project (inFi/X32 show
-//   "Read Case Study →" instead, so their cover image is the gallery entry point)
+// - the "View →" CTA on each ungated project (inFi/X32 show a password
+//   gate instead, so their cover image is the only entry point)
 let currentGalleryImages=null; // set by openProjectGallery(); .zoomable scan below is a defensive fallback only, since nothing currently carries that class
 
 function getGalleryImages(){
@@ -519,10 +524,12 @@ function handleLightboxOverlayTap(){
     panel.id='panel-'+p.panel;
     panel.style.display='none';
 
-    if(p.caseStudy){
+    if(p.gated){
+      const passwordUrl=p.passwordUrl||p.url;
       panel.innerHTML=buildHeroHTML(p)+
         '<div class="project-action">'+
-          '<a class="project-cta" href="'+p.url+'">Read Case Study →</a>'+
+          '<p class="gate-label">This case study is password-protected.</p>'+
+          '<a class="project-cta" href="'+passwordUrl+'">Enter password →</a>'+
         '</div>';
     }else{
       const metaRows=(p.meta||[]).map(([label,value])=>
